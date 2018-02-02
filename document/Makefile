@@ -3,7 +3,7 @@ PDFLATEX = pdflatex
 
 SRC=$(wildcard *.tex)
 
-.PHONY = view clean
+.PHONY = view clean debug
 
 main.pdf: $(SRC)
 	-${PDFLATEX} -interaction=nonstopmode main
@@ -13,6 +13,9 @@ main.pdf: $(SRC)
 
 view: main.pdf $(SRC)
 	zathura main.pdf &
+
+debug: PDFLATEX=pplatex
+debug: main.pdf
 
 clean:
 	rm -f *.aux
