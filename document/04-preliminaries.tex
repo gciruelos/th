@@ -3,15 +3,185 @@
 \lcha{preliminaries}
 
 \section{Order theory}
+We are interested in understanding the derivation spaces
+of $\lambda$-terms.
+These derivation spaces, as we briefly mentioned earlier, have an structure that can be seen as an order.
+More specifically, the poset we will consider will be the one of derivations, where the order is giving by
+the amount of \textit{work} each derivation does.
 
-We need to introduce some concepts from this theory because, as we have seen,
-the structure of derivation spaces of $\lambda$ terms may be seen as an order,
-where the elements of the set are derivations, and the order is.
+But the structures we will work with are more than just posets, they have a richer structure,
+some of which we will define now.
 
-An \defn{upper semilattice} is a poset (i.e., a set $A$  with an order relation $\leq$), such that
-there is a least element $\bot \in A$
-In particular, we will  start defining what an \textit{upper semilattice} is.
+An \defn{upper semilattice} is a poset (\ie, a set $A$ with an order $\leq$)
+with a least element or \defn{bottom} $\bot \in A$,
+such that for every two elements $a, b \in A$
+there is a least upper bound or \defn{join} $(a \lor b) \in A$.
+
+
+A \defn{lattice} is an upper semilattice
+with a greatest element or \defn{top} $\top \in A$,
+and such that for every two elements $a, b \in A$
+there is a greatest lower bound or \defn{meet} $(a \land b) \in A$.
+A lattice is \defn{distributive} if $\land$ distributes over $\lor$ and vice versa.
+
+In the introduction we claimed that derivation spaces of $\lambda$-terms where
+upper semilattices, but in general were not lattices.
+
+A \defn{morphism} of upper semilattices
+is given by a monotonic function $f : A \to B$,
+\ie $a \leq b$ implies $f(a) \leq f(b)$,
+preserving the bottom element, \ie $f(\bot) = \bot$,
+and joins, \ie $f(a \lor b) = f(a) \lor f(b)$ for all $a, b \in A$.
+Similarly for morphisms of lattices (and distributive lattices).
+
+Any poset $(A,\leq)$ may be regarded as category whose objects are the elements of $A$
+and morphisms are of the form $\pt{b}{a}$ for all $a \leq b$. 
+The category of posets with monotonic functions is denoted by $\Poset$.
+In fact, we view it as a 2-category:
+given morphisms $f,g : A \to B$ of posets,
+there is a \textit{2-cell} $f \totwocell g$ if $f(a) \leq g(a)$ for all $a \in A$.
+(A 2-category is just a category with morphisms between morphisms).
+This notion is more technical and will only be used in the last chapter.
+
 
 \section{Rewriting theory}
+The $\lambda$-calculus is a particular case of a more general mathematical concept, called \defn{rewriting system}.
+Informally, a rewriting system is a set of objects and a set of rules that let you transform some objects into others.
 
-\section{$\lambda$-calculus}
+More formally, an \defn{axiomatic rewrite system} (\cf~\cite[Def.~2.1]{thesismellies})
+is given by a set of objects $\Obj$, a set of steps $\Stp$,
+two functions $\src,\tgt : \Stp \to \Obj$ indicating the source and target of each step,
+and a \defn{residual function} $(/)$ such that given any two steps $\redex,\redextwo \in \Stp$
+with the same source, yields a set of steps $\redex/\redextwo$ such that $\src(\redex') = \tgt(\redextwo)$
+for all $\redex' \in \redex/\redextwo$.
+Steps are ranged over by $\redex,\redextwo,\redexthree,\hdots$.
+A step $\redex' \in \redex/\redextwo$ is called a \defn{residual} of $\redex$ after $\redextwo$,
+and $\redex$ is called an \defn{ancestor} of $\redex'$.
+Steps are \defn{coinitial} (resp. \defn{cofinal}) if they have the same source (resp. target).
+A \defn{derivation} is a possibly empty sequence of composable steps $\redex_1\hdots\redex_n$.
+Derivations are ranged over by $\redseq,\redseqtwo,\redseqthree,\hdots$.
+The functions $\src$ and $\tgt$ are extended to derivations (noting that there is a different empty derivation for each element in $\Obj$).
+
+Composition of derivations is defined when $\tgt(\redseq) = \src(\redseqtwo)$ and written $\redseq\redseqtwo$.
+Residuals are extended for projecting after a derivation,
+namely $\redex_n \in \redex_0/\redextwo_1\hdots\redextwo_n$
+if and only if there exist $\redex_1,\hdots,\redex_{n-1}$
+such that $\redex_{i+1} \in \redex_i/\redextwo_{i+1}$ for all $0 \leq i \leq n - 1$.
+Let $\redexset$ be a set of coinitial steps.
+
+A \defn{development} of $\redexset$ is a (possibly infinite) derivation $\redex_1\hdots\redex_n\hdots$
+such that for every index $i$ there exists a step $\redextwo \in \redexset$
+such that $\redex_i \in \redextwo/\redex_1\hdots\redex_{i-1}$.
+A development is \defn{complete} if it is maximal.
+
+The definition of an abstract rewriting system is very general, and because of that it does not give us
+general properties for systems with such structure.
+In his PhD thesis, Melliès gave a set of sufficient properties (which he called axioms)
+that a rewriting system should have to behave properly.
+
+An \defn{orthogonal} axiomatic rewrite system (\cf~\cite[Sec.~2.3]{thesismellies})
+has four additional axioms\footnote{In \cite{thesismellies},
+Autoerasure is called Axiom~A, Finite Residuals is called Axiom~B, and Semantic Orthogonality is called PERM.
+We follow the nomenclature of~\cite{DBLP:conf/popl/AccattoliBKL14}}:
+\begin{enumerate}
+\item {\em Autoerasure}.
+  $\redex/\redex = \emptyset$ for all $\redex \in \Stp$.
+\item {\em Finite Residuals}.
+  The set $\redex/\redextwo$ is finite for all coinitial $\redex,\redextwo \in \Stp$.
+\item {\em Finite Developments}.
+  If $\redexset$ is a set of coinitial steps,
+  all developments of $\redexset$ are finite.
+\item {\em Semantic Orthogonality}.
+  Let $\redex,\redextwo \in \Stp$ be coinitial steps.
+  Then there exist a complete development $\redseq$ of $\redex/\redextwo$
+  and a complete development $\redseqtwo$ of $\redextwo/\redex$
+  such that $\redseq$ and $\redseqtwo$ are cofinal.
+  Moreover,
+  for every step $\redexthree \in \Stp$ such that $\redexthree$ is coinitial to $\redex$,
+  the following equality between sets holds:
+  $\redexthree/\redex\redseqtwo = \redexthree/\redextwo\redseq$.
+\end{enumerate}
+In~\cite{thesismellies}, Melli\`es develops
+the theory of orthogonal axiomatic rewrite systems.
+A notion of \defn{projection}
+$\redseq/\redseqtwo$ may be defined between coinitial derivations,
+essentially by setting $\emptyDerivation/\redseqtwo \eqdef \emptyDerivation$
+and $\redex\redseq'/\redseqtwo \eqdef (\redex/\redseqtwo)(\redseq'/(\redseqtwo/\redex))$
+where, by abuse of notation, $\redex/\redseqtwo$ stands for a (canonical) complete development
+of the set $\redex/\redseqtwo$.
+Using this notion, one may define
+a transitive relation of \defn{prefix} ($\redseq \permle \redseqtwo$),
+a \defn{permutation equivalence} relation ($\redseq \permeq \redseqtwo$),
+and the \defn{join} of derivations ($\redseq \sqcup \redseqtwo$).
+Some of their properties are summed up in the figure
+below:
+\begin{center}
+{\bf Summary of properties of orthogonal axiomatic rewrite systems}
+\end{center}
+\[
+{\small
+\begin{array}{|c|c|c|}
+\hline
+\begin{array}{r@{\hspace{0.2cm}}c@{\hspace{0.2cm}}l}
+  \emptyDerivation\,\redseq & = & \redseq
+\\
+  \redseq\,\emptyDerivation & = & \redseq
+\\
+  \emptyDerivation/\redseq & = & \emptyDerivation
+\\
+  \redseq/\emptyDerivation & = & \redseq
+\\
+  \redseq/\redseqtwo\redseqthree & = & (\redseq/\redseqtwo)/\redseqthree
+\\
+  \redseq\redseqtwo/\redseqthree & = & (\redseq/\redseqthree)(\redseqtwo/(\redseqthree/\redseq))
+\\
+  \redseq/\redseq & = & \emptyDerivation
+\end{array}
+&
+\begin{array}{r@{\hspace{0.2cm}}c@{\hspace{0.2cm}}l}
+  \redseq \permle \redseqtwo & \iffdef & \redseq/\redseqtwo = \emptyDerivation
+\\
+  \redseq \permeq \redseqtwo & \iffdef & \redseq \permle \redseqtwo \land \redseqtwo \permle \redseq
+\\
+  \redseq \sqcup \redseqtwo  & \eqdef & \redseq(\redseqtwo/\redseq) 
+\\
+  \redseq \permeq \redseqtwo & \implies & \redseqthree/\redseq = \redseqthree/\redseqtwo
+\\
+  \redseq \permle \redseqtwo & \iff & \exists \redseqthree.\ \redseq\redseqthree \permeq \redseqtwo
+\\
+  \redseq \permle \redseqtwo & \iff & \redseq \sqcup \redseqtwo \permeq \redseqtwo
+\end{array}
+&
+\begin{array}{r@{\hspace{0.2cm}}c@{\hspace{0.2cm}}l}
+  \redseq \permle \redseqtwo & \implies & \redseq/\redseqthree \permle \redseqtwo/\redseqthree
+\\
+  \redseq \permle \redseqtwo & \iff & \redseqthree\redseq \permle \redseqthree\redseqtwo
+\\
+  \redseq \sqcup \redseqtwo  & \permeq & \redseqtwo \sqcup \redseq
+\\
+  (\redseq \sqcup \redseqtwo) \sqcup \redseqthree & = & \redseq \sqcup (\redseqtwo \sqcup \redseqthree)
+\\
+  \redseq & \permle & \redseq \sqcup \redseqtwo
+\\
+  (\redseq \sqcup \redseqtwo)/\redseqthree & = & (\redseq/\redseqthree) \sqcup (\redseqtwo/\redseqthree) \\
+\end{array}
+\\
+\hline
+\end{array}
+}
+\]
+Let $\cls{\redseq} = \set{\redseqtwo \ST \redseq \permeq \redseqtwo}$
+denote the permutation equivalence class of $\redseq$.
+In an orthogonal axiomatic rewrite system,
+the set $\ulbDeriv{x} = \set{\cls{\redseq} \ST \src(\redseq) = x}$
+forms an upper semilattice.
+The order $\cls{\redseq} \permle \cls{\redseqtwo}$ is given by $\redseq \permle \redseqtwo$,
+the join is $\cls{\redseq} \sqcup \cls{\redseqtwo} = \cls{\redseq \sqcup \redseqtwo}$,
+and the bottom is $\bot = \cls{\emptyDerivation}$.
+The $\lambda$-calculus is an example of an orthogonal axiomatic rewrite system.
+Our structures of interest are the semilattices of derivations of the $\lambda$-calculus,
+written $\ulbDerivLam{\tm}$ for any given $\lambda$-term $\tm$.
+As usual, $\beta$-reduction in the $\lambda$-calculus
+is written $\tm \tobeta \tmtwo$
+and defined by the contextual closure of the axiom $(\lam{\var}{\tm})\tmtwo \tobeta \subs{\tm}{\var}{\tmtwo}$.
+
