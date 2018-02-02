@@ -1,0 +1,266 @@
+
+%%% Inductive rules with prooftree
+\newcommand{\indrulename}[1]{\texttt{#1}}
+\newcommand{\indrule}[3]{
+\ensuremath{
+\begin{array}{c}
+  \prooftree #2
+    \justifies #3
+    \thickness=0.05em
+    \using \indrulename{#1}
+  \endprooftree
+\end{array}}}
+
+\renewcommand{\theenumi}{\arabic{enumi}}
+\renewcommand{\theenumii}{\arabic{enumii}}
+\renewcommand{\theenumiii}{\arabic{enumiii}}
+\renewcommand{\theenumiv}{\arabic{enumiv}}
+%%
+\renewcommand{\labelenumi}{\arabic{enumi}.}
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}}
+\renewcommand{\labelenumiv}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.\arabic{enumiv}}
+%%
+\makeatletter
+\renewcommand\p@enumii{\theenumi.}
+\renewcommand\p@enumiii{\theenumi.\theenumii.}
+\renewcommand\p@enumiv{\theenumi.\theenumii.\theenumiii.}
+\makeatother
+
+%%% Theorem environments
+
+%  \newtheoremstyle{break}% name
+%    {}%         Space above, empty = `usual value'
+%    {}%         Space below
+%    {\itshape}% Body font
+%    {}%         Indent amount (empty = no indent, \parindent = para indent)
+%    {\bfseries}% Thm head font
+%    {.}%        Punctuation after thm head
+%    {\newline}% Space after thm head: \newline = linebreak
+%    {}%         Thm head spec
+%  
+%  \theoremstyle{break}
+\newtheorem{dummythm}{dummythm}
+\newtheorem{lemma}[dummythm]{Lemma}
+\newtheorem{convention}[dummythm]{Convention}
+\newtheorem{proposition}[dummythm]{Proposition}
+\newtheorem{theorem}[dummythm]{Theorem}
+\newtheorem{example}[dummythm]{Example}
+\newtheorem{corollary}[dummythm]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[dummythm]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[dummythm]{Remark}
+\newtheorem{notation}[dummythm]{Notation}
+
+\newcommand{\llem}[1]{\label{lemma:#1}}
+\newcommand{\rlem}[1]{Lem.~\ref{lemma:#1}}
+\newcommand{\ldef}[1]{\label{def:#1}}
+\newcommand{\rdef}[1]{Def.~\ref{def:#1}}
+\newcommand{\lprop}[1]{\label{prop:#1}}
+\newcommand{\rprop}[1]{Prop.~\ref{prop:#1}}
+\newcommand{\lthm}[1]{\label{thm:#1}}
+\newcommand{\rthm}[1]{Thm.~\ref{thm:#1}}
+\newcommand{\lremark}[1]{\label{remark:#1}}
+\newcommand{\rremark}[1]{Rem.~\ref{remark:#1}}
+\newcommand{\lcoro}[1]{\label{coro:#1}}
+\newcommand{\rcoro}[1]{Coro.~\ref{coro:#1}}
+\newcommand{\lsec}[1]{\label{section:#1}}
+\newcommand{\rsec}[1]{Section~\ref{section:#1}}
+\newcommand{\lcha}[1]{\label{cha:#1}}
+\newcommand{\rcha}[1]{Chapter~\ref{cha:#1}}
+\newcommand{\lconvention}[1]{\label{convention:#1}}
+\newcommand{\rconvention}[1]{Convention~\ref{convention:#1}}
+\newcommand{\lexample}[1]{\label{example:#1}}
+\newcommand{\rexample}[1]{Ex.~\ref{example:#1}}
+\newcommand{\leqn}[1]{\label{eqn:#1}}
+\newcommand{\reqn}[1]{(\ref{eqn:#1})}
+\newcommand{\lfig}[1]{\label{fig:#1}}
+\newcommand{\rfig}[1]{Figure~\ref{fig:#1}}
+%
+\newcommand{\lpart}[1]{\label{part:#1}}
+\newcommand{\rlempart}[2]{Lem.~\ref{lemma:#1}~(\ref{part:#2})}
+
+
+%%%%%%
+\newcommand{\defn}[1]{{\bf #1}}
+\newcommand{\eg}{{\em e.g.}\xspace}
+\newcommand{\ie}{{\em i.e.}\xspace}
+\newcommand{\ih}{{\em i.h.}\xspace}
+\newcommand{\ST}{\ |\ }
+\newcommand{\HS}{\hspace{.5cm}}
+\newcommand{\HStight}{\hspace{.2cm}}
+\newcommand{\VS}{\vspace{.5cm}}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\Nat}{\mathbb{N}}
+\newcommand{\eqdef}{\overset{\mathrm{def}}{=}}
+\newcommand{\iffdef}{\overset{\mathrm{def}}{\iff}}
+\newcommand{\eqih}{\overset{\mathrm{h.i.}}{=}}
+\newcommand{\TODO}[1]{\textcolor{red}{TODO: #1}}
+
+\newcommand{\Case}[1]{{\bf #1.}}
+
+\newcommand{\tm}{t}
+\newcommand{\tmtwo}{s}
+\newcommand{\tmthree}{u}
+\newcommand{\tmthreevariant}{v}
+\newcommand{\tmfour}{r}
+\newcommand{\tmfive}{p}
+\newcommand{\tmsix}{q}
+
+\newcommand{\var}{x}
+\newcommand{\vartwo}{y}
+\newcommand{\varthree}{z}
+
+\newcommand{\basetyp}{\alpha}
+\newcommand{\basetyptwo}{\beta}
+\newcommand{\basetypthree}{\gamma}
+
+\newcommand{\labelset}{\mathscr{E}}
+\newcommand{\lab}{e}
+\newcommand{\labtwo}{e'}
+\newcommand{\labthree}{e''}
+
+\newcommand{\conbase}{\Box}
+\newcommand{\of}[1]{\langle#1\rangle}
+\newcommand{\con}{\mathtt{C}}
+\newcommand{\contwo}{\con'}
+\newcommand{\conthree}{\con''}
+\newcommand{\conof}[1]{\con\of{#1}}
+\newcommand{\contwoof}[1]{\contwo\of{#1}}
+\newcommand{\conhat}{\hat{\con}}
+
+\newcommand{\Anon}{\mathtt{X}}
+
+\newcommand{\typ}{\tau}
+\newcommand{\typtwo}{\sigma}
+\newcommand{\typthree}{\rho}
+\newcommand{\typfour}{\phi}
+
+\newcommand{\lset}[1]{[#1]}
+\newcommand{\lsetenum}[3]{[#1_#2, \hdots, #1_#3]}
+\newcommand{\lsetcomp}[4]{[#1_#2]_{#2=#3}^{#4}}
+\newcommand{\mset}[1]{[\![#1]\!]}
+\newcommand{\emptylset}{\lset{\,}}
+
+\newcommand{\mtyp}{\mathcal{M}}
+\newcommand{\mtyptwo}{\mathcal{N}}
+\newcommand{\mtypthree}{\mathcal{P}}
+
+\newcommand{\emptyContext}{\varnothing}
+\newcommand{\tctx}{\Gamma}
+\newcommand{\tctxtwo}{\Delta}
+\newcommand{\tctxthree}{\Theta}
+\newcommand{\tctxfour}{\Psi}
+\newcommand{\card}[1]{|#1|}
+\DeclareMathOperator{\dom}{dom}
+
+\newcommand{\lam}[2]{\lambda #1. #2}
+\newcommand{\lamp}[3]{\lambda^{#1} #2. #3}
+\newcommand{\subs}[3]{#1\{#2 := #3\}}
+\newcommand{\sub}[2]{\{\!\!\{#1 := #2\}\!\!\}}
+
+\newcommand{\totwo}{\Rightarrow}
+\newcommand{\tolab}[1]{\overset{#1}{\to}}
+\newcommand{\tomulti}{\mathrel{\twoheadrightarrow}}
+% \newcommand{\tomulti}{\mathrel{\mbox{\ensuremath{\relbar\!\!\!\!\relbar\!\!\!\!\!\!\overset{}{\relbar\!\!\!\!\circ}\!\!\!\!\relbar\!\!\!\!\rightarrow}}}}
+
+\newcommand{\tobeta}{\mathrel{\to_\beta}}
+\newcommand{\rtobeta}{\mathrel{\twoheadrightarrow_\beta}}
+\newcommand{\toabeta}[1]{\mathrel{\xrightarrow{#1}_\beta}}
+\newcommand{\todist}{\mathrel{\to_\dist}}
+\newcommand{\rtodist}{\mathrel{\twoheadrightarrow_\dist}}
+\newcommand{\todistl}[1]{\mathrel{\xrightarrow{#1}_\dist}}
+\newcommand{\tomdist}{\mathrel{\tomulti_\dist}}
+\newcommand{\todistih}{\overset{\mathrm{(h.i.)}}{\todist}}
+
+\newcommand{\prooft}{\Phi}
+
+\newcommand{\emptyDerivation}{\epsilon}
+\newcommand{\redex}{R}
+\newcommand{\redextwo}{S}
+\newcommand{\redexthree}{T}
+\newcommand{\name}{\mathsf{name}}
+\newcommand{\names}{\mathsf{names}}
+\newcommand{\src}{\mathsf{src}}
+\newcommand{\tgt}{\mathsf{tgt}}
+\newcommand{\redexset}{\mathcal{M}}
+\newcommand{\redexsettwo}{\mathcal{N}}
+\newcommand{\redseq}{\rho}
+\newcommand{\redseqtwo}{\sigma}
+\newcommand{\redseqthree}{\tau}
+\newcommand{\nameof}[1]{\mathsf{name}(#1)}
+
+\newcommand{\arsA}{\mathscr{A}}
+\newcommand{\Objs}{\mathsf{Objs}}
+\newcommand{\Derivs}{\mathsf{Derivs}}
+\newcommand{\permeq}{\equiv}
+\newcommand{\permle}{\sqsubseteq}
+
+%%
+\newcommand{\conv}{\Pi}
+\newcommand{\convtwo}{\Phi}
+\newcommand{\convthree}{\Psi}
+\newcommand{\convid}{\mathsf{Id}}
+\newcommand{\perm}{\pi}
+\newcommand{\permtwo}{\phi}
+\newcommand{\permconv}[2]{{{#1}\choose{#2}}}
+
+\newcommand{\convto}{\Rightarrow}
+\newcommand{\splitt}[3]{\mathsf{split}^{#1}_{#2}(#3)}
+\newcommand{\emptyList}{\epsilon}
+\newcommand{\cons}{\cdot}
+\newcommand{\dist}{\mathtt{\#}}
+\newcommand{\terms}{\mathcal{T}}
+\newcommand{\termsdist}{\mathcal{T}^{\dist}}
+\newcommand{\numof}[2]{\#_{#1}(#2)}
+\newcommand{\lengthof}[1]{|#1|}
+\newcommand{\fv}[1]{\mathsf{fv}({#1})}
+\newcommand{\ls}[1]{\vec{#1}}
+
+\newcommand{\refinedby}{\mathrel{\rtimes}}
+\newcommand{\refines}{\mathrel{\ltimes}}
+
+\newcommand{\tmlabel}[1]{\ell(#1)}
+\newcommand{\varlabel}[2]{\ell_{#1}(#2)}
+
+\newcommand{\anon}{\mathtt{X}}
+
+\newcommand{\derivlattice}[1]{\mathcal{D}_{#1}}
+\newcommand{\classof}[1]{{[#1]}}
+\newcommand{\powerset}{\mathcal{P}}
+
+\newcommand{\sieve}{\downarrow}
+
+\newcommand{\Ob}{\mathsf{Ob}}
+\newcommand{\Hom}{\mathsf{Hom}}
+\newcommand{\id}{\mathsf{id}}
+\newcommand{\Cat}{\mathscr{C}}
+\newcommand{\CatTwo}{\mathscr{D}}
+\newcommand{\USL}{\mathsf{USL}}
+\newcommand{\USLB}{\mathsf{USLB}}
+\newcommand{\cls}[1]{{[#1]}}
+\newcommand{\bigcls}[1]{{\left[#1\right]}}
+\newcommand{\grothy}[2]{\int_{#1}{#2}}
+\newcommand{\ulbDeriv}[1]{\mathbb{D}(#1)}
+\newcommand{\ulbFree}[2]{\mathbb{F}(#1, #2)}
+\newcommand{\ulbGarbage}[2]{\mathbb{G}(#1, #2)}
+\newcommand{\ulbF}{\mathcal{F}}
+\newcommand{\ulbG}{\mathcal{G}}
+\newcommand{\leqF}{\unlhd}
+\newcommand{\lorF}{\triangledown}
+\newcommand{\leqG}{\permle}
+\newcommand{\identity}{\mathsf{id}}
+
+\newcommand{\toI}{\ensuremath{\to_{\mathrm{I}}}}
+\newcommand{\toE}{\ensuremath{\to_{\mathrm{E}}}}
+\newcommand{\lambdadist}{\lambda^\dist}
+\newcommand{\pt}[2]{#1//#2}
+\newcommand{\ptF}[2]{#1/_{\mathcal{F}}/#2}
+
+
+\newcommand{\SeeAppendix}{\textcolor{red}{$\clubsuit$}\xspace}
+\newcommand{\SeeAppendixRef}[1]{\hyperref[#1]{\SeeAppendix}}

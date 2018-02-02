@@ -1,0 +1,70 @@
+\documentclass[11pt, a4paper]{book}
+
+
+\usepackage{mathpazo}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts}
+
+\usepackage[all]{xy}
+\usepackage{mathtools}
+\usepackage{array,amsmath,amssymb,amsthm}
+\usepackage{xspace}
+\usepackage{fancyhdr}
+\usepackage[us,24hr]{datetime}
+\usepackage{framed}
+\usepackage{mathrsfs}
+\usepackage{ulem}      % for \sout
+\usepackage{xcolor}
+\usepackage{geometry}
+
+\bibliographystyle{alpha}% the recommended bibstyle
+%\usepackage[hidelinks]{hyperref} % Hyperref package for url's and [hidelinks] option to remove collouring
+
+%% Otros paquetes.
+\usepackage{listings}
+\usepackage[colorlinks=true, pagebackref=true]{hyperref}
+%\usepackage[alphabetic]{amsrefs}
+\usepackage{titlesec} %reasonable chapter headings
+\usepackage{stmaryrd} %double brackets
+\usepackage{tikz}
+\usepackage[toc,page]{appendix}
+\usepackage{showlabels}
+\usepackage[margin=1.2cm]{caption}
+\usepackage{leading}
+\leading{14.5pt}
+
+\input{macros.tex}
+
+
+\input{prooftree.tex}
+
+\usepackage{chngcntr}
+\counterwithout{equation}{section} %this fixes equation numbering
+\begin{document}
+\frontmatter
+\setcounter{page}{-3}
+\input{./caratula.tex}
+
+\thispagestyle{empty}
+\tableofcontents
+\newpage \input{./01-abstract_es.tex}
+\newpage \input{./02-abstract_en.tex}
+\newpage \input{./03-introduction.tex}
+
+\mainmatter
+\newpage \input{./04-preliminaries.tex}
+\newpage \input{./05-distributive.tex}
+\newpage \input{./06-factorization.tex}
+
+\backmatter
+\newpage \input{./07-conclusion.tex}
+\begin{appendix}
+\newpage \input{./08-appendix.tex}
+\end{appendix}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
+\input{./09-bibliography.tex}
+\end{document}

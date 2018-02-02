@@ -1,0 +1,343 @@
+\chapter{Introduction}
+
+The space of computations of a program may have a complex structure.
+Consider a side-effect free programming language.
+The possible computations of a tuple $(A,B)$
+are rewrite sequences $(A,B) \to \hdots \to (A',B')$.
+These sequences can always be decomposed as two non-interfering computations
+$A \to \hdots \to A'$ and $B \to \hdots \to B'$.
+The reason is that the subexpressions $A$ and $B$ cannot interact with each other.
+Indeed, the space of computations of $(A,B)$ can be understood as
+the {\em product} of the spaces of $A$ and $B$.
+In contrast, the space of computations of a function application $f(A)$ is not so easy
+to characterize. The difficulty is that $f$ may use the value of $A$ zero, one, or
+possibly many times.
+
+The motivation of this paper is attempting to {\bf understand spaces of computations}.
+We hope that this may be helpful to better understand the properties of {\em evaluation strategies},
+such as call-by-name or call-by-value,
+from a quantitative point of view.
+A better understanding may also suggest program optimizations,
+and it should allow to justify that certain program conversions are sound:
+\eg that they do not turn a terminating program into a non-terminating one.
+
+The pure $\lambda$-calculus is the quintessential functional programming language.
+Computations in the $\lambda$-calculus have been thoroughly
+studied since its conception in the 1930s.
+The well-known theorem by Church and Rosser~\cite{church1936some}
+states that the $\lambda$-calculus is \emph{confluent},
+which means, in particular, that terminating programs have unique normal forms.
+Another result by Curry and Feys~\cite{curry1958combinatory}
+states that computations in the
+$\lambda$-calculus may be \emph{standardized},
+meaning that they may be converted into a computation in canonical form.
+A refinement of this theorem by L\'evy~\cite{Tesis:Levy:1978}
+asserts that the canonical computation thus obtained is equivalent to the
+original one in a strong sense, namely that they are \emph{permutation equivalent}.
+In a series of papers~\cite{DBLP:conf/ctcs/Mellies97,DBLP:journals/logcom/Mellies00,DBLP:conf/rta/Mellies02,mellies2002axiomatic,DBLP:conf/birthday/Mellies05},
+Melli\`es generalized many of these results to the abstract setting of {\em axiomatic rewrite systems}.
+
+Let us discuss ``spaces of computations'' more precisely.
+The \emph{derivation space} of an object~$x$ in some rewriting system
+is the set of all {\em derivations}, \ie sequences of rewrite steps, starting from $x$.
+In this paper, our rewriting system of interest will be the pure $\lambda$-calculus,
+and we will be interested in \emph{finite} derivations only.
+In the $\lambda$-calculus,
+a transitive relation between derivations may be defined, the {\em prefix order}.
+A derivation $\redseq$ is a prefix of a derivation $\redseqtwo$,
+written $\redseq \permle \redseqtwo$,
+whenever $\redseq$ performs less computational work than $\redseqtwo$.
+Formally, $\redseq \permle \redseqtwo$ is defined to hold whenever the {\em projection} $\redseq/\redseqtwo$ 
+is empty\footnote{The notion of projection defined by means of residuals
+is the standard one, see \eg \cite[Chapter~12]{Barendregt:1984}
+or \cite[Section~8.7]{Terese}.}.
+For example, if $K = \lam{\var}{\lam{\vartwo}{\var}}$,
+the derivation space of the term $(\lam{\var}{\var\var})(K\varthree)$
+can be depicted with the \emph{reduction graph} below.
+Derivations are directed paths in the reduction graph,
+and $\redseq$ is a prefix of $\redseqtwo$ if there is a directed path from the
+target of $\redseq$ to the target of $\redseqtwo$.
+For instance, $\redextwo\redex_2$ is a prefix of $\redex\redextwo'\redexthree'$:
+\[
+  \xymatrix@R=.1cm{
+    (\lam{\var}{\var\var})(K\varthree)
+      \ar^-{\redex}[rr]
+      \ar@/_.2cm/^-{\redextwo}[rdd]
+  &
+  &
+    (\lam{\var}{\var\var})(\lam{\vartwo}{\varthree})
+    \ar@/^.3cm/[rd]^{\redextwo'}
+  &
+  \\
+  &
+  &
+    (K\varthree)(\lam{\vartwo}{\varthree}) \ar[r]^-{\redex'_2}
+  &
+    (\lam{\vartwo}{\varthree})(\lam{\vartwo}{\varthree})
+    \ar@/^.2cm/[rd]^-{\redexthree'}
+  \\
+  &
+    (K\varthree)(K\varthree) \ar@/^.3cm/[ru]^{\redex_1} \ar[r]^-{\redex_2}
+  &
+    (\lam{\vartwo}{\varthree})(K\varthree)
+      \ar@/_.2cm/[ru]^-{\redex'_1}
+      \ar[rr]^-{\redexthree}
+  &
+  &
+    \varthree
+  }
+\]
+Remark that the relation $\permle$ is reflexive and transitive but not antisymmetric,
+\ie it is a quasi-order but not an order.
+For example $\redex\redextwo' \permle \redextwo\redex_1\redex_2' \permle \redex\redextwo'$
+but $\redex\redextwo' \neq  \redextwo\redex_1\redex_2'$.
+Antisymmetry may be recovered as usual when in presence of a quasi-order,
+namely by working modulo {\em permutation equivalence}:
+two derivations $\redseq$ and $\redseqtwo$
+are said to be permutation equivalent,
+written $\redseq \permeq \redseqtwo$, if $\redseq \permle \redseqtwo$
+and $\redseqtwo \permle \redseq$.
+Working modulo permutation equivalence is reasonable because L\'evy's formulation
+of the standardization theorem ensures that permutation equivalence is decidable,
+and each equivalence class has a canonical representative.
+
+Derivation spaces are known to exhibit various
+regularities~\cite{Tesis:Levy:1978,DBLP:journals/tcs/Zilli84,laneve1994distributive,thesismellies,levy_redex_stability,DBLP:conf/lics/AspertiL13}.
+In his PhD thesis, L\'evy~\cite{Tesis:Levy:1978} showed that the derivation space of a term is
+an upper semilattice: any two derivations $\redseq,\redseqtwo$ from a term $\tm$
+have a {\em least upper bound} $\redseq \sqcup \redseqtwo$, defined as $\redseq(\redseqtwo/\redseq)$,
+unique up to permutation equivalence.
+On the other hand, the derivation space of a term $\tm$ is not an easy structure to understand in general\footnote{Problem~2 in
+the RTA List of Open Problems~\cite{dershowitz1991open} poses
+the open-ended question of investigating the properties of ``spectra'', \ie derivation spaces.}.
+For example, relating the derivation space of an application $\tm\tmtwo$
+with the derivation spaces of $\tm$ and $\tmtwo$ appears to be a hard problem.
+L\'evy also noted that the {\em greatest lower bound} of two derivations does
+not necessarily exist, meaning that the derivation space of a term does not form a lattice in general.
+Even when it forms a lattice, it may not necessarily be a {\em distributive} lattice, as observed for example by
+Laneve~\cite{laneve1994distributive}.
+
+Consider the following counterexample,
+due to L\'evy, showing that the meet of derivations is not well-defined.
+Let $\Omega = (\lam{\var}{\var\var})\lam{\var}{\var\var}$,
+and consider the reduction space of $(\lam{\var}{a})((\lam{\var}{b})\Omega)$,
+where the steps $T_i$ contract $\Omega$:
+\[
+  \xymatrix{
+    &
+    (\lam{\var}{a})((\lam{\var}{b})\Omega)
+    \ar_{T_1}[d]
+    \ar@/_1cm/_{R}[dddl]
+    \ar@/^1cm/^{S}[dddr]
+    &
+  \\
+    &
+    (\lam{\var}{a})((\lam{\var}{b})\Omega)
+    \ar@/_1cm/[ddl] \ar@/^1cm/[ddr]
+    \ar_{T_2}[d]
+    &
+  \\
+    &
+    (\lam{\var}{a})((\lam{\var}{b})\Omega)
+    \ar@/_1cm/[dl] \ar@/^1cm/[dr]
+    \ar_{T_3}[d]
+    &
+  \\
+    a
+    &
+    \vdots
+    &
+    (\lam{\var}{a})b
+  }
+\]
+Observe that for all $n \in \mathbb{N}$ we have that $T_1 \hdots T_n \sqsubseteq R$
+and $T_1 \hdots T_n \sqsubseteq S$ so the meet $R \sqcap S$ does not exist.
+
+
+In \cite{DBLP:conf/ctcs/Mellies97}, Melli\`es showed that
+derivation spaces in any rewriting system satisfying certain axioms
+may be factorized using two spaces,
+one of {\em external} and one of {\em internal} derivations.
+
+
+
+The difficulty to understand derivation spaces is due to three pervasive phenomena
+of \emph{interaction} between computations.
+The first phenomenon is \emph{duplication}:
+in the reduction graph of above, the step $\redextwo$ duplicates the step $\redex$,
+resulting in two copies of $\redex$: the steps $\redex_1$ and $\redex_2$.
+In such situation, one says that $\redex_1$ and $\redex_2$ are \emph{residuals} of $\redex$,
+and, conversely, $\redex$ is an \emph{ancestor} of $\redex_1$ and $\redex_2$.
+The second phenomenon is \emph{erasure}:
+in the diagram above, the step $\redexthree$ erases the step $\redex'_1$,
+resulting in no copies of $\redex'_1$.
+The third phenomenon is \emph{creation}:
+in the diagram above, the step $\redex_2$ creates the step $\redexthree$,
+meaning that $\redexthree$ is not a residual of a step that existed prior
+to executing $\redex_2$; that is, $\redexthree$ has no ancestor.
+
+These three interaction phenomena, especially duplication and erasure,
+are intimately related with the management of \emph{resources}.
+In this work, we aim to explore the hypothesis that {\bf having an explicit
+representation of resource management may provide insight on
+the structure of derivation spaces}.
+
+There are many existing $\lambda$-calculi that deal with resource management explicitly~\cite{boudol1993lambda,ehrhard2003differential,kesner2007resource,kesner2009prismoid},
+most of which draw inspiration from Girard's Linear Logic~\cite{girard1987linear}.
+In recent years, one family of such formalisms, namely calculi endowed with
+{\em non-idempotent intersection type systems},
+has received some attention~\cite{ehrhard2012collapsing,bernadet2013non,bucciarelli2014inhabitation,bucciarelli2017non,kesner2016reasoning,thesisvial,KRV18}.
+These type systems are able to statically capture non-trivial
+dynamic properties of terms, particularly {\em normalization},
+while at the same time being amenable to elementary proof techniques by induction,
+rather than arguments based on reducibility.
+Intersection types were originally proposed by
+Coppo and Dezani-Ciancaglini~\cite{DBLP:journals/aml/CoppoD78}
+to study termination in the $\lambda$-calculus.
+They are characterized by the presence of an {\em intersection} type constructor $\typ \cap \typtwo$.
+{\em Non-idempotent} intersection type systems are distinguished from their usual idempotent
+counterparts by the fact that intersection
+is not declared to be idempotent, \ie $\typ$ and $\typ \cap \typ$ are not equivalent types.
+Rather, intersection behaves like a multiplicative connective in linear logic.
+Arguments to functions are typed many times, typically once
+per each time that the argument will be used.
+Non-idempotent intersection types were originally formulated by
+Gardner~\cite{gardner1994discovering},
+and later reintroduced by de Carvalho~\cite{carvalho2007semantiques}.
+
+In this work, we will use a non-idempotent intersection type system
+based on system~$\mathcal{W}$~of~\cite{bucciarelli2017non}
+(called system~$\mathcal{H}$ in \cite{bucciarelli2014inhabitation}).
+Let us recall its definition.
+Terms are as usual in the $\lambda$-calculus ($\tm  ::= \var \mid \lam{\var}{\tm} \mid \tm\,\tm$).
+Types $\typ,\typtwo,\typthree,\hdots$ are defined by the grammar:
+\[
+  \begin{array}{rcl@{\hspace{2cm}}rcl}
+  \typ  & ::= & \basetyp \OR \mtyp \to \typ
+  &
+  \mtyp & ::= & [\typ_i]_{i=1}^{n} \HS\text{with $n \geq 0$} \\
+  \end{array}
+\]
+where $\basetyp$ ranges over one of denumerably many {\em base types},
+and $\mtyp$ represents a {\em multiset of types}.
+Here $[\typ_i]_{i=1}^{n}$ denotes the multiset containing the types $\typ_1,\hdots,\typ_n$
+with their respective multiplicities.
+A multiset $[\typ_i]_{i=1}^{n}$ intuitively stands for the (non-idempotent) intersection $\typ_1 \cap \hdots \cap \typ_n$.
+The {\em sum of multisets} $\mtyp + \mtyptwo$ is defined as their union (adding multiplicities).
+A {\em typing context} $\tctx$ is a partial function mapping variables to multisets of types.
+The domain of $\tctx$ is the set of variables $\var$ such that $\tctx(\var)$ is defined.
+We assume that typing contexts always have {\em finite domain} and hence they may be written as
+$\var_1 : \mtyp_1, \hdots, \var_n : \mtyp_n$.
+The {\em sum of contexts} $\tctx + \tctxtwo$ is their pointwise sum,
+\ie $(\tctx + \tctxtwo)(\var) := \tctx(\var) + \tctxtwo(\var)$ if $\tctx(\var)$ and $\tctxtwo(\var)$ are both defined,
+$(\tctx + \tctxtwo)(\var) := \tctx(\var)$ if $\tctxtwo(\var)$ is undefined,
+and $(\tctx + \tctxtwo)(\var) := \tctxtwo(\var)$ if $\tctx(\var)$ is undefined.
+We write $\tctx +_{i=1}^{n} \tctxtwo_i$ to abbreviate $\tctx + \tctxtwo_1 + \hdots + \tctxtwo_n$.
+The {\em disjoint sum of contexts} $\tctx \oplus \tctxtwo$ stands for $\tctx + \tctxtwo$, provided that
+the domains of $\tctx$ and $\tctxtwo$ are disjoint.
+A {\em typing judgment} is a triple $\tctx \vdash \tm : \typ$,
+representing the knowledge that the term $\tm$ has type $\typ$ in the context $\tctx$.
+Type assignment rules for system $\mathcal{W}$ are as follows.
+
+\begin{definition}[System $\mathcal{W}$]
+\[
+  \indrule{var}{
+  }{
+    \var : [\typ] \vdash \typ
+  }
+  \indrule{\toI}{
+    \tctx \oplus (\var:\mtyp) \vdash \tm : \typ
+  }{
+    \tctx \vdash \lam{\var}{\tm} : \mtyp \to \typ
+  }
+  \indrule{\toE}{
+    \tctx \vdash \tm : [\typtwo_i]_{i=1}^{n} \to \typ
+    \HS
+    (\tctxtwo_i \vdash \tmtwo_i : \typtwo_i)_{i=1}^{n}
+  }{
+    \tctx +_{i=1}^{n} \tctxtwo_i \vdash \tm\,\tmtwo : \typ
+  }
+\]
+\end{definition}
+Observe that the \indrulename{\toE} rule has $n + 1$ premises, where $n \geq 0$.
+System~$\mathcal{W}$ enjoys various properties, nicely summarized in~\cite{bucciarelli2017non}.
+
+There are two obstacles to adopting system~$\mathcal{W}$ for studying derivation spaces.
+The first obstacle is just a matter of presentation---typing derivations use a tree-like notation,
+which is cumbersome. One would like to have an alternative presentation based on proof terms.
+For example, one would like to write $\var^\typ$ for an application of the \texttt{var} rule,
+$\lam{\var}{\tm}$ for an application of the \indrulename{\toI} rule,
+and $\tm[\tmtwo_1,\hdots,\tmtwo_n]$ for an application of the
+\indrulename{\toE} rule,
+so that, for example,
+$
+  \lam{\var}{\var^{[\alpha,\alpha] \to \beta}[\var^\alpha,\var^\alpha]}
+$
+represents the following typing derivation:
+\[
+  {\small
+  \indrule{\toI}{
+    \indrule{\toE}{
+      \indrule{var}{}{\var : [\alpha,\alpha] \to \beta \vdash \var : [\alpha,\alpha] \to \beta}
+      \indrule{var}{}{\var : [\alpha] \vdash \var : \alpha}
+      \indrule{var}{}{\var : [\alpha] \vdash \var : \alpha}
+      \vspace{.1cm}
+    }{
+      \var : [[\alpha,\alpha] \to \beta, \alpha,\alpha] \vdash \var\var : \beta
+    }
+  }{
+      \vdash \lam{\var}{\var\var} : [[\alpha,\alpha] \to \beta, \alpha,\alpha] \to \beta
+  }}
+\]
+The second obstacle is a major one for our purposes: {\em proof normalization} in this system is not confluent.
+The reason is that applications take multiple arguments, and a $\beta$-reduction step must choose a way to
+distribute these arguments among the occurrences of the formal parameters.
+For instance, the following critical pair cannot be closed:
+\[
+  \xymatrix@R=.1cm{
+  (\lam{\var}{\vartwo^{[\alpha] \to [\alpha] \to \beta}[\var^\alpha][\var^\alpha]})
+    [\varthree^{[\gamma] \to \alpha}[\varthree^\gamma],\varthree^{[] \to \alpha}[]]
+  \ar[r] \ar[dr]
+  &
+    \vartwo^{[\alpha] \to [\alpha] \to \beta}[\varthree^{[\gamma] \to \alpha}[\varthree^\gamma]][\varthree^{[] \to \alpha}[]]
+  \\
+  &
+    \vartwo^{[\alpha] \to [\alpha] \to \beta}[\varthree^{[] \to \alpha}[]][\varthree^{[\gamma] \to \alpha}[\varthree^\gamma]]
+  }
+\]
+
+The remainder of this thesis is organized as follows:
+\begin{itemize}
+\item 
+  In \rcha{preliminaries}, we review some standard notions of order and rewriting theory.
+\item 
+  In \rcha{lambdadist}, we introduce a confluent calculus $\lambdadist$ based on system $\mathcal{W}$.
+  The desirable properties of system~$\mathcal{W}$ of~\cite{bucciarelli2017non} still hold in $\lambdadist$.
+  Moreover, $\lambdadist$ is confluent.
+  We impose confluence forcibly, by decorating subtrees with distinct labels, so that
+  a $\beta$-reduction step may distribute the arguments in a unique way.
+  Derivation spaces in $\lambdadist$ have very regular structure,
+  namely they are distributive lattices.
+\item
+  In \rsec{simulation}, we establish a correspondence between derivation spaces in the
+  $\lambda$-calculus and the $\lambdadist$-calculus via simulation theorems,
+  which defines a morphism of upper semilattices.
+\item
+  In \rcha{factorization}, we introduce the notion of a garbage derivation.
+  Roughly, a derivation in the $\lambda$-calculus is {\em garbage} if it maps to
+  an empty derivation in the $\lambdadist$-calculus.
+  This gives rise to an orthogonal notion of {\em garbage-free} derivation.
+  The notion of garbage-free derivation is closely related
+  with the notions of {\em needed step}~\cite[Section~8.6]{Terese},
+  {\em typed occurrence of a redex}~\cite{bucciarelli2017non},
+  and {\em external} derivation~\cite{DBLP:conf/ctcs/Mellies97}.
+  Using this notion of garbage we prove a {\em factorization theorem}
+  reminiscent of Melli\`es'~\cite{DBLP:conf/ctcs/Mellies97}.
+  The upper semilattice of derivations of a term in the $\lambda$-calculus
+  is factorized using a variant of the Grothendieck construction.
+  Every derivation is uniquely decomposed as a garbage-free prefix followed by a garbage suffix.
+\item
+  In \rsec{conclusions}, we conclude.
+\end{itemize}
+\bigskip
+{\bf Note.} Proofs including a \SeeAppendix symbol are spelled out in detail in the appendix.
