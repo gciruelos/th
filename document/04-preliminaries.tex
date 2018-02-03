@@ -185,3 +185,42 @@ As usual, $\beta$-reduction in the $\lambda$-calculus
 is written $\tm \tobeta \tmtwo$
 and defined by the contextual closure of the axiom $(\lam{\var}{\tm})\tmtwo \tobeta \subs{\tm}{\var}{\tmtwo}$.
 
+
+\section{Lists and Sets}
+
+Throughout this work we will use lists and sets, so we establish here basic definitions and notations.
+
+\begin{definition}[Lists and sets]
+If $A$ is a sort, we write $\ls{A}$ for the sort of (finite) \defn{lists} over $A$,
+defined inductively as:
+\[
+  \ls{A} ::= \emptyList \mid A \cons \ls{A}
+  \]
+We usually write $[a_1, \hdots, a_n]$,
+abbreviated $[a_i]_{i=1}^{n}$,
+to stand for $a_1 \cons (a_2 \cons \hdots (a_n \cons \emptyList))$.
+If $\ls{a}$ and $\ls{b}$ are lists, $\ls{a} + \ls{b}$ stands for its concatenation,
+and $\lengthof{\ls{a}}$ is the length of the list $\ls{a}$.
+If $a,b,c,\hdots$ are the names of the metavariables ranging over a sort $A$,
+then $\ls{a},\ls{b},\ls{c},\hdots$
+are the names of the metavariables ranging over lists of $A$.
+When there is no possibility of confusion, we may also write $[\ls{a},b,\ls{c}]$
+for the list $\ls{a} + [b] + \ls{c}$.
+We write $\ls{a} \approx \ls{b}$ if $\ls{a}$ is a permutation of $\ls{b}$.
+Observe that $\approx$ is an equivalence relation.
+
+In some cases we will work with (finite) \defn{sets},
+which are defined to be lists,
+considered modulo arbitrary permutations of their elements
+and without regard of the number of repetitions of each element.
+The notation for operations on lists will be lifted to operations
+on sets.
+In particular, $\ls{a} + \ls{b}$ denotes the union of sets,
+and $\lengthof{\ls{a}}$ stands for the cardinal of $\ls{a}$.
+This notation is chosen to resemble the multiset notation of existing
+intersection type systems. Whether we are referring to sets or lists will be
+clear from the context.
+\end{definition}
+
+
+

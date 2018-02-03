@@ -1,9 +1,149 @@
 \chapter{A distributive $\lambda$-calculus}
 \lcha{lambdadist}
 
+In this chapter we present a
+{\em distributive $\lambda$-calculus} ($\lambdadist$),
+and we prove some basic properties it enjoys.
+
+Terms of the $\lambdadist$-calculus are typing derivations of a non-idempotent intersection type
+system, written using proof term syntax.
+The underlying type system is a variant of
+system~$\mathcal{W}$ of \cite{bucciarelli2014inhabitation,bucciarelli2017non},
+the main difference being that $\lambdadist$
+uses {\em labels} and a suitable invariant on terms,
+to ensure that the formal parameters of all functions
+are in 1--1 correspondence with the actual arguments that they receive.
+
+
 \section{Types}
 
+We will now present the type system we will work with, which as we said, is a variant of the system presented
+in \cite{bucciarelli2017non}.
+
+\begin{definition}[Types and typing contexts]
+Let $\labelset = \set{e,e',e'',\hdots}$ be a denumerable set of labels.
+The sets of \defn{types}, ranged over by $\typ,\typtwo,\typthree,\hdots$,
+and \defn{finite sets of types}, ranged over by $\mtyp,\mtyptwo,\mtypthree,\hdots$,
+are given mutually inductively by the following abstract syntax:
+\[
+  \typ ::= \basetyp^{\lab} \mid \mtyp \tolab{\lab} \typ
+\]
+\[
+  \mtyp ::= \lset{\typ_i}_{i=1}^{n} \HS \text{for some $n \geq 0$}
+\]
+In a type like $\basetyp^{\lab}$ and $\mtyp \tolab{\lab} \typ$,
+the label $\lab$ is called the \defn{external label}.
+\defn{Typing contexts}, or contexts for short,
+ranged over by $\tctx,\tctxtwo,\tctxthree,\hdots$ are (total) functions from variables to finite sets of types.
+We write $\dom\tctx$ for the set of variables $\var$ such that $\tctx(\var) \neq \lset{}$.
+We write $\emptyContext$ for the context such that $\emptyContext(\var) = \lset{}$ for every variable $\var$.
+The notation $\tctx + \tctxtwo$ stands for the \defn{sum of contexts}, defined as follows:
+\[
+    (\tctx + \tctxtwo)(\var) \eqdef \tctx(\var) + \tctxtwo(\var)
+\]
+The notation $\tctx \oplus \tctxtwo$ stands for the \defn{disjoint sum of contexts},
+\ie it stands for $\tctx + \tctxtwo$ provided $\dom\tctx \cap \dom\tctxtwo = \emptyset$.
+We also write $\tctx +_{i=1}^{n} \tctxtwo_i$ for $\tctx + \sum_{i=1}^{n} \tctxtwo_i$.
+Moreover, $\var : \mtyp$ denotes the context such that $(\var : \mtyp)(\var) = \mtyp$
+and $\dom(\var : \mtyp) = \set{\var}$.
+\end{definition}
+
+Remark that the (only) difference with the system~$\mathcal{W}$ is that we include labels.
+The other, related, difference will appear when we define the terms of the calculus.
+
+More in general, note that it will not be possible for a term to have multiple types,
+like the name \textit{intersection type system} would suggest.
+Rather, what happens is that function terms will receive a parameter that can be interpreted
+as having several types.
+
+
 \section{Syntax}
+
+
+\begin{definition}[Distributive type system]
+The set of \defn{distributive terms},
+ranged over by ($\tm,\tmtwo,\tmthree,\hdots$) is given by the following abstract syntax:
+\[
+  \tm ::= \var^{\typ} \mid \lamp{\lab}{\var}{\tm} \mid \tm\,\ls{\tm}
+\]
+Typing rules are defined inductively as follows.
+\[
+  \indrule{var}{
+  }{
+    \var : \lset{\typ} \vdash \var^\typ : \typ
+  }
+  \indrule{\toI}{
+    \tctx \oplus \var : \mtyp \vdash \tm : \typtwo
+  }{
+    \tctx \vdash \lamp{\lab}{\var}{\tm} : \mtyp \tolab{\lab} \typtwo
+  }
+\]
+\[
+  \indrule{\toE}{
+    \tctx \vdash \tm : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
+    \HS
+    \left( \tctxtwo_i \vdash \tmtwo_i : \typtwo_i \right)_{i=1}^{n}
+  }{
+    \tctx +_{i=1}^{n} \tctxtwo_i \vdash \tm[\tmtwo_1,\hdots,\tmtwo_n] : \typ
+  }
+\]
+Moreover, we introduce a judgment of the form
+$[\tctx_1,\hdots,\tctx_n] \vdash [\tm_1,\hdots,\tm_n] : [\typ_1,\hdots,\typ_n]$
+with the following rule:
+\[
+  \indrule{t-multi}{
+    \tctx_i \vdash \tm_i : \typ_i \text{ for all $i=1..n$}
+  }{
+    [\tctx_1,\hdots,\tctx_n] \vdash [\tm_1,\hdots,\tm_n] : [\typ_1,\hdots,\typ_n]
+  }
+\]
+\end{definition}
+
+For example, using integer labels,
+$\vdash \lamp{1}{\var}{\var^{[\alpha^2,\alpha^3] \tolab{4} \beta^5}[\var^{\alpha^3},\var^{\alpha^2}]}
+: [[\alpha^2,\alpha^3] \tolab{4} \beta^5, \alpha^2, \alpha^3] \tolab{1} \beta^5$
+is a derivable judgment.
+For another example,
+$\var : [] \tolab{1} \alpha^2 \vdash \var^{[] \tolab{1} \alpha^2} [] : \alpha^2$
+is a derivable judgment.
+
+Note that writing all labels is rather cumbersome, so we will omit or simplify them when possible.
+
+\subsection{Correctness}
+Observe that the definition we gave has a fatal problem:
+we cannot uniquely associate arguments with variables in the body of the lambdas.
+
+For example, consider the term
+$(\lamp{1}{x}{y^{[\alpha^2, \alpha^2] \tolab{3} \alpha^4} [x^{\alpha^2}, x^{\alpha^2}]})
+[a^{\alpha^2}, b^{\alpha^2}]$.
+We don't know which parameter to associate which each $x$-- which parameter goes in the first $x$, $a$ or $b$?
+
+To solve that problem we introduce an invariant that will ensure
+that problem does not manifest.
+We will call that invariant \defn{correctness},
+and we will consider $\lambdadist$ to be the system of all correct terms.
+
+\begin{definition}[Correct term]
+A typable term $\tm$ is \defn{correct} if the three following conditions hold:
+\begin{itemize}
+\item {\bf Unique lambdas.}
+      Lambdas in a term are decorated with pairwise distinct labels.
+\item {\bf Sequential contexts.}
+      For every judgment $\tctx \vdash \tmtwo : \typ$ in the type derivation of $\tm$,
+      and for every variable $\var$, the set $\tctx(\var)$ is sequential.
+\item {\bf Sequential types.}
+      For every subtype $\mtyp \tolab{\lab} \typ$ ocurring somewhere in the derivation of $\tm$,
+      the set $\mtyp$ is sequential.
+\end{itemize}
+The set of correct terms is written $\lambdadist$.
+\end{definition}
+
+
+Having defined the types and the terms of out system
+sheds some light on the resource management capabilities that we claimed it will enjoy:
+note that we can track very precisely how (\ie with which type) a term will be used or
+a bounded variable will be evaluated.
+This will prove very useful to analyze the $\lambda$-calculus.
 
 \section{Basic Properties}
 
