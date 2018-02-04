@@ -1,0 +1,117 @@
+\section*{}
+
+El espacio de cómputos de un programa puede tener una estructura compleja.
+Considere un lenguaje de programación sin efectos secundarios,
+como lo es por ejemplo el cálculo $\lambda$ simplemente tipado.
+Los cómputos que se pueden realizar a partir de una tupla $(A,B)$
+son secuencias $(A, B) \to \hdots \to (A', B')$.
+Estas secuencias siempre pueden descomponerse
+en dos cómputos independientes,
+$A \to \hdots \to A'$ y $B \to \hdots \to B'$.
+La razón por la cual podemos hacer esto es que las sub-expresiones $A$ y $B$
+no pueden interactuar la una con la otra.
+Dicho de forma más general, el espacio de cómputos de $(A,B)$ puede
+verse como el producto de los espacios de $A$ y $B$.
+
+Por otro lado, el espacio de cómputos de la aplicación $f(A)$
+no es tan fácil de caracterizar.
+El problema es que $f$ puede usar o no el valor de A,
+y en caso de usarlo puede posiblemente hacerlo más de una vez.
+
+
+La motivación de esta tesis es intentar \textbf{entender el espacio de cómputos} de programas.
+El objetivo de entender el espacio de cómputos del cálculo $\lambda$ es comprender
+las propiedades de distintas \textit{estrategias de evaluación},
+como son call-by-name o call-by-value desde un punto de vista cuantitativo.
+Una mayor comprensión de estas estrategias desde un punto de vista cuantitativo puede
+sugerir optimizaciones a programas y podría permitir justificar que
+ciertas conversiones de programas son correctas (por ejemplo, que no
+convierten un programa que termina en uno que no).
+
+Otro objetivo para entender el espacio de cómputos del cálculo $\lambda$ es comprender mejor
+distintas nociones de equivalencias de programas~\cite{Tesis:Morris,Bre16}.
+Usualmente, se pueden definir diferentes equivalencias de
+programas respecto a cómo un programa se evalúa en un contexto:
+por ejemplo,
+podríamos definir que dos $A$ y $B$ son (contextualmente) equivalentes
+si, para todo contexto $\con$, $\conof{A} =_{\beta} \conof{B}$.
+Es claro que poder descomponer el espacio de cómputos de $\conof{A}$ (resp. $\conof{B}$) en una
+estructura que dependa del espacio de cómputos de $A$ (resp. $B$) sería conveniente
+para ganar intuición sobre las distintas nociones de equivalencia observacional.
+
+\vspace{1cm}
+
+Es sabido que los espacios de derivación del cálculo $\lambda$ presentan
+ciertas regularidades~\cite{Tesis:Levy:1978,DBLP:journals/tcs/Zilli84,laneve1994distributive,thesismellies,levy_redex_stability,DBLP:conf/lics/AspertiL13}.
+En su tesis de doctorado, L\'evy~\cite{Tesis:Levy:1978}
+probó que el espacio de derivaciones de un término es un semi-reticulado superior: todo par de derivaciones
+$\redseq,\redseqtwo$ de un término $\tm$
+tienen una cota inferior mínima $\redseq \sqcup \redseqtwo$, definida como $\redseq(\redseqtwo/\redseq)$,
+que es única módulo \textit{permutation equivalence}.
+
+Pero el espacio de derivación de un término no es fácil de entender en general: el Problema~2 de la
+lista de problemas abiertos de la RTA~\cite{dershowitz1991open}
+propone el asunto de investigar las propiedades de \textit{spectra}, es decir, espacios de derivación.
+
+En cálculo $\lambda$, el ejemplo que dimos antes se traduce en
+relacionar el espacio de derivación de la aplicación $\tm \tmtwo$
+con los espacios de derivación de $\tm$ y $\tmtwo$, lo cual parece ser un problema difícil en general.
+De nuevo, esto se debe a que $\tm$ bien puede borrar o duplicar a $\tmtwo$,
+lo cual sugiere que el problema está relacionado con el de manejo de \textit{recursos}:
+si supiéramos exactamente cómo $\tm$ usa a $\tmtwo$ el problema se simplificaría.
+Por eso en esta tesis nos proponemos explorar la hipótesis de que tener una representación
+explícita del manejo de recursos puede proveer una mejor intuición
+sobre la estructura de los espacios de derivación.
+
+Existen varios cálculos $\lambda$ que abarcan el problema del manejo de recursos
+de manera explícita~\cite{boudol1993lambda,ehrhard2003differential,kesner2007resource,kesner2009prismoid},
+la mayoría de los cuales están inspirados en la lógica lineal de Girard~\cite{girard1987linear}.
+
+Recientemente, una familia de estos formalismos, cálculos dotados con
+\textit{sistemas de tipos intersección no idempotentes},
+ha recibido atención~\cite{ehrhard2012collapsing,bernadet2013non,bucciarelli2014inhabitation,bucciarelli2017non,kesner2016reasoning,thesisvial,KRV18}.
+Estos sistemas de tipos permiten capturar, de manera estática, propiedades dinámicas no triviales de los términos
+(en particular distintos grados de \textit{normalización}), mientras que al mismo tiempo se prestan a
+demostraciones simples por inducción.
+
+Los sistemas de tipos intersección fueron originalmente propuestos por
+Coppo y Dezani-Ciancaglini~\cite{DBLP:journals/aml/CoppoD78}
+para estudiar la terminación del cálculo $\lambda$.
+Se caracterizan por la presencia de un constructor de tipos \textit{intersección} $\typ \cap \typtwo$.
+Los sistemas de tipos intersección \textit{no idempotentes} se distinguen de los (clásicamente) idempotentes
+por el hecho de que la intersección de tipos no es idempotente, es decir que $\typ$ y $\typ \cap \typ$
+no son tipos equivalentes.
+En cambio, la intersección se comporta como un conectivo multiplicativo en lógica lineal.
+Los argumentos de las funciones típicamente tendrán varios tipos dependiendo de cuántas veces y cómo son usados,
+lo cual da a estos sistemas una notable capacidad a la hora de rastrear cómo son utilizados los recursos
+de un programa.
+
+Los sistemas de tipos intersección no idempotentes fueron originalmente formulados por
+Gardner~\cite{gardner1994discovering},
+y mas tarde reintroducidos por de Carvalho~\cite{carvalho2007semantiques}.
+
+\vspace{1cm}
+
+En sistemas de tipos intersección no idempotentes típicos, la normalización de pruebas no es confluente.
+En esta tesis presentamos un sistema confluente de tipos intersección no idempotentes para el cálculo $\lambda$.
+Escribimos las derivaciones de tipos usando una sintaxis concisa de términos de prueba.
+El sistema gozará de buenas propiedades: progreso, será fuertemente normalizante, y tendrá una teoría de
+residuos muy regular.
+Estableceremos una correspondencia con el cálculo lambda mediante teoremas de simulación.
+
+
+Además, los espacios de derivación de los términos del sistema propuesto tendrán una estructura muy simple.
+Esa simplicidad junto con los teoremas de simulación nos ayudará a estudiar un fragmento de interés
+de los espacios de derivación de los términos del cálculo $\lambda$ con mucha facilidad.
+
+La maquinaria de los tipos intersección no idempotentes nos permite seguir el rastro del uso de los recursos
+necesarios para obtener una respuesta.
+En particular, induce una noción de \textit{basura}: un cómputo es basura si no contribuye a hallar una respuesta.
+Usando estas nociones, mostraremos que el espacio de derivaciones de un término $\lambda$ puede ser factorizado
+usando una variante de la construcción de Grothendieck para semi-reticulados.
+Esto significa, en particular, que cualquier derivación del cálculo $\lambda$ puede ser escrita
+de una única manera como un prefijo libre de basura, seguido de basura.
+
+\vspace{0.5cm}
+\noindent
+\textbf{Palabras clave:} Cálculo lambda, Tipos intersección, Espacio de derivación, Reticulado
