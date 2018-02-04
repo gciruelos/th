@@ -1,0 +1,78 @@
+Let $\tm \in \termsdist$ be a correct term,
+and $\tctx \vdash \tm : \typ$ its (unique) type derivation.
+Let $\var$ be any variable,
+and consider the $n \geq 0$ free occurrences of the variable $\var$ in the term $\tm$,
+more precisely, write $\tm$ as $\tm = \conhat\of{\var^{\typ_1},\hdots,\var^{\typ_n}}$,
+where $\conhat$ is a context with $n$-holes such that $\var \not\in \fv{\conhat}$.
+We will prove that $\tctx(\var) = \set{\typ_1,\hdots,\typ_n}$.
+
+\begin{proof}
+By induction on $\tm$.
+\begin{enumerate}
+\item \Case{Variable (same), $\tm = \var^\typ$}
+  By uniqueness of derivations, we have that $\set{\var : \set{\typ}} \vdash \var^\typ : \typ$.
+  Also, $\conhat = \conbase$ and $\tm = \conhat\of{\var^\typtwo}$.
+  And we also have that $\tctx(\var) = \set{\typ}$, so we are done.
+\item \Case{Variable (different), $\tm = \vartwo^\typ$}
+  By uniqueness of derivations, we have that $\set{\vartwo : \set{\typ}} \vdash \vartwo^\typ : \typ$.
+  Also, $\conhat = \vartwo^\typ$ (that is, $\conhat$ does not have any holes) and $\tm = \conhat$.
+  And we also have that $\tctx(\var) = \emptyset$, so we are done.
+\item \Case{Abstraction, $\tm = \lam{\vartwo}{\tmthree}$}
+  By uniqueness of derivations, we have that the derivation of $\tm$ is the following.
+    \[
+      \indrule{\toI}{
+        \tctx \oplus \vartwo : \lsetenum{\typthree}{1}{n} \vdash \tmthree : \typ_1
+      }{
+        \tctx \vdash \lamp{\lab}{\vartwo}{\tmthree} : \lsetenum{\typthree}{1}{n} \tolab{\lab} \typ_1
+      }
+    \]
+  Given that $\tmthree$ is a subterm of $\tm$, it is correct. So we may use the inductive hypothesis,
+    which tells us that there is a context $\conhat_1$
+    such that $\tmthree = \conhat_1\of{\var^{\typ_1},\hdots,\var^{\typ_n}}$
+    (where $\var \not\in \fv\conhat$) and
+    $(\tctx \oplus \vartwo : \lsetenum{\typthree}{1}{n})(\var) = \set{\typ_1,\hdots,\typ_n}$.
+
+  Then, we take $\conhat$ to be $\lamp{\lab}{\vartwo}{\conhat_1}$.
+    Note that $\var \not\in \fv\conhat$, and also that
+    $\tctx(\var) = (\tctx \oplus \vartwo : \lsetenum{\typthree}{1}{n})(\var) = \set{\typ_1,\hdots,\typ_n}$.
+\item \Case{Application, $\tm = \tmthree [\tmfour_1,\hdots,\tmfour_n]$}
+  By uniqueness of derivations, we have that the derivation of $\tm$ is the following.
+    \[
+      \indrule{\toE}{
+        \tctx_0 \vdash \tmthree : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
+        \HS
+        \left( \tctx_i \vdash \tmfour_i : \typtwo_i \right)_{i=1}^{n}
+      }{
+        \tctx = \tctx_0 +_{i=1}^{n} \tctx_i \vdash \tmthree \lsetenum{\tmfour}{1}{n} : \typ
+      }
+    \]
+  Given that $\tmthree$ and all $\tmfour_i$ are subterms of $\tm$, they are correct;
+    so can use inductive hypothesis on them.
+  By inductive hypothesis on $\tmthree$,
+    we get that $\tmthree = \conhat_0\of{\var^{\typ_{0,0}},\hdots,\var^{\typ_{0,m_0}}}$
+  (where $\var \not\in \fv{\conhat_0}$) and $\tctx_0(\var) = \set{\typ_{0,0},\hdots,\typ_{0,m_0}}$.
+  On the other hand, by inductive hypothesis on $\tmfour_i$,
+    we get that $\tmfour_i = \conhat_i\of{\var^{\typ_{i,0}},\hdots,\var^{\typ_{i, m_i}}}$
+  (where $\var \not\in \fv{\conhat_i}$) and $\tctx_i(\var) = \set{\typ_{i,0},\hdots,\typ_{i,m_i}}$.
+
+  If we take $\conhat$ to be $\conhat_0 \lset{\conhat_1, \hdots, \conhat_n}$, we have that
+    $\var \not\in \fv\conhat$ and
+    \begin{equation*}\begin{split}
+      \tm
+     & = \tmthree [\tmfour_1, \hdots, \tmfour_n] \\
+     & = \conhat_0\of{\var^{\typ_{0,0}},\hdots,\var^{\typ_{0,n_0}}}
+         [\conhat_1\of{\var^{\typ_{1,0}},\hdots,\var^{\typ_{1,m_1}}},\hdots
+          \conhat_n\of{\var^{\typ_{n,0}},\hdots,\var^{\typ_{n,m_n}}}] \\
+     & = (\conhat_0 \lset{\conhat_1, \hdots, \conhat_n})\of{\var^{\typ_{0,0}},\hdots,
+        \var^{\typ_{0,n_0}}, \hdots, \var^{\typ_{n,0}},\hdots,\var^{\typ_{n,m_n}}} \\
+    \end{split}\end{equation*}
+  To end the proof, we check the condition on the context.
+    \begin{equation*}\begin{split}
+      \tctx(\var)
+        & = (\tctx_0 +_{i=1}^{n} \tctx_i)(\var) \\
+        & = \tctx_0(\var) +_{i=1}^{n} \tctx_i(\var) \\
+        & = \set{\typ_{0,0},\hdots,\typ_{0,m_0}} +_{i=1}^{n} \set{\typ_{i,0},\hdots,\typ_{i,m_i}} \\
+        & = \set{\typ_{0,0},\hdots,\typ_{0,m_0}, \hdots, \typ_{n,0},\hdots,\typ_{n,m_n}}\\
+    \end{split}\end{equation*}
+\end{enumerate}
+\end{proof}

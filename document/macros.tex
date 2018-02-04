@@ -262,7 +262,7 @@
 
 
 % pub macros
-\newcommand{\SeeAppendix}{\textcolor{red}{$\clubsuit$}\xspace}
+\newcommand{\SeeAppendix}{$\spadesuit$\xspace}
 \newcommand{\SeeAppendixRef}[1]{\hyperref[#1]{\SeeAppendix}}
 \newcommand{\OR}{\ \mid\ }
 \newcommand{\ulbDeriv}[1]{\mathbb{D}(#1)}
@@ -277,3 +277,9 @@
 \newcommand{\Poset}{\mathsf{Poset}}
 
 \newcommand{\totwocell}{\leq}
+
+\newcommand{\occursin}{\preceq}
+
+\newcommand{\itemname}[1]{\textcolor{darkgray}{\sffamily\bfseries{#1}}}
+\newcommand{\refcase}[1]{\itemname{\ref{#1}}}
+\newcommand{\condp}[1]{\textrm{\texttt{[c#1]}}}

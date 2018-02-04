@@ -1,0 +1,381 @@
+We are to prove that
+if $\conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}$ is correct
+then $\conof{\subs{\tm}{\var}{\ls{\tmtwo}}}$ is correct,
+and, moreover, that their unique typings are under the same typing context
+and have the same type.
+Also, we check that correctness is preserved.
+We need a few auxiliary results:
+
+
+\begin{lemma}
+\llem{substitution_permutation}
+If $\ls{\tmtwo}$ is a permutation of $\ls{\tmthree}$, then $\subs{\tm}{\var}{\ls{\tmtwo}} = \subs{\tm}{\var}{\ls{\tmthree}}$.
+\end{lemma}
+\begin{proof}
+By induction on $\tm$.
+\end{proof}
+
+\begin{lemma}
+\llem{correct_subterms}
+If $\tm$ is correct, then any subterm of $\tm$ is correct.
+\end{lemma}
+\begin{proof}
+Note, by definition of correctness~(\rdef{sequentiality_and_correctness}),
+that if $\tm$ is a correct abstraction $\tm = \lamp{\lab}{\var}{\tmtwo}$ then $\tmtwo$ is correct,
+and if $\tm$ is a correct application $\tm = \tmtwo[\tmthree_1,\hdots,\tmthree_n]$
+then $\tmtwo$ and $\tmthree_1,\hdots,\tmthree_n$ are correct.
+This allows us to conclude by induction on $\tm$.
+\end{proof}
+
+\begin{lemma}[Relevance]
+\llem{relevance}
+If $\tctx \vdash \tm : \typ$
+and $\var \in \dom\tctx$ then $\var \in \fv{\tm}$.
+\end{lemma}
+\begin{proof}
+By induction on $\tm$.
+\end{proof}
+
+\begin{definition}
+$\Lambda(\tm)$ stands for the multiset of labels decorating the lambdas of $\tm$:
+\[
+  \begin{array}{rcl}
+    \Lambda(\var^\typ) & \eqdef & [\,] \\
+    \Lambda(\lamp{\lab}{\var}{\tm}) & \eqdef & [\lab] + \Lambda(\tm)  \\
+    \Lambda(\tm[\tmtwo_i]_{i=1}^{n}) & \eqdef & \Lambda(\tm) +_{i=1}^{n} \Lambda(\tmtwo_i)  \\
+  \end{array}
+\]
+\end{definition}
+For example, $\Lambda((\lamp{1}{\var}{\var^{[\alpha^2] \tolab{3} \alpha^2}})[\lamp{3}{\var}{\var^{\alpha^2}}]) = [1,3]$.
+
+\begin{lemma}
+\llem{labels_over_lambdas_substitution}
+Let $\tm,\tmtwo_1,\hdots,\tmtwo_n$ be correct terms.
+Then
+$\Lambda(\subs{\tm}{\var}{[\tmtwo_i]_{i=1}^{n}}) = \Lambda(\tm) +_{i=1}^n \Lambda(\tmtwo_i)$.
+\end{lemma}
+\begin{proof}
+By induction on $\tm$.
+\end{proof}
+
+To prove \rlem{subject_reduction}, we first show that substitution preserves typing,
+and then that it preserves correctness.
+
+\subsubsection{Substitution preserves typing}
+\lsec{substitution_preserves_typing}
+
+  More precisely, let us show that
+  if $\tctx \vdash \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}} : \typ$ is derivable,
+  then $\tctx \vdash \conof{\subs{\tm}{\var}{\ls{\tmtwo}}} : \typ$ is derivable.
+  By induction on the context $\con$.
+  \begin{enumerate}
+  \item {\bf Empty, $\con = \conbase$.}
+    \label{subject_reduction__case_base_empty_context}
+    By induction on $\tm$.
+    \begin{enumerate}
+    \item {\bf Variable (same), $\tm = \var^\typ$, $\ls{\tmtwo} = [\tmtwo]$.}
+      We have that $\var : [\typ] \vdash \var^\typ : \typ$
+      and $\tctxtwo \vdash \tmtwo : \typtwo$ are derivable,
+      so we are done.
+    \item {\bf Variable (different), $\tm = \vartwo^\typ$, $\vartwo \neq \var$, $\ls{\tmtwo} = []$.}
+      We have that $\vartwo : [\typ] \vdash \vartwo^\typ : \typ$ is derivable, so we are done.
+    \item {\bf Abstraction, $\tm = \lamp{\lab}{\vartwo}{\tmthree}$.}
+      Let $\tctx \oplus \var : [\typtwo_i]_{i=1}^n \vdash \lamp{\lab}{\var}{\tmthree} : \mtyp \tolab{\lab} \typ$
+      be derivable
+      and $\tctxtwo_i \vdash \tmtwo_i : \typtwo_i$ be derivable for all $i=1..n$.
+      By inversion of the \indrulename{\toI} rule,
+      we have that $\tctx \oplus \vartwo : \mtyp \oplus \var : [\typtwo_i]_{i=1}^n \vdash \tmthree : \typ$
+      is derivable, so by \ih
+      $(\tctx \oplus \vartwo : \mtyp) +_{i=1}^{n} \tctxtwo_i \vdash \subs{\tmthree}{\var}{[\tmtwo_i]_{i=1}^n} : \typ$ is derivable.
+      Observe that $\vartwo \not\in \fv{\tmtwo_i}$ so $\vartwo \not\in \dom\tctxtwo_i$ by \rlem{relevance}.
+      Hence the previous judgment can be written as
+      $(\tctx +_{i=1}^{n} \tctxtwo_i) \oplus \vartwo : \mtyp \vdash \subs{\tmthree}{\var}{[\tmtwo_i]_{i=1}^n} : \typ$.
+      Applying the \indrulename{\toI} rule we obtain
+      $\tctx +_{i=1}^{n} \tctxtwo_i \vdash \subs{\lamp{\lab}{\vartwo}{\tmthree}}{\var}{[\tmtwo_i]_{i=1}^n} : \mtyp \tolab{\lab} \typ$
+      as required.
+    \item {\bf Application, $\tm = \tmthree[\tmfour_j]_{j=1}^m$.}
+      Let $\tctx \oplus \var : [\typtwo_i]_{i=1}^n \vdash \tmthree[\tmfour_j]_{j=1}^m : \typ$
+      be derivable
+      and $\tctxtwo_i \vdash \tmtwo_i : \typtwo_i$ be derivable for all $i=1..n$.
+      By inversion of the \indrulename{\toE} rule,
+      the multiset of types $[\typtwo_i]_{i=1}^n$
+      may be partitioned as $[\typtwo_i]_{i=1}^n = \sum_{j=0}^{m} \mtyp_j$,
+      and
+      the typing context $\tctx$
+      may be partitioned as $\tctx = \sum_{j=0}^{m} \tctx_j$
+      in such a way that
+      $\tctx_0 \oplus \var : \mtyp_0 \vdash \tmthree : [\typthree_j]_{j=1}^m \tolab{\lab} \typ$
+      is derivable
+      and
+      $\tctx_j \oplus \var : \mtyp_j \vdash \tmfour_j : \typthree_j$ is derivable for all $j=1..m$.
+      Consider a partition $(\ls{\tmtwo}_0,\hdots,\ls{\tmtwo}_j)$
+      of the list $\ls{\tmtwo}$ 
+      such that for every $j=0..m$ we have $\tmlabel{\ls{\tmtwo}_j} = \mtyp_j$.
+      Observe that this partition exists since $\tmlabel{\ls{\tmtwo}_0 + \hdots + \ls{\tmtwo}_j} = \tmlabel{\ls{\tmtwo}} = \sum_{j=0}^m \mtyp_j = [\typtwo_i]_{i=1}^n = \varlabel{\var}{\tm}$.
+
+      Moreover, let $\tctxthree_j = \sum_{i : \tmtwo_i \in \ls{\tmtwo}_j} \tctxtwo_i$ for all $j=0..m$.
+      By \ih we have that
+      $\tctx_0 + \tctxthree_0 \vdash \subs{\tmthree}{\var}{\ls{\tmtwo}_0} : [\typthree_j]_{j=1}^m \tolab{\lab} \typ$
+      is derivable
+      and
+      $\tctx_j + \tctxthree_j \vdash \subs{\tmfour_j}{\var}{\ls{\tmtwo}_j} : \typthree_j$
+      is derivable for all $j=1..m$.
+      Applying the \indrulename{\toE} rule we obtain
+      that
+      $\sum_{j=0}^m \tctx_j + \sum_{j=0}^m \tctxthree_j \vdash \subs{\tmthree[\tmfour_j]}{\var}{\sum_{j=0}^m \ls{\tmtwo}_j} : \typ$
+      is derivable.
+      By definition of
+      $\tctx_0,\hdots,\tctx_m$ and
+      $\tctxthree_0,\hdots,\tctxthree_m$
+      this judgment equals
+      $\tctx +_{i=1}^n \tctxtwo_i \vdash \subs{\tmthree[\tmfour_j]}{\var}{\sum_{j=0}^m \ls{\tmtwo}_j} : \typ$.
+      By definition of $\ls{\tmtwo}_0,\hdots,\ls{\tmtwo}_m$
+      and \rlem{substitution_permutation}
+      this in turn equals
+      $\tctx +_{i=1}^n \tctxtwo_i \vdash \subs{\tmthree[\tmfour_j]}{\var}{\ls{\tmtwo}} : \typ$,
+      as required.
+    \end{enumerate}
+  \item {\bf Under an abstraction, $\con = \lamp{\labtwo}{\vartwo}{\con'}$.}
+    Straightforward by \ih.
+  \item {\bf Left of an application, $\con = \con'\ls{\tmthree}$.}
+    Straightforward by \ih.
+  \item {\bf Right of an application, $\con = \tmthree[\ls{\tmfour}_1,\con',\ls{\tmfour}_2]$.}
+    Straightforward by \ih.
+  \end{enumerate}
+
+\subsubsection{Substitution preserves correctness}
+
+  More precisely, let us show that
+  if $\conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}$ is correct
+  then $\conof{\subs{\tm}{\var}{\ls{\tmtwo}}}$ is correct.
+  By induction on $\con$:
+  \begin{enumerate}
+  \item {\bf Empty, $\con = \conbase$.}
+    \label{subject_reduction__case_base_empty_context}
+    Let $\ls{\tmtwo} = [\tmtwo_1,\hdots,\tmtwo_n]$.
+    Observe that if $(\lamp{\lab}{\var}{\tm})[\tmtwo_1,\hdots,\tmtwo_n]$ is correct then:
+    \begin{itemize}
+    \item \condp{1} $\tctx \oplus \var : [\typtwo_i]_{i=1}^{n} \vdash \tm : \typ$ and $\tctxtwo_i \vdash \tmtwo_i : \typtwo_i$ are derivable for all $i=1..n$,
+    \item \condp{2} $\tm,\tmtwo_1,\hdots,\tmtwo_n$ are correct,
+    \item \condp{3} there are no free occurrences of $\var$ among $\tmtwo_1,\hdots,\tmtwo_n$,
+    \item \condp{4} all the lambdas occurring in $\tm,\tmtwo_1,\hdots,\tmtwo_n$ have pairwise distinct labels,
+    \item \condp{5} $\tctx +_{i=1}^n \tctxtwo_i$ is a sequential context.
+    \end{itemize}
+    Condition \condp{1} holds by inversion of the typing rules,
+    condition \condp{2} holds by~\rlem{correct_subterms},
+    condition \condp{3} holds by Barendregt's convention,
+    and conditions \condp{4} and \condp{5} hold because the source term is supposed to be correct.
+
+    By induction on $\tm$, we check that
+    if $(\lamp{\lab}{\var}{\tm})[\tmtwo_1,\hdots,\tmtwo_n]$
+    is correct, then
+    $\subs{\tm}{\var}{\ls{\tmtwo}}$ is correct.
+    \begin{enumerate}
+    \item {\bf Variable (same), $\tm = \var^{\typ}$, $\ls{\tmtwo} = [\tmtwo]$.}
+      Note that $\subs{\tm}{\var}{\ls{\tmtwo}} = \tmtwo$. Conclude by \condp{2}.
+    \item {\bf Variable (different), $\tm = \vartwo^{\typ}$, $\ls{\tmtwo} = []$ with $\var \neq \vartwo$.}
+      Note that $\subs{\tm}{\var}{\ls{\tmtwo}} = \vartwo^\typ$.
+      Conclude by \condp{2}.
+    \item {\bf Abstraction, $\tm = \lamp{\labtwo}{\vartwo}{\tmthree}$.}
+      \label{subject_reduction__case_abstraction}
+      Then $\typ = \mtyp \tolab{\labtwo} \typthree$ and
+      by inversion $\tctx \oplus \vartwo : \mtyp \vdash \tmthree : \typthree$ is derivable.
+      Note that $(\lamp{\lab}{\var}{\tmthree})\ls{\tmtwo}$ is correct,
+      so by \ih $\subs{\tmthree}{\var}{\ls{\tmtwo}}$ is correct.
+      The variable $\vartwo$ does not occur free in $\ls{\tmtwo}$,
+      so $(\tctx \oplus \vartwo : \mtyp) +_{i=1}^{n} \tctxtwo_i = (\tctx +_{i=1}^{n} \tctxtwo_i) \oplus (\vartwo : \mtyp)$.
+      Let us check that $\lamp{\labtwo}{\vartwo}{\subs{\tmthree}{\var}{\ls{\tmtwo}}}$ is correct:
+      \begin{enumerate}
+      \item {\em Uniquely labeled lambdas.}
+        Let $\lab_1$ and $\lab_2$ be two labels decorating different lambdas of 
+        $\lamp{\labtwo}{\vartwo}{\subs{\tmthree}{\var}{\ls{\tmtwo}}}$,
+        and let us show that $\lab_1 \neq \lab_2$.
+        There are two subcases, depending on whether one of the labels
+        decorates the outermost lambda:
+        \begin{enumerate}
+        \item
+          {\bf If $\lab_1$ or $\lab_2$ decorates the outermost lambda.}
+          Suppose without loss of generality that $\lab_1 = \labtwo$ is the label decorating the outermost lambda.
+          Then by \rlem{labels_over_lambdas_substitution},
+          there are two cases: either $\lab_2$ decorates a lambda of $\tmthree$,
+          or $\lab_2$ decorates a lambda of some term in the list $\ls{\tmtwo}$.
+          If $\lab_2$ decorates a lambda of $\tmthree$, then $\lab_1 \neq \lab_2$
+          since we knew that $\lamp{\labtwo}{\vartwo}{\tmthree}$ was a correct term by \condp{2}.
+          If $\lab_2$ decorates a lambda of some term in the list $\ls{\tmtwo}$, then $\lab_1 \neq \lab_2$
+          by condition \condp{4}.
+        \item
+          {\bf If $\lab_1$ and $\lab_2$ do not decorate the outermost lambda.}
+          Then $\lab_1$ and $\lab_2$ decorate different lambdas of the term $\subs{\tmthree}{\var}{\ls{\tmtwo}}$,
+          and we conclude by \ih.
+        \end{enumerate}
+      \item {\em Sequential contexts.}
+        \label{subject_reduction__case_abstraction_sequential_contexts}
+        Let $\tm'$ be a subterm of $\lamp{\labtwo}{\var}{\subs{\tmthree}{\var}{\ls{\tmtwo}}}$.
+        If $\tm'$ is a subterm of $\subs{\tmthree}{\var}{\ls{\tmtwo}}$, we conclude by \ih.
+        Otherwise $\tm'$ is the whole term and the context is $\tctx +_{i=1}^{n} \tctxtwo_i$,
+        which is sequential by hypothesis \condp{5}.
+      \item {\em Sequential types.}
+        \label{subject_reduction__case_abstraction_sequential_types}
+        Let $\tm'$ be a subterm of $\lamp{\labtwo}{\var}{\subs{\tmthree}{\var}{\ls{\tmtwo}}}$.
+        If $\tm'$ is a subterm of $\subs{\tmthree}{\var}{\ls{\tmtwo}}$, we conclude by \ih.
+        Otherwise $\tm'$ is the whole term. Then $\tctx +_{i=1}^{n} \tctxtwo_i \vdash \tm' : \typ$ is derivable,
+        since we have already shown that substitution preserves typing.
+        Let $\mtyptwo \tolab{\labthree} \typfour$ be
+        a type such that $\mtyptwo \tolab{\labthree} \typfour \occursin \tctx +_{i=1}^{n} \tctxtwo_i$ or $\mtyptwo \tolab{\labthree} \typfour \occursin \typ$,
+        and let us show that $\mtyptwo$ is sequential.
+        In the first case, \ie if $\mtyptwo \tolab{\labthree} \typfour \occursin \tctx +_{i=1}^{n} \tctxtwo_i$ holds,
+        then either $\mtyptwo \tolab{\labthree} \typfour \occursin \tctx$ or $\mtyptwo \tolab{\labthree} \typfour \occursin \tctxtwo_i$ for some $i=1..n$,
+        and we have that $\mtyptwo$ is sequential because all the terms $\tm,\tmtwo_1,\hdots,\tmtwo_n$ are correct by \condp{2}.
+        In the second case, \ie if $\mtyptwo \tolab{\labthree} \typfour \occursin \typ$ holds,
+        then we have that $\mtyptwo$ is sequential because $\tm$ is correct by \condp{2}.
+      \end{enumerate}
+    \item {\bf Application, $\tm = \tmthree\,\ls{\tmfour}$.}
+      \label{subject_reduction__case_application} 
+      Let $\ls{\tmfour} = [\tmfour_1,\hdots,\tmfour_m]$.
+      Note that $(\lamp{\lab}{\var}{\tmthree})\ls{\tmtwo}_0$ is correct
+      and $(\lamp{\lab}{\var}{\tmfour_j})\ls{\tmtwo}_j$ is correct for all $j=1..m$,
+      which means that we may apply the \ih in all these cases.
+      Let us show that $\subs{\tmthree[\tmfour_j]_{j=1}^m}{\var}{\ls{\tmtwo}}$ is correct:
+      \begin{enumerate}
+      \item {\em Uniquely labeled lambdas.}
+        Let $\lab_1$ and $\lab_2$ be two labels decorating different lambdas of
+        $\subs{\tmthree[\tmfour_j]_{j=1}^m}{\var}{\ls{\tmtwo}}$, and let us show that $\lab_1 \neq \lab_2$.
+        Observe that the term
+        $\subs{\tmthree[\tmfour_j]_{j=1}^m}{\var}{\ls{\tmtwo}} =
+         \subs{\tmthree}{\var}{\ls{\tmtwo}_0}[\subs{\tmfour_j}{\var}{\ls{\tmtwo}_j}]_{j=1}^m$
+        has $m + 1$ immediate subterms, namely
+        $\subs{\tmthree}{\var}{\ls{\tmtwo}_0}$
+        and $\subs{\tmfour_j}{\var}{\ls{\tmtwo}_j}$ for each $j=1..m$.
+        We consider two subcases, depending on whether $\lab_1$ and $\lab_2$
+        decorate two lambdas in the same immediate subterm or in different immediate subterms.
+
+        \begin{enumerate}
+        \item {\bf The labels $\lab_1$ and $\lab_2$ decorate the same immediate subterm.}
+          That is, $\lab_1$ and $\lab_2$ both decorate lambdas in $\subs{\tmthree}{\var}{\ls{\tmtwo}_0}$
+          or both decorate lambdas in some $\subs{\tmfour_j}{\var}{\ls{\tmtwo}_j}$ for some $j=1..m$.
+          Then we conclude, since both $\subs{\tmthree}{\var}{\ls{\tmtwo}_0}$ and
+          the $\subs{\tmfour_j}{\var}{\ls{\tmtwo}_j}$ are correct by \ih.
+        \item {\bf The labels $\lab_1$ and $\lab_2$ decorate different subterms.}
+          Let $\tmfour_0 := \tmthree$.
+          Then we have that
+          $\lab_1$ decorates a lambda in $\subs{\tmfour_j}{\var}{\ls{\tmtwo}_j}$ for some $j=0..m$
+          and
+          $\lab_2$ decorates a lambda in $\subs{\tmfour_k}{\var}{\ls{\tmtwo}_k}$ for some $k=0..m$, $j \neq k$.
+          By \rlem{labels_over_lambdas_substitution},
+          $\lab_1$ decorates a lambda in $\tmfour_j$ or a lambda in a term of the list $\ls{\tmtwo}_j$,
+          and similarly
+          $\lab_2$ decorates a lambda in $\tmfour_k$ or a lambda in a term of the list $\ls{\tmtwo}_k$.
+          This leaves four possibilities, which are all consequence of \condp{4}.
+        \end{enumerate}
+      \item {\em Sequential contexts.}
+        Similar to item~\refcase{subject_reduction__case_abstraction_sequential_contexts}.
+      \item {\em Sequential types.}
+        Similar to item~\refcase{subject_reduction__case_abstraction_sequential_types}.
+      \end{enumerate}
+    \end{enumerate}
+  \item {\bf Under an abstraction, $\con = \lamp{\labtwo}{\vartwo}{\con'}$.}
+    Note that $\tctx \vdash \lamp{\labtwo}{\vartwo}{\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}} : \mtyp \tolab{\labtwo} \typ$ is derivable.
+    Let us check the three conditions to see that $\lamp{\labtwo}{\vartwo}{\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}}$ is correct:
+    \begin{enumerate}
+    \item {\em Uniquely labeled lambdas.}
+      Any two lambdas in $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$ have different labels by \ih.
+      We are left to check that $\labtwo$ does not decorate any lambda in $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$.
+      Let $\lab_1$ be a label that decorates a lambda in $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$.
+      Then we have that $\lab_1$ decorates a lambda in $\con'$,
+      or it decorates a lambda in $\subs{\tm}{\var}{\ls{\tmtwo}}$.
+      By what we proved in item~\refcase{subject_reduction__case_base_empty_context}
+      this in turn means that it decorates a lambda in $\tm$ or a lambda in some of the terms of the list $\ls{\tmtwo}$.
+      In any of these cases we have that $\lab_1 \neq \labtwo$
+      since $\lamp{\labtwo}{\vartwo}{\con'\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}}$ is correct.
+    \item {\em Sequential contexts.}
+      Let $\tm'$ be a subterm of $\lamp{\labtwo}{\vartwo}{\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}}$
+      and let us check that its typing context is sequential.
+      If $\tm'$ is a subterm of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$ we conclude by \ih.
+      We are left to check the property for $\tm'$ being the whole term, \ie that $\tctx$ is sequential.
+      By \ih, $\tctx \oplus \vartwo : \mtyp$ is sequential, which implies that $\tctx$ is sequential.
+    \item {\em Sequential types.}
+      Let $\tm'$ be a subterm of $\lamp{\labtwo}{\vartwo}{\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}}$
+      and let us check that, if $\mtyptwo \tolab{\labthree} \typthree$ is any type occurring in the typing
+      context or in the type of $\tm'$, then $\mtyptwo$ is sequential.
+      If $\tm'$ is a subterm of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$ we conclude by \ih.
+      We are left to check the property for $\tm'$ being the whole term.
+
+      If $\mtyptwo \tolab{\labthree} \typthree \occursin \tctx$,
+      then $\mtyptwo \tolab{\labthree} \typthree \occursin \tctx \oplus \vartwo:\mtyptwo$
+      which is the type of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$,
+      so by \ih $\mtyptwo$ is sequential.
+
+      If $\mtyptwo \tolab{\labthree} \typthree \occursin \mtyp \tolab{\lab''} \typ$,
+      there are three subcases:
+      \begin{enumerate}
+      \item If $\mtyptwo = \mtyp$, then note that $\mtyp$ is sequential
+            because $\tctx \oplus \vartwo : \mtyp$ is the typing context of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$,
+           which is sequential by \ih.
+      \item If $\mtyptwo \tolab{\labthree} \typthree \occursin \typtwo$ where $\typtwo$ is one of the types of $\mtyp$,
+            then $\mtyptwo \tolab{\labthree} \typthree \occursin \mtyp \tolab{\lab''} \typ$ which is the typing context
+            of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$,
+            and we conclude for this term has sequential types by \ih.
+      \item If $\mtyptwo \tolab{\labthree} \typthree \occursin \typ$,
+            note that $\typ$ is the type of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$,
+            and we conclude for this term has sequential types by \ih.
+      \end{enumerate}
+    \end{enumerate}
+  \item {\bf Left of an application, $\con = \con'\ls{\tmthree}$.}
+    \label{subject_reduction__case_left_application}
+    Note that $\tctx \vdash \con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}} : [\typtwo_j]_{j=1}^m \tolab{\labtwo} \typ$
+    is derivable.
+    Moreover the list of arguments is of the form
+    $\ls{\tmthree} = [\tmthree_1,\hdots,\tmthree_m]$ where all the $\tmthree_j$ are correct
+    and $\tctxtwo_j \vdash \tmthree_j : \typtwo_j$ is derivable for all $j=1..m$.
+    Then $\tctx +_{j=1}^m \tctxtwo_j \vdash \con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}[\tmthree_j]_{j=1}^{m} : \typ$
+    is derivable.
+    Let us check the three conditions to see that $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}[\tmthree_j]_{j=1}^{m}$ is correct:
+    \begin{enumerate}
+    \item {\em Uniquely labeled lambdas.}
+      Let $\lab_1$ and $\lab_2$ be two labels decorating different lambdas in $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}[\tmthree_j]_{j=1}^{m}$.
+      There are three subcases.
+      \begin{enumerate}
+      \item
+        If $\lab_1$ and $\lab_2$ both decorate lambdas in the subterm $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$
+        then $\lab_1 \neq \lab_2$ since $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$ is correct by \ih.
+      \item
+        If $\lab_1$ and $\lab_2$ both decorate lambdas somewhere in $[\tmthree_1,\hdots,\tmthree_m]$
+        then $\lab_1 \neq \lab_2$ since $\con'\of{\tm}[\tmthree_1,\hdots,\tmthree_m]$ is correct by hypothesis.
+      \item
+        If $\lab_1$ decorates a lambda in $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$
+        and $\lab_2$ decorates a lambda in one of the terms $\tmthree_j$ for some $j=1..m$,
+        then note that $\lab_1$ must either decorate a lambda in $\con'$ or a lambda in $\subs{\tm}{\var}{\ls{\tmtwo}}$.
+        By what we proved in item~\refcase{subject_reduction__case_base_empty_context}
+        this in turn means that it decorates a lambda in $\tm$ or a lambda in some of the terms of the list $\ls{\tmtwo}$.
+        In any of these cases we have that $\lab_1 \neq \lab_2$
+        since $\con'\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}[\tmthree_j]_{j=1}^m$ is correct by hypothesis.
+      \end{enumerate}
+    \item {\em Sequential contexts.}
+      Let $\tm'$ be a subterm of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}[\tmthree_j]_{j=1}^m$
+      and let us show that its typing context is sequential.
+      If $\tm'$ is a subterm of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$ we conclude by \ih.
+      If $\tm'$ is a subterm of one of the $\tmthree_j$ for some $j=1..m$, we conclude using that $\tmthree_j$ is correct by hypothesis.
+      It remains to check that the whole term is correct, \ie that $\tctx +_{j=1}^m \tctxtwo_j$ is sequential.
+      Observe that $\tctx +_{j=1}^m \tctxtwo_j$ is also the typing context of
+      $\con'\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}[\tmthree_j]_{j=1}^m$, which is correct by hypothesis.
+    \item {\em Sequential types.}
+      Let $\tm'$ be a subterm of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}[\tmthree_j]_{j=1}^m$
+      and let us show if $\mtyptwo \tolab{\labtwo} \typthree$ is a type
+      that occurs in the typing context or in the type of $\tm'$, then $\mtyptwo$ is sequential.
+      If $\tm'$ is a subterm of $\con'\of{\subs{\tm}{\var}{\ls{\tmtwo}}}$ we conclude by \ih.
+      If $\tm'$ is a subterm of one of the $\tmthree_j$ for some $j=1..m$, we conclude using that $\tmthree_j$ is correct by hypothesis.
+      We are left to check the property for $\tm'$ being the whole term.
+
+      If $\mtyptwo \tolab{\labtwo} \typthree \occursin \tctx +_{j=1}^m \tctxtwo_j$,
+      we conclude by observing
+      that $\tctx +_{j=1}^m \tctxtwo_j$ is also the typing context of $\con'\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}[\tmthree_j]_{j=1}^m$,
+      which is correct by hypothesis, so it has sequential types.
+      
+      Similarly, if $\mtyptwo \tolab{\labtwo} \typthree \occursin \typ$,
+      we conclude by observing
+      that $\typ$ is also the type of $\con'\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}[\tmthree_j]_{j=1}^m$.
+    \end{enumerate}
+  \item {\bf Right of an application, $\con = \tmthree[\ls{\tmfour}_1,\con',\ls{\tmfour}_2]$.}
+    Similar to item~\refcase{subject_reduction__case_left_application}.
+  \end{enumerate}
+

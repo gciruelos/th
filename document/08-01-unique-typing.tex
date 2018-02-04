@@ -1,0 +1,68 @@
+We will prove that given two typings of a term, they are the same.
+
+\begin{proof}
+By induction on $\tm$.
+\begin{enumerate}
+\item \Case{Variable, $\tm = \var^\typtwo$}
+  If $\tctx \vdash \var^\typtwo : \typ$,
+  then the last rule in the derivation must be \indrulename{var} so
+  it must be the case that $\typ = \typtwo$ and
+                           $\tctx = \set{\var : \lset{\typ}}$.
+  The same is true for $\typ'$ and $\tctx'$.
+  Note that the derivations are equal.
+\item \Case{Abstraction, $\tm = \lam{\vartwo}{\tmthree}$}
+  As $\tctx \vdash \lam{\vartwo}{\tmthree} : \typ$,
+  then for some $\lsetenum{\typthree}{1}{n}$ and $\typ_1$ it must be the case that
+  $\typ = \lsetenum{\typthree}{1}{n} \tolab{\lab} \tmthree_1$.
+  Given that the last rule in the derivation must be \indrulename{\toI}, we know that
+    \[
+      \indrule{\toI}{
+        \tctx \oplus \vartwo : \lsetenum{\typthree}{1}{n} \vdash \tmthree : \typ_1
+      }{
+        \tctx \vdash \lamp{\lab}{\vartwo}{\tmthree} : \lsetenum{\typthree}{1}{n} \tolab{\lab} \typ_1
+      }
+    \]
+  The same way, there are $\lsetenum{\typthree'}{1}{n}$ and $\typ'_1$ such that
+    \[
+      \tctx' \oplus \vartwo : \lsetenum{\typthree'}{1}{n} \vdash \tmthree : \typ'_1
+    \]
+  But now we can use our inductive hypothesis, that tells us that
+  $\tctx \oplus \vartwo : \lsetenum{\typthree}{1}{n} = \tctx' \oplus \vartwo : \lsetenum{\typthree'}{1}{n}$ and
+  $\typ_1 = \typ'_1$, which implies that
+  $\tctx = \tctx'$ and $\typ = \typ'$.
+  Moreover, the inductive hypothesis tells us that the derivations are the same.
+\item \Case{Application, $\tm = \tmthree [\tmfour_1,\hdots,\tmfour_n]$}
+  Given that the last rule in the derivation must be \indrulename{\toE}, we know that
+    \[
+      \indrule{\toE}{
+        \tctx_0 \vdash \tmthree : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
+        \HS
+        \left( \tctx_i \vdash \tmfour_i : \typtwo_i \right)_{i=1}^{n}
+      }{
+        \tctx = \tctx_0 +_{i=1}^{n} \tctx_i \vdash \tmthree \lsetenum{\tmfour}{1}{n} : \typ
+      }
+    \]
+  The same way,
+    \[
+      \indrule{\toE}{
+        \tctx'_0 \vdash \tmthree : \lsetenum{\typtwo'}{1}{n} \tolab{\lab'} \typ'
+        \HS
+        \left( \tctx'_i \vdash \tmfour_i : \typtwo'_i \right)_{i=1}^{n}
+      }{
+        \tctx' = \tctx'_0 +_{i=1}^{n} \tctx'_i \vdash \tmthree \lsetenum{\tmfour}{1}{n} : \typ'
+      }
+    \]
+  Using the inductive hypothesis for $\tmthree$, we get that
+    $\tctx_0 = \tctx'_0$ and
+    $\lsetcomp{\typtwo}{i}{1}{n} \tolab{\lab} \typ = \lsetcomp{\typtwo'}{j}{1}{n} \tolab{\lab'} \typ'$.
+   In particular, $\typ = \typ'$. The inductive hypothesis also tells us that the derivations are the same.
+
+  Lastly, using the inductive hypothesis $n$ times for each $\tmfour_i$,
+    we get that $\tctx_i = \tctx'_i$ (given that the derivations are the same),
+  so adding everything we can see that
+    $\tctx_0 +_{i=1}^{n} \tctx_i = \tctx'_0 +_{i=1}^{n} \tctx'_i$, i.e. $\tctx = \tctx'$
+    (and more generally that the derivations are the same).
+\end{enumerate}
+\end{proof}
+
+
