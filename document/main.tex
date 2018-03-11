@@ -29,7 +29,7 @@
 \usepackage{stmaryrd} %double brackets
 \usepackage{tikz}
 \usepackage[toc,page]{appendix}
-\usepackage{showlabels}
+% \usepackage{showlabels}
 \usepackage[margin=1.2cm]{caption}
 \usepackage{leading}
 \leading{14.5pt}
@@ -57,11 +57,14 @@
 \newpage \input{./05-distributive.tex}
 \newpage \input{./06-factorization.tex}
 
-\backmatter
 \newpage \input{./07-conclusion.tex}
+
+\appendix
 \begin{appendix}
 \newpage \input{./08-appendix.tex}
 \end{appendix}
+
+\backmatter
 
 \cleardoublepage
 \phantomsection
