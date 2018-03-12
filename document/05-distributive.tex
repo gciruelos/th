@@ -224,6 +224,90 @@ The idea is straightforward: in order apply a lambda abstraction to a list of ar
 replace each occurrence of the variable bounded by the lambda with the corresponding argument.
 As the term types and is correct we know that we can do it successfully.
 
+As substitution will be \emph{type-directed} we need to define notation for the type
+of ocurrences of a free variable. If $\tm$ is typable,
+$\varlabel{\var}{\tm}$
+stands for the multiset
+of types of the free occurrences of $\var$ in $\tm$.
+If $\tm_1,\hdots,\tm_n$ are typable,
+$\tmlabel{[\tm_1,\hdots,\tm_n]}$ stands for the multiset
+of types of $\tm_1,\hdots,\tm_n$.
+For example,
+$\varlabel{\var}{\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}]} =
+\tmlabel{[\vartwo^{\alpha^1},\varthree^{[\alpha^1] \tolab{2} \beta^3}]} = [[\alpha^1] \tolab{2} \beta^3,\alpha^1]$.
+To perform a substitution $\subs{\tm}{\var}{[\tmtwo_1,\hdots,\tmtwo_n]}$
+we will require that $\varlabel{\var}{\tm} = \tmlabel{[\tmtwo_1,\hdots,\tmtwo_n]}$.
+
+
+Now we will define exactly what we mean by \emph{replacing}.
+\begin{definition}[Substitution]
+\ldef{substitution}
+Let $\tm$ and $\tmtwo_1,\hdots,\tmtwo_n$ be correct terms such that $\varlabel{\var}{\tm} = \tmlabel{[\tmtwo_1,\hdots,\tmtwo_n]}$.
+The capture-avoiding substitution of $\var$ in $\tm$ by $\ls{\tmtwo} = [\tmtwo_1,\hdots,\tmtwo_n]$
+is denoted by $\subs{\tm}{\var}{\ls{\tmtwo}}$ and defined as follows:
+\[
+  \begin{array}{rcll}
+    \subs{\var^\typ}{\var}{[\tmtwo]} & \eqdef & \tmtwo
+  \\
+    \subs{\vartwo^\typ}{\var}{[]} & \eqdef & \vartwo^\typ
+    & \text{ if $\var \neq \vartwo$}
+  \\
+    \subs{(\lamp{\lab}{\vartwo}{\tmthree})}{\var}{\ls{\tmtwo}} & \eqdef &  \lamp{\lab}{\vartwo}{ \subs{\tmthree}{\var}{\ls{\tmtwo}} }
+    & \text{ if $\var \neq \vartwo$ and $\vartwo \not\in \fv{\ls{\tmtwo}}$}
+  \\
+    \subs{\tmthree_0[\tmthree_j]_{j=1}^{m}}{\var}{\ls{\tmtwo}} & \eqdef &
+    \subs{\tmthree_0}{\var}{\ls{\tmtwo}_0}[\subs{\tmthree_j}{\var}{\ls{\tmtwo}_j}]_{j=1}^{m}
+  \end{array}
+\]
+In the last case, $(\ls{\tmtwo}_0, \hdots, \ls{\tmtwo}_m)$
+is a partition of $\ls{\tmtwo}$
+such that $\varlabel{\var}{\tmthree_j} = \tmlabel{\ls{\tmtwo}_j}$ for all $j=0..m$.
+\end{definition}
+
+For example,
+$\subs{(\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}])}{\var}{[\vartwo^{[\alpha^1] \tolab{2} \beta^3},\varthree^{\alpha^1}]}
+  = \vartwo^{[\alpha^1] \tolab{2} \beta^3}\varthree^{\alpha^1}$
+and
+$\subs{(\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}])}{\var}{[\vartwo^{\alpha^1},\varthree^{[\alpha^1] \tolab{2} \beta^3}]}
+  = \varthree^{[\alpha^1] \tolab{2} \beta^3}\vartwo^{\alpha^1}$.
+
+
+\begin{remark}
+Substitution is {\em type-directed}: arguments $[\tmtwo_1,\hdots,\tmtwo_n]$
+are propagated throughout the term
+so that $\tmtwo_i$ reaches the free occurrence of $\var$
+that has the same type as $\tmtwo_i$.
+There exists one such occurrence for each $i \in \set{1, \hdots, n}$ because
+$\varlabel{\var}{\tm} = \tmlabel{[\tmtwo_1,\hdots,\tmtwo_n]}$.
+Moreover, the fact that $\tm$ is correct ensures that such occurrence is unique,
+since $\varlabel{\var}{\tm}$ is sequential.
+Hence there is essentially a unique way to split $\ls{\tmtwo}$
+into $(\ls{\tmtwo}_0, \ls{\tmtwo}_1, \hdots, \ls{\tmtwo}_n)$.
+More precisely, if $(\ls{\tmtwo}_0, \ls{\tmtwo}_1, \hdots, \ls{\tmtwo}_n)$
+and $(\ls{\tmthree}_0, \ls{\tmthree}_1, \hdots, \ls{\tmthree}_n)$
+are two partitions of $\ls{\tmtwo}$ with the stated property,
+then $\ls{\tmtwo}_i$ is a permutation of $\ls{\tmthree}_i$ for all $i \in \set{0,\hdots,n}$.
+It is easy to check by induction on $\tm$
+that the value of $\subs{\tm}{\var}{\ls{\tmtwo}}$ does
+not depend on this choice.
+The following lemma formalizes what we just said.
+\end{remark}
+
+
+\begin{lemma}[Substitution is well-defined]
+\llem{distrSubstitutionWellDefined}
+If $\tctx \oplus \var : \ls{\typtwo} \vdash \tm : \typ$
+and $\ls{\tctxtwo} \vdash \ls{\tmtwo} : \ls{\typtwo}$
+are derivable,
+then $\tctx + \ls{\tctxtwo} \vdash \subs{\tm}{\var}{\ls{\tmtwo}} : \typ$
+is derivable.
+\end{lemma}
+\begin{proof}
+By induction on $\tm$, straightforward using the ideas in the last remark.
+\end{proof}
+
+
+
 \begin{definition}[The distributive lambda-calculus]
 The \defn{distributive lambda-calculus} is given by the set of correct typable terms $\termsdist$.
 For each label $\lab \in \labelset$, we define a reduction relation $\todistl{\lab}\ \subseteq \termsdist \times \termsdist$
@@ -253,7 +337,8 @@ by $\tm_i$.
 If $\con$ is an $n$-hole contexts for some $n$, we say that it is a many-hole context.
 \end{definition}
 
-\bigskip
+\section{Basic Properties}
+
 The following lemmas show that the rewrite rule $\todist$ is well-defined.
 
 \begin{lemma}[Linearity]
@@ -283,7 +368,15 @@ Moreover, correctness is preserved.
 \SeeAppendixRef{subject_reduction_proof} By induction on $\con$.
 \end{proof}
 
-\section{Basic Properties}
+\begin{lemma}[$\termsdist$ is closed under $\todist$]
+\llem{closed_under_arrow}
+Let $\tm \in \termsdist$ such that $\tm \todist \tm'$. Then $\tm' \in \termsdist$.
+\end{lemma}
+\begin{proof}
+  \SeeAppendixRef{closed_under_arrow_proof}
+Let $\tm = \conof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$. We proceed by induction on $\con$.
+\end{proof}
+
 
 \section{Termination}
 

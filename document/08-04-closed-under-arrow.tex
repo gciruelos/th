@@ -1,0 +1,304 @@
+We are to prove that
+if $\tm$ is correct and $\tm \todist \tm'$,
+then $\tm'$ is correct.
+We need a few auxiliary results:
+
+\begin{lemma}[Subterm property]
+\llem{subterm_is_correct}
+Let $\tm \in \termsdist$. Then every subterm of $\tm$ is in $\termsdist$.
+\end{lemma}
+\begin{proof}
+Straightforward by induction on $\tm$.
+\end{proof}
+
+\begin{lemma}
+\llem{labels_of_reduction}
+Let $\tm \in \termsdist$ such that $\tm \todist \tm'$.
+Then the set of labels that decorate the lambdas in $\tm'$ is strictly contained in that of $\tm$.
+\end{lemma}
+\begin{proof}
+We proceed by induction on $\tm$.
+Given a term $\tmtwo$,
+we write $L(\tmtwo)$ for the set of labels of the lambdas of $\tmtwo$.
+\begin{enumerate}
+\item {\bf Variable $\tm = \var$.} This case is impossible given that there are no redexes.
+
+\item {\bf Abstraction, $\tm = \lamp{\lab}{\var}{\tmtwo}$.}
+  In this case, $\tm' = \lam{\var}{\tmtwo'}$, where $\tmtwo \todist \tmtwo'$.
+  By inductive hypothesis, $L(\tmtwo') \subset L(\tmtwo)$.
+  Then, $L(\tm') = \set{\lab} \cup L(\tmtwo') \subset \set{\lab} \cup L(\tmtwo) = L(\tm)$.
+
+\item {\bf Application, $\tm = \tmfour \lset{\tmthree_1, \hdots, \tmthree_n}$.}
+  We have three subcases, depending on the place where reduction takes place.
+  It can be either in $\tmfour$, in one of the $\tmthree_i$ or at the root.
+  \begin{enumerate}
+    \item {\bf Reduction is internal to $\tmfour$.}
+      Then $\tm' = \tmfour' \lset{\tmthree_1, \hdots, \tmthree_n}$, where $\tmfour \todist \tmfour'$.
+      By indutive hypothesis, $L(\tmfour') \subset L(\tmfour)$.
+      Then,
+        $L(\tm') = L(\tmfour') \cup_i L(\tmthree_i) \subset L(\tmfour) \cup_i L(\tmthree_i) = L(\tm)$.
+    \item {\bf Reduction is internal to $\tmthree_k$.}
+      Then $\tm' = \tmfour \lset{\tmthree_1, \hdots, \tmthree_k', \hdots, \tmthree_n}$,
+        where $\tmthree_k \todist \tmthree_k'$.
+      By indutive hypothesis, $L(\tmthree_k') \subset L(\tmthree_k)$.
+      Then,
+        $L(\tm') = L(\tmfour') \cup_{i\neq k} L(\tmthree_i) \cup L(\tmthree_k')
+           \subset L(\tmfour') \cup_{i\neq k} L(\tmthree_i) \cup L(\tmthree_k)
+                 = L(\tmfour) \cup_i L(\tmthree_i) = L(\tm)$.
+    \item {\bf Reduction is at the root.} In this case, $\tmfour = \lamp{\lab}{\var}{\tmfour'}$,
+      so $\tm' = \subs{\tmfour'}{\var}{\lset{\tmthree_1, \hdots, \tmthree_n}}$.
+      Given that $L(\tm) = \set{e} \cup L(\tmfour') \cup_i L(\tmthree_i)$, it would be enough
+        to show that $L(\tm') = L(\tmfour') \cup_i L(\tmthree_i)$.
+      We will prove that
+        $L(\subs{\tmfour'}{\var}{\lset{\tmthree_1, \hdots, \tmthree_n}}) =
+         L(\tmfour') \cup_i L(\tmthree_i)$ by induction on $\tmfour'$.
+      \begin{enumerate}
+        \item {\bf Variable (same), $\tmfour' = \var$.}
+          In this case $n = 1$, $L(\tmfour') = \emptyset$ and
+          $L(\subs{\var}{\var}{\lset{\tmthree_1}}) = L(\tmthree_1)$.
+        \item {\bf Variable (different), $\tmfour' = \vartwo$.}
+          In this case $n = 0$ and
+          $L(\subs{\vartwo}{\var}{\emptylset}) = L(\vartwo) = \emptylset$.
+        \item {\bf Abstraction, $\tmfour' = \lamp{\lab}{\vartwo}{\tmfour''}$.}
+        \begin{equation*}\begin{split}
+          L(\subs{(\lamp{\lab}{\vartwo}{\tmfour''})}{\var}{\lset{\tmthree_1, \hdots, \tmthree_n}}) &
+                 = L(\lamp{\lab}{\vartwo}{\subs{\tmfour''}{\var}{\lset{\tmthree_1, \hdots, \tmthree_n}}}) \\
+               & = \set{\lab} \cup L(\subs{\tmfour''}{\var}{\lset{\tmthree_1, \hdots, \tmthree_n}}) \\
+           & \eqih \set{\lab} \cup L(\tmfour'') \cup_i L(\tmthree_i) \\
+               & = L(\lamp{\lab}{\vartwo}{\tmfour''}) \cup_i L(\tmthree_i) \\
+               & = L(\tmfour') \cup_i L(\tmthree_i) \\
+        \end{split}\end{equation*}
+        \item {\bf Application, $\tmfour' = \tmfour'' \ls{\tmfour''}$.}
+        \begin{equation*}\begin{split}
+          L(\subs{(\tmfour'' \ls{\tmfour''})}{\var}{\ls{\tmthree}})
+               & = L(\subs{\tmfour''}{\var}{\ls{\tmthree}_0}
+                     [\subs{\tmfour''_i}{\var}{\ls{\tmthree}_i}]_{i=1}^m) \\
+               & = L(\subs{\tmfour''}{\var}{\ls{\tmthree}_0})
+                     \cup_i L(\subs{\tmfour''_i}{\var}{\ls{\tmthree}_i}) \\
+           & \eqih \left( L(\tmfour'') \cup_j L(\tmthree_{0j}) \right)
+                     \cup_i \left( L(\tmfour''_i) \cup_j L(\tmthree_{ij}) \right) \\
+               & = L(\tmfour'') \cup_i L(\tmfour''_i) \cup_k L(\tmthree_k) \\
+               & = L(\tmfour'' \ls{\tmfour''}) \cup_k L(\tmthree_k) \\
+               & = L(\tmfour') \cup_k L(\tmthree_k) \\
+        \end{split}\end{equation*}
+      \end{enumerate}
+    \end{enumerate}
+  \end{enumerate}
+\end{proof}
+
+Now we proceed to prove the main result.
+\subsubsection{$\termsdist$ is closed under $\todist$}
+
+\begin{proof}
+Let $\tm = \conof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$. We proceed by induction on $\con$.
+\begin{enumerate}
+\item \Case{Empty context, $\con = \conbase$}
+  Then $\tm = (\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}$
+  and $\tm' = \subs{\tmtwo}{\var}{\ls{\tmthree}}$.
+  The terms $\tmtwo$ and $\tmthree_i$ are correct by \rlem{subterm_is_correct},
+    and also have pairwise distinct labels in their lambdas.
+  Let's prove that if $\tctx \vdash \tmtwo : \typtwo$ and $\tctxtwo_i \vdash \tmthree_i : \typ_i$
+    are correct, $\typtwo$ is sequential, $\tctx +_{i=1}^n \tctxtwo$ is sequential and
+    $\tmtwo$ and $\tmthree$ have pairwise distinct labels in their lambdas then
+    $\subs{\tmtwo}{\var}{\ls{\tmthree}}$ also is correct.
+  We proceed by induction on $\tmtwo$.
+  \begin{enumerate}
+  \item \Case{Variable (same)}
+    $\subs{\var^{\typ}}{\var}{[\tmthree]} = \tmthree$, which is correct by hypothesis.
+  \item \Case{Variable (different)}
+    $\subs{\vartwo^{\typ}}{\var}{[]} = \vartwo$, which is correct by hypothesis.
+  \item \Case{Abstraction}
+    $\subs{(\lamp{\lab}{\vartwo}{\tmfour})}{\var}{\ls{\tmthree}} = 
+     \subs{\lamp{\lab}{\vartwo}{\tmfour}}{\var}{\ls{\tmthree}}$. All $u_i$ are correct by hypothesis, and
+     $\tmfour$ is correct by \rlem{subterm_is_correct}.
+     Then by inductive hypothesis 
+     $\subs{\tmfour}{\var}{\ls{\tmthree}}$ is correct.
+
+     Also, it is the case that
+        \indrule{\toI}{
+        \tctx \oplus \vartwo : \mtyp \vdash \subs{\tmfour}{\var}{\ls{\tmthree}} : \typtwo
+        }{
+        \tctx \vdash \lamp{\lab}{\vartwo}{\subs{\tmfour}{\var}{\ls{\tmthree}}} : \mtyp \tolab{\lab} \typtwo
+        }
+      \begin{itemize}
+      \item {\bf Unique lambdas.}
+            As $(\lamp{\lab}{\vartwo}{\tmfour})$ is correct and it has pairwise distinct lambda labels with
+            $\tmthree_i$, then $\lab$ does not decorate any lambda in $\tmfour$ or $\tmthree_i$.
+            Then, as $\subs{\tmfour}{\var}{\ls{\tmthree}}$ has unique lambdas,
+              $\lamp{\lab}{\vartwo}{\subs{\tmfour}{\var}{\ls{\tmthree}}}$ also has.
+      \item {\bf Sequential contexts.}
+            The derivation of $\subs{\tmfour}{\var}{\ls{\tmthree}}$ has sequential contexts because
+            it is correct.
+            Also, $\tctx$ is sequential because $\tctx \oplus \vartwo : \mtyp$ is sequential.
+      \item {\bf Sequential types.} Because it is correct, all types in the derivation of
+                $\subs{\tmfour}{\var}{\ls{\tmthree}}$
+            are sequential.
+            Finally, $\mtyp$ is sequential because it is $(\tctx \oplus \vartwo : \mtyp)(\vartwo)$, which is sequential.
+      \end{itemize}
+  \item \Case{Application}
+    $\subs{(\tmfour \ls{\tmfour})}{\var}{\ls{\tmthree}} =
+     \subs{\tmfour}{\var}{\ls{\tmthree}_0} [\subs{\tmfour_1}{\var}{\ls{\tmthree}_1}, \hdots,
+                                            \subs{\tmfour_n}{\var}{\ls{\tmthree}_n}]$.
+    By inductive hypothesis, $\subs{\tmfour}{\var}{\ls{\tmthree}_0}$ and all
+      $\subs{\tmfour_i}{\var}{\ls{\tmthree}_i}$ are correct.
+
+     By \indrulename{\toE},
+      \indrule{\toE}{
+        \tctx_0 \vdash \tmfour : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
+        \HS
+        \left( \tctx_i \vdash \tmfour_i : \typtwo_i \right)_{i=1}^{n}
+      }{
+        \tctx = \tctx_0 +_{i=1}^{n} \tctx_i \vdash \tmfour \ls{\tmfour} : \typ
+      }
+
+     And $\tctxtwo_i \vdash \tmthree_i : \typtwo_i$ for all $i \in \{1, \hdots, n\}$.
+
+     By \indrulename{\toE},
+     \[
+      \indrule{\toE}{
+        \tctx_0 + \ls{\tctxtwo}_0 \vdash \subs{\tmfour}{\var}{\ls{\tmthree}_0} : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
+        \HS
+        \left( \tctx_i + \ls{\tctxtwo}_i \vdash \tmtwo_i : \subs{\tmfour_i}{\var}{\ls{\tmthree}_i} \right)_{i=1}^{n}
+      }{
+        \tctx_0 +_{i=1}^{n} \tctx_i +_{i=0}^n \tctxtwo_i \vdash \subs{\tmfour}{\var}{\ls{\tmthree}_0}
+        [\subs{\tmfour_1}{\var}{\ls{\tmthree}_1}, \hdots, \subs{\tmfour_n}{\var}{\ls{\tmthree}_n}] : \typ
+      }
+      \]
+      \begin{itemize}
+      \item {\bf Unique lambdas.} By hypothesis $\tmfour$, $\ls{\tmfour}$ and $\ls{\tmthree}$
+        all have pairwise distinct labels in their lambdas.
+      \item {\bf Sequential contexts.}
+            The derivations of $\subs{\tmfour}{\var}{\ls{\tmthree}_0}$ and
+              $\subs{\tmfour_i}{\var}{\ls{\tmthree}_i}$ have sequential contexts because
+              the terms are correct.
+            Also, $\tctx_0 +_{i=1}^{n} \tctx_i +_{i=0}^n \tctxtwo_i$ is correct by hypothesis.
+      \item {\bf Sequential types.} Because they are correct, all types in the derivations of
+            $\subs{\tmfour}{\var}{\ls{\tmthree}_0}$ and
+              $\subs{\tmfour_i}{\var}{\ls{\tmthree}_i}$ are sequential.
+            Finally, if $\typ$ is an arrow type, its domain is sequential by hypothesis.
+      \end{itemize}
+  \end{enumerate}
+\item \Case{Under an abstraction, $\con = \lamp{\lab'}{\vartwo}{\con'}$}
+  Then $\tm = \lamp{\lab'}{\vartwo}{\contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}}$
+  and $\tm' = \lamp{\lab'}{\vartwo}{\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}}$.
+  By \rlem{subterm_is_correct}, $\contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$
+    is correct, so by i.h. $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ is correct.
+
+  Let
+    $\tctx \vdash \lamp{\lab'}{\vartwo}{\contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}} :
+        \mtyp \tolab{\lab'} \typtwo$.
+
+By Subject reduction,
+\indrule{\toI}{
+\tctx \oplus \vartwo : \mtyp \vdash \contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}} : \typtwo
+}{
+\tctx \vdash \lamp{\lab'}{\vartwo}{\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}} : \mtyp \tolab{\lab'} \typtwo
+}
+
+Then $\lamp{\lab'}{\vartwo}{\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}}$ is correct, because
+\begin{itemize}
+\item {\bf Unique lambdas.}
+      As it is correct, $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ enjoys uniqueness of lambda labeling.
+      Also, as $\tm$ as correct, $\lab'$ does not decorate any lambda in
+        $\contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$
+      so by \rlem{labels_of_reduction}, $\lab'$ does not decorate any lambda in
+        $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$.
+\item {\bf Sequential contexts.}
+      The derivation of $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ has sequential contexts because
+      it is correct.
+      Also, $\tctx$ is sequential because $\tm$ is correct.
+\item {\bf Sequential types.} Because it is correct, all types in the derivation of
+          $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$
+      are sequential. Finally, $\mtyp$ is sequential because $\tm$ is correct.
+\end{itemize}
+\item \Case{Left of an application, $\con = \con'\,\vec{\tmfour}$}
+  Then $\tm = \contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}\,\ls{\tmfour}$
+  and $\tm' = \subs{\tmtwo}{\var}{\ls{\tmthree}}\,\ls{\tmfour}$.
+  By \rlem{subterm_is_correct}, $\contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$
+    is correct, so by i.h. $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ is correct.
+
+  Let
+    $\tctx \vdash \contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}\,\ls{\tmfour} : \typ$.
+
+By Subject reduction,
+\indrule{\toE}{
+   \tctx_0 \vdash \contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}} : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
+       \HS
+       \left( \tctx_i \vdash \tmfour_i : \typtwo_i \right)_{i=1}^{n}
+}{
+   \tctx = \tctx_0 +_{i=1}^{n} \tctx_i \vdash \contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}} \, [\tmfour_1,\hdots,\tmfour_n] : \typ
+}
+
+Then $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}\,\ls{\tmfour}$ is correct, because
+\begin{itemize}
+\item {\bf Unique lambdas.}
+      As it is correct, $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ enjoys uniqueness of lambda labeling.
+      Also, as $\tm$ as correct, the labels that decorate all the $\tmfour_i$ do not decorate any lambda in 
+        $\contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$
+      so by \rlem{labels_of_reduction}, they do not decorate any lambda in
+        $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$. $r$ and $r_i$ for all $i \neq j$ also have
+        pairwise distinct lambda labels because they already did in $\tm$.
+\item {\bf Sequential contexts.}
+      The derivation of $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ has sequential contexts because
+      it is correct.
+      The derivations of $r_i$ have secuential contexts for all $i$ by hypothesis
+      (their derivation in $\tm'$ is the same that it was in $\tm$).
+      Also, $\tctx$ is sequential because $\tm$ is correct.
+\item {\bf Sequential types.} Because it is correct, all types in the derivation of
+          $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$
+      are sequential.
+      The derivations of $r_i$ have secuential types for all $i$ by hypothesis (same as before).
+      Finally, if $\typ$ is an arrow type, then the domain is sequential because $\tm$ is correct.
+\end{itemize}
+\item \Case{Right of an application, $\con = \tmfour\,[\tmfour_1,\hdots, \tmfour_{k-1}, \con', \tmfour_{k+1}, \hdots,\tmfour_n]$}
+
+  So $\tm = \tmfour\,
+    [\tmfour_1,\hdots, \tmfour_{k-1}, \contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}, \tmfour_{k+1},
+    \hdots,\tmfour_n]$;
+    $\tm' = \tmfour\,[\tmfour_1,\hdots, \tmfour_{k-1}, \contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}, \tmfour_{k+1}, \hdots,\tmfour_n]$.
+  By \rlem{subterm_is_correct}, $\contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$
+    is correct, so by i.h. $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ is correct.
+
+  Let
+    $\tctx \vdash \contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}\,\ls{\tmfour} : \typ$.
+
+By Subject reduction,
+
+\indrule{\toE}{
+   \tctx_0 \vdash \tmfour : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
+       \HStight
+       \left( \tctx_i \vdash \tmfour_i : \typtwo_i \right)_{i=1}^{k-1}
+       \HStight
+       \tctx_k \vdash \contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}} : \typtwo_k
+       \HStight
+       \left( \tctx_i \vdash \tmfour_i : \typtwo_i \right)_{i=k+1}^{n}
+}{
+   \tctx = \tctx_0 +_{i=1}^{n} \tctx_i \vdash \tmfour\,[\tmfour_1,\hdots, \tmfour_{k-1},
+   \contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}, \tmfour_{k+1}, \hdots,\tmfour_n] : \typ
+}
+
+Then $\tmfour\,[\tmfour_1,\hdots, \tmfour_{k-1},\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}, \tmfour_{k+1},
+\hdots,\tmfour_n]$ is correct, because
+\begin{itemize}
+\item {\bf Unique lambdas.}
+      As it is correct, $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ enjoys uniqueness of lambda labeling.
+      Also, as $\tm$ as correct, the labels that decorate the lambdas of $r$
+        and of all the $\tmfour_i$ for $i\neq j$ do not decorate any lambda in 
+        $\contwoof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$
+      so by \rlem{labels_of_reduction}, they do not decorate any lambda in
+        $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$. $r$ and $r_i$ for all $i \neq j$ also have
+        pairwise distinct lambda labels because they already did in $\tm$.
+\item {\bf Sequential contexts.}
+      The derivation of $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$ has sequential contexts because
+      it is correct.
+      The derivations of $r$ and all $r_i$ with $i \neq j$ have sequential contexts by hypothesis
+      (their derivation in $\tm'$ is the same that it was in $\tm$).
+      Also, $\tctx$ is sequential because $\tm$ is correct.
+\item {\bf Sequential types.} Because it is correct, all types in the derivation of
+          $\contwoof{\subs{\tmtwo}{\var}{\ls{\tmthree}}}$
+      are sequential.
+      The derivations of $r$ and all $r_i$ with $i \neq j$ have sequential types by hypothesis (same as before).
+      Finally, if $\typ$ is an arrow type, then the domain is sequential because $\tm$ is correct.
+\end{itemize}
+\end{enumerate}
+\end{proof}
