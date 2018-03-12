@@ -1,0 +1,59 @@
+
+We wanted to prove that $d(\tm) + \sum_{i=1}^n d(\tmtwo_i) = d(\subs{\tm}{\var}{\ls{\tmtwo}})$,
+where $d$ counts the number of lambdas of its paramter.
+
+\begin{proof}
+We proceed by induction on $\tm$.
+
+\begin{itemize}
+\item \Case{Variable (same)} $\tm = \var^\typ$.
+  Then, $\ls{\tmtwo} = \lset{\tmtwo}$ and 
+        $\subs{\var^{\typ}}{\var}{[\tmtwo]} = \tmtwo$. So what we want to show is true:
+   \[ d(\var^\typ) + d(\tmtwo) = d(\tmtwo)\]
+\item \Case{Variable (different)} $\tm = \vartwo^\typ \neq \var$.
+  Then, $\ls{\tmtwo} = \emptylset$ and 
+        $\subs{\vartwo^{\typ}}{\var}{\emptylset} = \vartwo^\typ$. So:
+   \[ d(\vartwo^\typ) + 0 = d(\vartwo^\typ) \]
+\item \Case{Abstraction} $\tm = \lamp{\lab}{\vartwo}{\tmfour}$.
+Then, $\subs{(\lamp{\lab}{\vartwo}{\tmfour})}{\var}{\ls{\tmtwo}} =
+       \lamp{\lab}{\vartwo}{\subs{\tmfour}{\var}{\ls{\tmtwo}}}$.
+
+By inductive hypothesis on $\tmfour$ and $\ls{\tmtwo}$, we have that
+  $d(\tmfour) + \sum_{i=1}^n d(\tmtwo_i) = d(\subs{\tmfour}{\var}{\ls{\tmtwo}})$, but that is
+what we needed, because
+  \[
+    d(\lamp{\lab}{\vartwo}{\tmfour}) + \sum_{i=1}^n d(\tmtwo_i)
+       = 1 + d(\tmfour) + \sum_{i=1}^n d(\tmtwo_i)
+       = 1 + d(\subs{\tmfour}{\var}{\ls{\tmtwo}})
+       = d(\lamp{\lab}{\vartwo}{\subs{\tmfour}{\var}{\ls{\tmtwo}}})
+  \]
+\item \Case{Application} $\tm = \tmthree \lsetcomp{\tmfour}{i}{1}{n}$. Then,
+  \[
+    \subs{\tmthree[\tmfour_i]_{i=1}^{n}}{\var}{\ls{\tmtwo}}
+    =
+    \subs{\tmthree}{\var}{\ls{\tmtwo}_0}[\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}]_{i=1}^{n}
+  \]
+  where $\ls{\tmtwo}_0 +_{i=1}^{n} \ls{\tmtwo}_i$ is a permutation of $\ls{\tmtwo}$
+  such that $\varlabel{\var}{\tmthree} = \tmlabel{\ls{\tmtwo}_0}$
+  and $\varlabel{\var}{\tmfour_i} = \tmlabel{\ls{\tmtwo}_i}$ for all $i \in \set{1, \hdots, n}$.
+  Let $l(i) = |\ls{\tmtwo}_i|$.
+
+By inductive hypothesis
+  \begin{itemize}
+    \item on $\tmthree$ and $\ls{\tmtwo}_0$, we have that $d(\tmthree) + \sum_{j=1}^{l(0)} d(\ls{\tmtwo}_{0, j}) = d(\subs{\tmthree}{\var}{\ls{\tmtwo}_0})$
+    \item on $\tmfour_i$ and $\ls{\tmtwo}_i$ (for all $i \in \set{1, \hdots, n}$), we have that $d(\tmfour_i) + \sum_{j=1}^{l(i)} d(\ls{\tmtwo}_{i, j}) = d(\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i})$
+  \end{itemize}
+Note that $\ls{\tmtwo} = \sum_{i=0}^n \sum_{j=1}^{l(i)} \ls{\tmtwo}_{i,j}$.
+
+Using all that we can finally show what we wanted:
+\begin{equation*}\begin{split}
+d(\tmthree\lsetcomp{\tmfour}{i}{1}{n}) + d(\ls{\tmtwo}) & =
+  d(\tmthree) + \sum_{i=1}^n d(\tmfour_i) + \sum_{i=0}^n \sum_{j=1}^{l(i)} d(\ls{\tmtwo}_{i,j}) \\
+ &= d(\tmthree) + \sum_{j=1}^{l(0)} d(\ls{\tmtwo}_{0,j}) + \sum_{i=1}^n d(\tmfour_i) + \sum_{i=1}^n \sum_{j=1}^{l(i)} d(\ls{\tmtwo}_{i,j}) \\
+ &= d(\tmthree) + \sum_{j=1}^{l(0)} d(\ls{\tmtwo}_{0,j}) + \sum_{i=1}^n \bigg(d(\tmfour_i) + \sum_{j=1}^{l(i)} d(\ls{\tmtwo}_{i,j}) \bigg) \\
+ &= d(\subs{\tmthree}{\var}{\ls{\tmtwo}_0}) + \sum_{i=1}^n d(\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}) \\
+ &= d(\subs{\tmthree}{\var}{\ls{\tmtwo}_0} [\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}]_{i=1}^n) \\
+ &= d(\subs{\tmthree[\tmfour_i]_{i=1}^{n}}{\var}{\ls{\tmtwo}}) \\
+\end{split}\end{equation*}
+\end{itemize}
+\end{proof}

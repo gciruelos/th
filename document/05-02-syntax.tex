@@ -1,0 +1,154 @@
+Generally, intersection type systems are used on the pure $\lambda$-calculus.
+In such environment, a term may be able to be typed:
+for example, in system~$\mathcal{W}$,
+$\lam{x}{x x}$ can have the type $((\alpha \to \beta) \cap \alpha) \to \beta$.
+On the other hand, the term $\Omega = (\lam{x}{x x}) (\lam{x}{x x})$ cannot
+be typed.
+
+In contrast, what we will do in this work is define a slightly different
+calculus, such that all terms of that calculus can be typed using
+the non idempotent intersection type system defined above.
+
+The informal idea behind the definition of the terms of the calculus is that
+in an application, for each type in the domain of the function there will be
+a different argument. So if we have a term $\tm$ with type
+$(\typ_1 \cap \typ_2) \to \typ_3$, we can apply it to a \textit{list}
+of arguments, one with type $\typ_1$ and the other with type $\typ_2$.
+
+\begin{definition}[Distributive type system]
+The set of \defn{distributive terms},
+ranged over by ($\tm,\tmtwo,\tmthree,\hdots$) is given by the following abstract syntax:
+\[
+  \tm ::= \var^{\typ} \mid \lamp{\lab}{\var}{\tm} \mid \tm\,\ls{\tm}
+\]
+Typing rules are defined inductively as follows.
+\[
+  \indrule{var}{
+  }{
+    \var : \lset{\typ} \vdash \var^\typ : \typ
+  }
+  \indrule{\toI}{
+    \tctx \oplus \var : \mtyp \vdash \tm : \typtwo
+  }{
+    \tctx \vdash \lamp{\lab}{\var}{\tm} : \mtyp \tolab{\lab} \typtwo
+  }
+\]
+\[
+  \indrule{\toE}{
+    \tctx \vdash \tm : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
+    \HS
+    \left( \tctxtwo_i \vdash \tmtwo_i : \typtwo_i \right)_{i=1}^{n}
+  }{
+    \tctx +_{i=1}^{n} \tctxtwo_i \vdash \tm[\tmtwo_1,\hdots,\tmtwo_n] : \typ
+  }
+\]
+Moreover, we introduce a judgment of the form
+$[\tctx_1,\hdots,\tctx_n] \vdash [\tm_1,\hdots,\tm_n] : [\typ_1,\hdots,\typ_n]$
+with the following rule:
+\[
+  \indrule{t-multi}{
+    \tctx_i \vdash \tm_i : \typ_i \text{ for all $i=1..n$}
+  }{
+    [\tctx_1,\hdots,\tctx_n] \vdash [\tm_1,\hdots,\tm_n] : [\typ_1,\hdots,\typ_n]
+  }
+\]
+\end{definition}
+
+\begin{example}
+Uusing integer labels,
+\[\vdash \lamp{1}{\var}{\var^{[\alpha^2,\alpha^3] \tolab{4} \beta^5}[\var^{\alpha^3},\var^{\alpha^2}]}
+: [[\alpha^2,\alpha^3] \tolab{4} \beta^5, \alpha^2, \alpha^3] \tolab{1} \beta^5\]
+is a derivable judgment.
+For another example,
+\[\var : [] \tolab{1} \alpha^2 \vdash \var^{[] \tolab{1} \alpha^2} [] : \alpha^2\]
+is a derivable judgment.
+\end{example}
+
+Note that writing all labels is rather cumbersome, so we will omit or simplify them when possible.
+
+\subsection{Correctness}
+Observe that the definition we gave has a fatal flaw:
+we cannot uniquely associate arguments with variables in the body of the lambdas.
+For example, consider the term
+$(\lamp{1}{x}{y^{[\alpha^2, \alpha^2] \tolab{3} \alpha^4} [x^{\alpha^2}, x^{\alpha^2}]})
+[a^{\alpha^2}, b^{\alpha^2}]$.
+We don't know which parameter to associate which eaich $x$---which parameter goes in the first $x$, $a$ or $b$?
+
+To solve that problem we introduce an invariant that will ensure
+that problem does not manifest.
+We will call that invariant \defn{correctness},
+and we will consider $\lambdadist$ to be the system of all correct terms.
+
+Note that the problem is that the function in the application expects two arguments
+with exactly the same type. A related problem is that, in the body of the function,
+the variable $x$ has the same type twice (remember that in a non idempotent context repetition matters).
+In fact, it is enough to ask that those two anomalies don't show up for the system to work.
+
+We will also ask that the labels of the lambdas do not repeat which
+will come in handy later.
+
+\begin{definition}[Correct term]
+\ldef{sequentiality_and_correctness}
+A multiset of types $[\typ_1,\hdots,\typ_n]$ is \defn{sequential}
+if the external labels of $\typ_i$ and $\typ_j$ are different for all $i \neq j$.
+A typing context $\tctx$ is sequential if $\tctx(\var)$ is sequential for every $\var \in \dom\tctx$.
+The set of \defn{correct} terms is denoted by $\termsdist$.
+A term $\tm$ is correct if it is typable and it verifies the following three conditions:
+\begin{enumerate}
+\item {\em Uniquely labeled lambdas.}
+  If $\lamp{\lab}{\var}{\tmtwo}$ and $\lamp{\labtwo}{\vartwo}{\tmthree}$ 
+  are subterms of $\tm$ at different positions, then $\lab$ and $\labtwo$
+  must be different labels.
+\item {\em Sequential contexts.}
+  If $\tmtwo$ is a subterm of $\tm$ and $\tctx \vdash \tmtwo : \typ$
+  is derivable, then $\tctx$ must be sequential.
+\item {\em Sequential types.}
+  If $\tmtwo$ is a subterm of $\tm$,
+  the judgment $\tctx \vdash \tmtwo : \typ$ is derivable,
+  and there exists a type such that
+  $(\mtyp \tolab{\lab} \typtwo \occursin \tctx)$ or $(\mtyp \tolab{\lab} \typtwo \occursin \typ)$,
+  then $\mtyp$ must be sequential.
+\end{enumerate}
+\end{definition}
+
+\begin{example}
+$\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}]$ is a correct term.
+The example we gave above,
+\[(\lamp{1}{x}{y^{[\alpha^2, \alpha^2] \tolab{3} \alpha^4} [x^{\alpha^2}, x^{\alpha^2}]})
+[a^{\alpha^2}, b^{\alpha^2}]\]
+is not.
+One problem is that the type of $y$ is not sequential.
+For a last example,
+$\lamp{1}{\var}{\lamp{1}{\vartwo}{\vartwo^{\alpha^2}}}$
+is not a correct term since labels for lambdas are not unique.
+\end{example}
+
+
+Having defined the types and the terms of our system
+sheds some light on the resource management capabilities that we claimed it will enjoy:
+note that we can track very precisely how (\ie with which type) a term will be used or
+a bounded variable will be evaluated.
+This will prove very useful to analyze the $\lambda$-calculus.
+
+The next lemma shows that a term is uniquely typable: this means that for a given term
+there is only one type and typing context that satisfy the typing judgement.
+Moreover, all proof trees are the same.
+
+Note that for all proof trees to be the same it is crucial that
+we only consider correct terms, because otherwise when we apply the rule
+$\toE$ we may have the possiblity to choose between different orders for the
+parameters.\footnote{This implies that a weaker uniqueness result holds for
+incorrect terms: proof trees are equal modulo permutations when the rule $\toE$
+is applied, but as we don't care about incorrect terms we don't need to consider this.}
+
+\begin{lemma}[Unique typing]
+\llem{unique_typing}
+Let $\tm$ be typable, \ie suppose that there exist a context $\tctx$ and a type $\typ$ such that $\tctx \vdash \tm : \typ$. Furthermore, suppose that $\tm$ is correct.
+Then there is a unique derivation that types $\tm$.
+In particular, if $\tctx' \vdash \tm : \typ'$, then $\tctx = \tctx'$ and $\typ = \typ'$.
+\end{lemma}
+\begin{proof}
+\SeeAppendixRef{unique_typing_proof}
+By induction on $\tm$.
+\end{proof}
+

@@ -1,0 +1,58 @@
+We will now present the type system we will work with, which as we said, is a variant of the system presented
+in \cite{bucciarelli2017non}.
+
+To make the notation easier, we will write $\typ_1 \cap ... \cap \typ_n$ as the
+multiset $\lset{\typ_1, \hdots, \typ_n}$.
+Recall that we work in a non idempotent environment so we may have repetitions.
+
+\begin{definition}[Types and typing contexts]
+Let $\labelset = \set{\lab,\lab',\lab'',\hdots}$ be a denumerable set of labels.
+The sets of \defn{types}, ranged over by $\typ,\typtwo,\typthree,\hdots$,
+and \defn{finite sets of types}, ranged over by $\mtyp,\mtyptwo,\mtypthree,\hdots$,
+are given mutually inductively by the following abstract syntax:
+\[
+  \typ ::= \basetyp^{\lab} \mid \mtyp \tolab{\lab} \typ
+\]
+\[
+  \mtyp ::= \lset{\typ_i}_{i=1}^{n} \HS \text{for some $n \geq 0$}
+\]
+In a type like $\basetyp^{\lab}$ and $\mtyp \tolab{\lab} \typ$,
+the label $\lab$ is called the \defn{external label}.
+\defn{Typing contexts}, or contexts for short,
+ranged over by $\tctx,\tctxtwo,\tctxthree,\hdots$ are (total) functions from variables to finite sets of types.
+We write $\dom\tctx$ for the set of variables $\var$ such that $\tctx(\var) \neq \lset{}$.
+We write $\emptyContext$ for the context such that $\emptyContext(\var) = \lset{}$ for every variable $\var$.
+The notation $\tctx + \tctxtwo$ stands for the \defn{sum of contexts}, defined as follows:
+\[
+    (\tctx + \tctxtwo)(\var) \eqdef \tctx(\var) + \tctxtwo(\var)
+\]
+The notation $\tctx \oplus \tctxtwo$ stands for the \defn{disjoint sum of contexts},
+\ie it stands for $\tctx + \tctxtwo$ provided $\dom\tctx \cap \dom\tctxtwo = \emptyset$.
+We also write $\tctx +_{i=1}^{n} \tctxtwo_i$ for $\tctx + \sum_{i=1}^{n} \tctxtwo_i$.
+Moreover, $\var : \mtyp$ denotes the context such that $(\var : \mtyp)(\var) = \mtyp$
+and $\dom(\var : \mtyp) = \set{\var}$.
+\end{definition}
+
+Remark that the (only) difference with the system~$\mathcal{W}$
+at type-level is that we include labels.
+
+Like in system~$\mathcal{W}$, note that it will not be possible for a term to have multiple types,
+like the name \textit{intersection type system} would suggest.
+Rather, what happens is that function terms will receive a parameter that can be interpreted
+as having several types.
+
+Later we will need to look closely at these types,
+for which purpose the following definition will be useful.
+
+\begin{definition}
+A type $\typ$ is said to \defn{occur} in another type $\typtwo$ if
+$\typ \occursin \typtwo$ holds,
+where $(\occursin)$ is the reflexive and transitive closure of
+the axioms
+$\typ_i \occursin [\typ_1,\hdots,\typ_n] \to \typtwo$ for all $i=1..n$,
+and $\typtwo \occursin [\typ_1,\hdots,\typ_n] \to \typtwo$.
+This is extended to say that a type $\typ$ occurs in a multiset $[\typtwo_1,\hdots,\typtwo_n]$,
+defined by $\typ \occursin [\typtwo_1,\hdots,\typtwo_n]$ if $\typ \occursin \typtwo_i$ for some $i=1..n$,
+and that a type $\typ$ occurs in a typing context $\tctx$,
+defined by $\typ \occursin \tctx$ if $\typ \occursin \tctx(\var)$ for some $\var \in \dom\tctx$.
+\end{definition}

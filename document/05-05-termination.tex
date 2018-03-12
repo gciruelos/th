@@ -1,0 +1,65 @@
+The $\lambdadist$-calculus happens to be strongly normalizing.
+This is because substitution is \emph{linear}, \ie the term
+$\subs{\tm}{\var}{[\tmtwo_1, \hdots, \tmtwo_n]}$ uses
+$\tmtwo_i$ exactly once for all $i \in \set{1,\hdots,n}$,
+hence $\todist$ reduces the number of lambdas of a term in exactly one.
+
+
+\begin{proposition}[Termination]
+\lprop{termination}
+There is no infinite reduction $\tm_0 \todist \tm_1 \todist \tm_2 \todist \hdots$.
+\end{proposition}
+\begin{proof}
+It suffices to show that there is a function $d : \termsdist \to \Nat_0$ compatible with $\todist$,
+\ie such that $\tm \todist \tmtwo$ implies $d(\tm) > d(\tmtwo)$.
+In particular, we will show that taking $d(\tm)$ to be the number of $\lambda$s in $\tm$ works. More precisely:
+\begin{equation*}\begin{split}
+d(\var^\typ) & \eqdef 0 \\
+d(\lamp{\lab}{\var}{\tm}) & \eqdef 1 + d(\tm) \\
+d(\tm \lsetenum{\tmtwo}{1}{n}) & \eqdef d(\tm) + \sum_{i=1}^n d(\tmtwo_i) \\
+\end{split}\end{equation*}
+This definition may be extended to contexts, by taking $d(\conbase) \eqdef 0$.
+It is straightforward to show, by induction on $\con$, that $d(\conof{\tm}) = d(\con) + d(\tm)$.
+
+Now, to prove the proposition, suppose that
+  \[
+    \conof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}} \todist \conof{\subs{\tm}{\var}{\ls{\tmtwo}}}
+  \]
+We would like to see that
+  $d(\conof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}) > d(\conof{\subs{\tm}{\var}{\ls{\tmtwo}}})$.
+But
+  \[
+    \begin{array}{rcl}
+    d(\conof{(\lamp{\lab}{\var}{\tm})}) & = & d(\con) + d((\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}) \\
+                                        & = & d(\con) + d(\lamp{\lab}{\var}{\tm}) + \sum_{i=1}^n d(\tmtwo_i) \\
+                                        & = & d(\con) + 1 + d(\tm) + \sum_{i=1}^n d(\tmtwo_i) \\
+    \end{array}
+  \]
+Moreover
+  \[
+    d(\conof{\subs{\tm}{\var}{\ls{\tmtwo}}}) = d(\con) + d(\subs{\tm}{\var}{\ls{\tmtwo}})
+  \]
+So it suffices to show that $1 + d(\tm) + \sum_{i=1}^n d(\tmtwo_i) > d(\subs{\tm}{\var}{\ls{\tmtwo}})$.
+As a matter of fact, a stronger proposition holds:
+  $d(\tm) + \sum_{i=1}^n d(\tmtwo_i) = d(\subs{\tm}{\var}{\ls{\tmtwo}})$.
+\SeeAppendixRef{termination_proof} We can prove this by induction on $\tm$.
+\end{proof}
+
+
+
+\begin{corollary}[Bound for the length of derivations]
+\lcoro{bounded_length_of_derivations}
+Let $\tm' \in \termsdist$ be a correct term.
+Then there is a bound for the length of derivations starting at $\tm'$.
+\end{corollary}
+\begin{proof}
+This is an immediate consequence of the fact that the distributive lambda-calculus
+is strongly normalizing (\rprop{termination}) and finitely branching, by K\"onig's lemma.
+\end{proof}
+
+\begin{remark}
+For example, a possible bound---albeit not very good---is the number of lambdas of the term.
+This fact stems from the proof of \rprop{termination}.
+\end{remark}
+
+

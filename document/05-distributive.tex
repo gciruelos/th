@@ -4,6 +4,10 @@
 In this chapter we present a
 {\em distributive $\lambda$-calculus} ($\lambdadist$),
 and we prove some basic properties it enjoys.
+Following that, we give develop a theory of residuals for our calculus and talk
+about the structure of the derivation spaces of its terms.
+To finish, we establish a relation between our calculus and the pure lambda-calculus
+that will allow us to prove interesting results in the next chapter.
 
 Terms of the $\lambdadist$-calculus are typing derivations of a non-idempotent intersection type
 system, written using proof term syntax.
@@ -14,378 +18,29 @@ uses {\em labels} and a suitable invariant on terms,
 to ensure that the formal parameters of all functions
 are in 1--1 correspondence with the actual arguments that they receive.
 
-
 \section{Types}
-
-We will now present the type system we will work with, which as we said, is a variant of the system presented
-in \cite{bucciarelli2017non}.
-
-To make the notation easier, we will write $\typ_1 \cap ... \cap \typ_n$ as the
-multiset $\lset{\typ_1, \hdots, \typ_n}$.
-Recall that we work in a non idempotent environment so we may have repetitions.
-
-\begin{definition}[Types and typing contexts]
-Let $\labelset = \set{e,e',e'',\hdots}$ be a denumerable set of labels.
-The sets of \defn{types}, ranged over by $\typ,\typtwo,\typthree,\hdots$,
-and \defn{finite sets of types}, ranged over by $\mtyp,\mtyptwo,\mtypthree,\hdots$,
-are given mutually inductively by the following abstract syntax:
-\[
-  \typ ::= \basetyp^{\lab} \mid \mtyp \tolab{\lab} \typ
-\]
-\[
-  \mtyp ::= \lset{\typ_i}_{i=1}^{n} \HS \text{for some $n \geq 0$}
-\]
-In a type like $\basetyp^{\lab}$ and $\mtyp \tolab{\lab} \typ$,
-the label $\lab$ is called the \defn{external label}.
-\defn{Typing contexts}, or contexts for short,
-ranged over by $\tctx,\tctxtwo,\tctxthree,\hdots$ are (total) functions from variables to finite sets of types.
-We write $\dom\tctx$ for the set of variables $\var$ such that $\tctx(\var) \neq \lset{}$.
-We write $\emptyContext$ for the context such that $\emptyContext(\var) = \lset{}$ for every variable $\var$.
-The notation $\tctx + \tctxtwo$ stands for the \defn{sum of contexts}, defined as follows:
-\[
-    (\tctx + \tctxtwo)(\var) \eqdef \tctx(\var) + \tctxtwo(\var)
-\]
-The notation $\tctx \oplus \tctxtwo$ stands for the \defn{disjoint sum of contexts},
-\ie it stands for $\tctx + \tctxtwo$ provided $\dom\tctx \cap \dom\tctxtwo = \emptyset$.
-We also write $\tctx +_{i=1}^{n} \tctxtwo_i$ for $\tctx + \sum_{i=1}^{n} \tctxtwo_i$.
-Moreover, $\var : \mtyp$ denotes the context such that $(\var : \mtyp)(\var) = \mtyp$
-and $\dom(\var : \mtyp) = \set{\var}$.
-\end{definition}
-
-Remark that the (only) difference with the system~$\mathcal{W}$
-at type-level is that we include labels.
-
-Like in system~$\mathcal{W}$, note that it will not be possible for a term to have multiple types,
-like the name \textit{intersection type system} would suggest.
-Rather, what happens is that function terms will receive a parameter that can be interpreted
-as having several types.
-
-Later we will need to look closely at these types,
-for which purpose the following definition will be useful.
-
-\begin{definition}
-A type $\typ$ is said to \defn{occur} in another type $\typtwo$ if
-$\typ \occursin \typtwo$ holds,
-where $(\occursin)$ is the reflexive and transitive closure of
-the axioms
-$\typ_i \occursin [\typ_1,\hdots,\typ_n] \to \typtwo$ for all $i=1..n$,
-and $\typtwo \occursin [\typ_1,\hdots,\typ_n] \to \typtwo$.
-This is extended to say that a type $\typ$ occurs in a multiset $[\typtwo_1,\hdots,\typtwo_n]$,
-defined by $\typ \occursin [\typtwo_1,\hdots,\typtwo_n]$ if $\typ \occursin \typtwo_i$ for some $i=1..n$,
-and that a type $\typ$ occurs in a typing context $\tctx$,
-defined by $\typ \occursin \tctx$ if $\typ \occursin \tctx(\var)$ for some $\var \in \dom\tctx$.
-\end{definition}
-
+\input{05-01-types}
 
 \section{Syntax}
-
-Generally, intersection type systems are used on the pure $\lambda$-calculus.
-In such environment, a term may be able to be typed:
-for example, in system~$\mathcal{W}$,
-$\lam{x}{x x}$ can have the type $((\alpha \to \beta) \cap \alpha) \to \beta$.
-On the other hand, the term $\Omega = (\lam{x}{x x}) (\lam{x}{x x})$ cannot
-be typed.
-
-In contrast, what we will do in this work is define a slightly different
-calculus, such that all terms of that calculus can be typed using
-the non idempotent intersection type system defined above.
-
-The informal idea behind the definition of the terms of the calculus is that
-in an application, for each type in the domain of the function there will be
-a different argument. So if we have a term $\tm$ with type
-$(\typ_1 \cap \typ_2) \to \typ_3$, we can apply it to a \textit{list}
-of arguments, one with type $\typ_1$ and the other with type $\typ_2$.
-
-\begin{definition}[Distributive type system]
-The set of \defn{distributive terms},
-ranged over by ($\tm,\tmtwo,\tmthree,\hdots$) is given by the following abstract syntax:
-\[
-  \tm ::= \var^{\typ} \mid \lamp{\lab}{\var}{\tm} \mid \tm\,\ls{\tm}
-\]
-Typing rules are defined inductively as follows.
-\[
-  \indrule{var}{
-  }{
-    \var : \lset{\typ} \vdash \var^\typ : \typ
-  }
-  \indrule{\toI}{
-    \tctx \oplus \var : \mtyp \vdash \tm : \typtwo
-  }{
-    \tctx \vdash \lamp{\lab}{\var}{\tm} : \mtyp \tolab{\lab} \typtwo
-  }
-\]
-\[
-  \indrule{\toE}{
-    \tctx \vdash \tm : \lset{\typtwo_1,\hdots,\typtwo_n} \tolab{\lab} \typ
-    \HS
-    \left( \tctxtwo_i \vdash \tmtwo_i : \typtwo_i \right)_{i=1}^{n}
-  }{
-    \tctx +_{i=1}^{n} \tctxtwo_i \vdash \tm[\tmtwo_1,\hdots,\tmtwo_n] : \typ
-  }
-\]
-Moreover, we introduce a judgment of the form
-$[\tctx_1,\hdots,\tctx_n] \vdash [\tm_1,\hdots,\tm_n] : [\typ_1,\hdots,\typ_n]$
-with the following rule:
-\[
-  \indrule{t-multi}{
-    \tctx_i \vdash \tm_i : \typ_i \text{ for all $i=1..n$}
-  }{
-    [\tctx_1,\hdots,\tctx_n] \vdash [\tm_1,\hdots,\tm_n] : [\typ_1,\hdots,\typ_n]
-  }
-\]
-\end{definition}
-
-For example, using integer labels,
-$\vdash \lamp{1}{\var}{\var^{[\alpha^2,\alpha^3] \tolab{4} \beta^5}[\var^{\alpha^3},\var^{\alpha^2}]}
-: [[\alpha^2,\alpha^3] \tolab{4} \beta^5, \alpha^2, \alpha^3] \tolab{1} \beta^5$
-is a derivable judgment.
-For another example,
-$\var : [] \tolab{1} \alpha^2 \vdash \var^{[] \tolab{1} \alpha^2} [] : \alpha^2$
-is a derivable judgment.
-
-Note that writing all labels is rather cumbersome, so we will omit or simplify them when possible.
-
-\subsection{Correctness}
-Observe that the definition we gave has a fatal flaw:
-we cannot uniquely associate arguments with variables in the body of the lambdas.
-For example, consider the term
-$(\lamp{1}{x}{y^{[\alpha^2, \alpha^2] \tolab{3} \alpha^4} [x^{\alpha^2}, x^{\alpha^2}]})
-[a^{\alpha^2}, b^{\alpha^2}]$.
-We don't know which parameter to associate which eaich $x$---which parameter goes in the first $x$, $a$ or $b$?
-
-To solve that problem we introduce an invariant that will ensure
-that problem does not manifest.
-We will call that invariant \defn{correctness},
-and we will consider $\lambdadist$ to be the system of all correct terms.
-
-Note that the problem is that the function in the application expects two arguments
-with exactly the same type. A related problem is that, in the body of the function,
-the variable $x$ has the same type twice (remember that in a non idempotent context repetition matters).
-In fact, it is enough to ask that those two anomalies don't show up for the system to work.
-
-We will also ask that the labels of the lambdas do not repeat which
-will come in handy later.
-
-\begin{definition}[Correct term]
-\ldef{sequentiality_and_correctness}
-A multiset of types $[\typ_1,\hdots,\typ_n]$ is \defn{sequential}
-if the external labels of $\typ_i$ and $\typ_j$ are different for all $i \neq j$.
-A typing context $\tctx$ is sequential if $\tctx(\var)$ is sequential for every $\var \in \dom\tctx$.
-The set of \defn{correct} terms is denoted by $\termsdist$.
-A term $\tm$ is correct if it is typable and it verifies the following three conditions:
-\begin{enumerate}
-\item {\em Uniquely labeled lambdas.}
-  If $\lamp{\lab}{\var}{\tmtwo}$ and $\lamp{\labtwo}{\vartwo}{\tmthree}$ 
-  are subterms of $\tm$ at different positions, then $\lab$ and $\labtwo$
-  must be different labels.
-\item {\em Sequential contexts.}
-  If $\tmtwo$ is a subterm of $\tm$ and $\tctx \vdash \tmtwo : \typ$
-  is derivable, then $\tctx$ must be sequential.
-\item {\em Sequential types.}
-  If $\tmtwo$ is a subterm of $\tm$,
-  the judgment $\tctx \vdash \tmtwo : \typ$ is derivable,
-  and there exists a type such that
-  $(\mtyp \tolab{\lab} \typtwo \occursin \tctx)$ or $(\mtyp \tolab{\lab} \typtwo \occursin \typ)$,
-  then $\mtyp$ must be sequential.
-\end{enumerate}
-\end{definition}
-
-For example,
-$\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}]$ is a correct term.
-The example we gave above,
-$(\lamp{1}{x}{y^{[\alpha^2, \alpha^2] \tolab{3} \alpha^4} [x^{\alpha^2}, x^{\alpha^2}]})
-[a^{\alpha^2}, b^{\alpha^2}]$ is not.
-One problem is that the type of $y$ is not sequential.
-For a last example,
-$\lamp{1}{\var}{\lamp{1}{\vartwo}{\vartwo^{\alpha^2}}}$
-is not a correct term since labels for lambdas are not unique.
-
-Having defined the types and the terms of our system
-sheds some light on the resource management capabilities that we claimed it will enjoy:
-note that we can track very precisely how (\ie with which type) a term will be used or
-a bounded variable will be evaluated.
-This will prove very useful to analyze the $\lambda$-calculus.
-
-\begin{lemma}[Unique typing]
-\llem{unique_typing}
-Let $\tm$ be typable, \ie suppose that there exist a context $\tctx$ and a type $\typ$ such that $\tctx \vdash \tm : \typ$. Furthermore, suppose that $\tm$ is correct.
-Then there is a unique derivation that types $\tm$.
-In particular, if $\tctx' \vdash \tm : \typ'$, then $\tctx = \tctx'$ and $\typ = \typ'$.
-\end{lemma}
-\begin{proof}
-\SeeAppendixRef{unique_typing_proof}
-By induction on $\tm$.
-\end{proof}
+\input{05-02-syntax}
 
 \section{The Calculus}
-
-What we want to do know is give the operational semantics for this calculus.
-The idea is straightforward: in order apply a lambda abstraction to a list of arguments we just
-replace each occurrence of the variable bounded by the lambda with the corresponding argument.
-As the term types and is correct we know that we can do it successfully.
-
-As substitution will be \emph{type-directed} we need to define notation for the type
-of ocurrences of a free variable. If $\tm$ is typable,
-$\varlabel{\var}{\tm}$
-stands for the multiset
-of types of the free occurrences of $\var$ in $\tm$.
-If $\tm_1,\hdots,\tm_n$ are typable,
-$\tmlabel{[\tm_1,\hdots,\tm_n]}$ stands for the multiset
-of types of $\tm_1,\hdots,\tm_n$.
-For example,
-$\varlabel{\var}{\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}]} =
-\tmlabel{[\vartwo^{\alpha^1},\varthree^{[\alpha^1] \tolab{2} \beta^3}]} = [[\alpha^1] \tolab{2} \beta^3,\alpha^1]$.
-To perform a substitution $\subs{\tm}{\var}{[\tmtwo_1,\hdots,\tmtwo_n]}$
-we will require that $\varlabel{\var}{\tm} = \tmlabel{[\tmtwo_1,\hdots,\tmtwo_n]}$.
-
-
-Now we will define exactly what we mean by \emph{replacing}.
-\begin{definition}[Substitution]
-\ldef{substitution}
-Let $\tm$ and $\tmtwo_1,\hdots,\tmtwo_n$ be correct terms such that $\varlabel{\var}{\tm} = \tmlabel{[\tmtwo_1,\hdots,\tmtwo_n]}$.
-The capture-avoiding substitution of $\var$ in $\tm$ by $\ls{\tmtwo} = [\tmtwo_1,\hdots,\tmtwo_n]$
-is denoted by $\subs{\tm}{\var}{\ls{\tmtwo}}$ and defined as follows:
-\[
-  \begin{array}{rcll}
-    \subs{\var^\typ}{\var}{[\tmtwo]} & \eqdef & \tmtwo
-  \\
-    \subs{\vartwo^\typ}{\var}{[]} & \eqdef & \vartwo^\typ
-    & \text{ if $\var \neq \vartwo$}
-  \\
-    \subs{(\lamp{\lab}{\vartwo}{\tmthree})}{\var}{\ls{\tmtwo}} & \eqdef &  \lamp{\lab}{\vartwo}{ \subs{\tmthree}{\var}{\ls{\tmtwo}} }
-    & \text{ if $\var \neq \vartwo$ and $\vartwo \not\in \fv{\ls{\tmtwo}}$}
-  \\
-    \subs{\tmthree_0[\tmthree_j]_{j=1}^{m}}{\var}{\ls{\tmtwo}} & \eqdef &
-    \subs{\tmthree_0}{\var}{\ls{\tmtwo}_0}[\subs{\tmthree_j}{\var}{\ls{\tmtwo}_j}]_{j=1}^{m}
-  \end{array}
-\]
-In the last case, $(\ls{\tmtwo}_0, \hdots, \ls{\tmtwo}_m)$
-is a partition of $\ls{\tmtwo}$
-such that $\varlabel{\var}{\tmthree_j} = \tmlabel{\ls{\tmtwo}_j}$ for all $j=0..m$.
-\end{definition}
-
-For example,
-$\subs{(\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}])}{\var}{[\vartwo^{[\alpha^1] \tolab{2} \beta^3},\varthree^{\alpha^1}]}
-  = \vartwo^{[\alpha^1] \tolab{2} \beta^3}\varthree^{\alpha^1}$
-and
-$\subs{(\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}])}{\var}{[\vartwo^{\alpha^1},\varthree^{[\alpha^1] \tolab{2} \beta^3}]}
-  = \varthree^{[\alpha^1] \tolab{2} \beta^3}\vartwo^{\alpha^1}$.
-
-
-\begin{remark}
-Substitution is {\em type-directed}: arguments $[\tmtwo_1,\hdots,\tmtwo_n]$
-are propagated throughout the term
-so that $\tmtwo_i$ reaches the free occurrence of $\var$
-that has the same type as $\tmtwo_i$.
-There exists one such occurrence for each $i \in \set{1, \hdots, n}$ because
-$\varlabel{\var}{\tm} = \tmlabel{[\tmtwo_1,\hdots,\tmtwo_n]}$.
-Moreover, the fact that $\tm$ is correct ensures that such occurrence is unique,
-since $\varlabel{\var}{\tm}$ is sequential.
-Hence there is essentially a unique way to split $\ls{\tmtwo}$
-into $(\ls{\tmtwo}_0, \ls{\tmtwo}_1, \hdots, \ls{\tmtwo}_n)$.
-More precisely, if $(\ls{\tmtwo}_0, \ls{\tmtwo}_1, \hdots, \ls{\tmtwo}_n)$
-and $(\ls{\tmthree}_0, \ls{\tmthree}_1, \hdots, \ls{\tmthree}_n)$
-are two partitions of $\ls{\tmtwo}$ with the stated property,
-then $\ls{\tmtwo}_i$ is a permutation of $\ls{\tmthree}_i$ for all $i \in \set{0,\hdots,n}$.
-It is easy to check by induction on $\tm$
-that the value of $\subs{\tm}{\var}{\ls{\tmtwo}}$ does
-not depend on this choice.
-The following lemma formalizes what we just said.
-\end{remark}
-
-
-\begin{lemma}[Substitution is well-defined]
-\llem{distrSubstitutionWellDefined}
-If $\tctx \oplus \var : \ls{\typtwo} \vdash \tm : \typ$
-and $\ls{\tctxtwo} \vdash \ls{\tmtwo} : \ls{\typtwo}$
-are derivable,
-then $\tctx + \ls{\tctxtwo} \vdash \subs{\tm}{\var}{\ls{\tmtwo}} : \typ$
-is derivable.
-\end{lemma}
-\begin{proof}
-By induction on $\tm$, straightforward using the ideas in the last remark.
-\end{proof}
-
-
-
-\begin{definition}[The distributive lambda-calculus]
-The \defn{distributive lambda-calculus} is given by the set of correct typable terms $\termsdist$.
-For each label $\lab \in \labelset$, we define a reduction relation $\todistl{\lab}\ \subseteq \termsdist \times \termsdist$
-as follows:
-\[
-  \conof{(\lamp{\lab}{\var}{\tm})\vec{\tmtwo}}
-  \ \todistl{\lab}\ %
-  \conof{\subs{\tm}{\var}{\vec{\tmtwo}}}
-\]
-where $\con$ stands for a \defn{context}.
-The binary relation $\todist$ is the union of all the $\todistl{\lab}$:
-\[
-  \todist \ \eqdef\ \bigcup_{\lab \in \labelset}\todistl{\lab}
-\]
-We sometimes drop the subscript for $\todist$, writing just $\to$, when clear from the context.
-The set of contexts is given by the grammar:
-\[
-  \con ::= \conbase \mid \lamp{\lab}{\var}{\con} \mid \con\,\vec{\tm} \mid \tm[\tmtwo_1,\hdots,\tmtwo_{i-1},\con,\tmtwo_{i+1},\hdots,\tmtwo_n]
-\]
-Contexts can be thought as terms with a single free occurrence of a distinguished variable $\conbase$.
-The notation $\conof{\tm}$ stands for the capturing substitution of the occurrence of $\conbase$ in $\con$ by $\tm$.
-
-In general an $n$-hole context is a term $\con$ with exactly $n \geq 0$ free occurrences of the distinguished variable $\conbase$.
-If $\con$ is an $n$-hole context, $\conof{\tm_1,\hdots,\tm_n}$ stands for the term
-that results from performing the substitution of the $i$-th occurrence of $\conbase_i$ (from left to right)
-by $\tm_i$.
-If $\con$ is an $n$-hole contexts for some $n$, we say that it is a many-hole context.
-\end{definition}
+\input{05-03-the-calculus}
 
 \section{Basic Properties}
+\input{05-04-basic-properties}
 
-The following lemmas show that the rewrite rule $\todist$ is well-defined.
-
-\begin{lemma}[Linearity]
-\llem{linearity}
-Let $\tm \in \termsdist$ be a correct term,
-and let $\tctx \vdash \tm : \typ$ be the (unique) type derivation for $\tm$.
-Let $\var$ be any variable,
-and consider the $n \geq 0$ free occurrences of the variable $\var$ in the term $\tm$,
-more precisely, write $\tm$ as $\tm = \conhat\of{\var^{\typ_1},\hdots,\var^{\typ_n}}$,
-where $\conhat$ is a context with $n$-holes such that $\var \not\in \fv{\conhat}$.
-Then $\tctx(\var) = \set{\typ_1,\hdots,\typ_n}$.
-\end{lemma}
-\begin{proof}
-\SeeAppendixRef{linearity_proof}
-By induction on $\tm$.
-\end{proof}
+\subsection{Termination}
+\input{05-05-termination}
 
 
+\subsection{Confluence}
 
-\begin{lemma}[Subject reduction]
-\llem{subject_reduction}
-If $\tctx \vdash \conof{(\lamp{\lab}{\var}{\tm}) \vec{\tmtwo}} : \typ$
-then $\tctx \vdash \conof{\subs{\tm}{\var}{\vec{\tmtwo}}} : \typ$.
-Moreover, correctness is preserved.
-\end{lemma}
-\begin{proof}
-\SeeAppendixRef{subject_reduction_proof} By induction on $\con$.
-\end{proof}
-
-\begin{lemma}[$\termsdist$ is closed under $\todist$]
-\llem{closed_under_arrow}
-Let $\tm \in \termsdist$ such that $\tm \todist \tm'$. Then $\tm' \in \termsdist$.
-\end{lemma}
-\begin{proof}
-  \SeeAppendixRef{closed_under_arrow_proof}
-Let $\tm = \conof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$. We proceed by induction on $\con$.
-\end{proof}
-
-
-\section{Termination}
-
-\section{Confluence}
+\section{Residual Theory}
+\lsec{residual_theory}
 
 \section{Simulation}
 \lsec{simulation}
-
-\section{Residual Theory}
 
 \section{Simulation Residuals}
 

@@ -1,0 +1,62 @@
+The following lemmas show that the rewrite rule $\todist$ is well-defined.
+
+\begin{lemma}[Linearity]
+\llem{linearity}
+Let $\tm \in \termsdist$ be a correct term,
+and let $\tctx \vdash \tm : \typ$ be the (unique) type derivation for $\tm$.
+Let $\var$ be any variable,
+and consider the $n \geq 0$ free occurrences of the variable $\var$ in the term $\tm$,
+more precisely, write $\tm$ as $\tm = \conhat\of{\var^{\typ_1},\hdots,\var^{\typ_n}}$,
+where $\conhat$ is a context with $n$-holes such that $\var \not\in \fv{\conhat}$.
+Then $\tctx(\var) = \set{\typ_1,\hdots,\typ_n}$.
+\end{lemma}
+\begin{proof}
+\SeeAppendixRef{linearity_proof}
+By induction on $\tm$.
+\end{proof}
+
+This first lemma talks about the shape of the typing context of a given typing judgement.
+Specifically, that the typing context will contain $\var : \typ$ for each free variable
+$\var^\typ$ that occurs in the term, and nothing else.
+
+This lemma will be very useful to prove a lot of upcoming results.
+
+\begin{remark}
+  Given that variables are labeled with their types, it is more or less easy to obtain
+  the type of a given (correct and typable) term.
+  Moreover, Linearity (\rlem{linearity}) shows that it is easy to obtain the context of the typing judgement.
+
+  In summary, given a term $\tm$ that is correct and typable
+  it is straightforward to obtain its typing judgement
+  $\tctx \vdash \tm : \typ$.
+  It is also straightforward to find out whether the term is typable or not---the
+  typability will manifest itself while we try to find $\typ$.
+\end{remark}
+
+
+
+
+\begin{lemma}[$\termsdist$ is closed under $\todist$]
+\llem{closed_under_arrow}
+Let $\tm \in \termsdist$ such that $\tm \todist \tm'$. Then $\tm' \in \termsdist$.
+\end{lemma}
+\begin{proof}
+  \SeeAppendixRef{closed_under_arrow_proof}
+Let $\tm = \conof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$. We proceed by induction on $\con$.
+\end{proof}
+
+
+\begin{lemma}[Subject reduction]
+\llem{subject_reduction}
+If $\tctx \vdash \conof{(\lamp{\lab}{\var}{\tm}) \vec{\tmtwo}} : \typ$
+then $\tctx \vdash \conof{\subs{\tm}{\var}{\vec{\tmtwo}}} : \typ$.
+Moreover, correctness is preserved.
+\end{lemma}
+\begin{proof}
+\SeeAppendixRef{subject_reduction_proof} By induction on $\con$.
+\end{proof}
+
+These two lemmas are very important because they show that $\todist$ behaves
+well, in particular that it preserves correctness of terms and their types.
+That is, if $\tm \to \tm'$ and $\tm$ is correct and well-typed,
+we know that $\tm'$ is correct, well-typed and has the same type as $\tm$.
