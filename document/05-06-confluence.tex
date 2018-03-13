@@ -1,0 +1,84 @@
+As we stated in the introduction, the goal of labeling terms and types
+is that we obtain a confluent calculus. Indeed, the resulting calculus
+is confluent, and it is the purpose of this section to prove so.
+
+
+First, we need to prove an adaptation of the Substitution Lemma for our calculus,
+which is a key tool to prove properties about coinitial steps.
+The substitution lemma for the pure lambda calculus \cite[Lemma 2.1.16]{Barendregt1976}  states that, provided that
+$\var \neq \vartwo$ and $\var \not\in \fv{\tmthree}$, then
+  $\subs{\subs{\tm}{\var}{\tmtwo}}{\vartwo}{\tmthree} =
+    \subs{\subs{\tm}{\vartwo}{\tmthree}}{\var}{\subs{\tmtwo}{\vartwo}{\tmthree}}$
+
+In our case variables get substituted by a \emph{list} of terms, so we need to adapt it.
+Particularly, the list of terms that will take the place of $\tmthree$ needs to be
+divided up in several lists: one for the corresponding $\vartwo$s in $\tm$, and the rest
+for the $\vartwo$s in each of the elements of $\tmtwo$, which recall that now will be a list.
+
+\begin{notation}
+We extend the substitution operator to work on lists,
+defining
+\[\subs{[\tm_i]_{i=1}^{n}}{\var}{\ls{\tmtwo}} \eqdef [\subs{\tm_i}{\var}{\ls{\tmtwo}_i}]_{i=1}^{n}\]
+where $(\ls{\tmtwo}_1,\hdots,\ls{\tmtwo}_n)$ is a partition of $\ls{\tmtwo}$
+such that $\varlabel{\var}{\tm_i} = \tmlabel{\ls{\tmtwo}_i}$ for all $i \in \set{1,\hdots,n}$.
+\end{notation}
+
+\begin{lemma}[Substitution Lemma]
+\llem{substitution_lemma}
+Let $\var \neq \vartwo$ and $\var \not\in \fv{\ls{\tmthree}}$.
+If $(\ls{\tmthree}_1,\ls{\tmthree}_2)$ is a partition of $\ls{\tmthree}$
+then
+\[
+  \subs{\subs{\tm}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}
+  =
+  \subs{\subs{\tm}{\vartwo}{\ls{\tmthree}_1}}{\var}{\subs{\ls{\tmtwo}}{\vartwo}{\ls{\tmthree}_2}}
+\]
+provided that both sides of the equation are defined.
+{\em Note:} there exists a list $\ls{\tmthree}$ that makes the left-hand side defined
+if and only if there exist lists $\ls{\tmthree}_1,\ls{\tmthree}_2$ that make the
+right-hand side defined.
+\end{lemma}
+\begin{proof}
+\SeeAppendixRef{substitution_lemma_proof}
+By induction on $\tm$.
+\end{proof}
+
+\begin{example} For example, consider the term
+\[
+  \tm =
+    (\lamp{\lab}{\var}{\varthree^{[\alpha] \to [\beta] \to \delta} [\var^\alpha] [\var^\beta]})
+      [z^\beta,y^\alpha]
+\]
+We can perform the following substitution (where $w,a,b$ are all variables).
+\[
+  \subs{
+    \subs{\tm}{\varthree}{[w^{[\alpha] \to [\beta] \to \delta}, \vartwo^\beta]}
+  }{
+    \vartwo
+  }{
+    [a^\beta,b^\alpha]
+  }
+  =
+   (\lamp{\lab}{\var}{w^{[\alpha] \to [\beta] \to \delta} [\var^\alpha] [\var^\beta]})
+    [a^\beta,b^\alpha]
+\]
+Note that, as we replaced one $\varthree$ by a $\vartwo$, if we wanted to invert the order
+of the substitutions we would need to separate the list $[a^\beta, b^\alpha]$ in two.
+\[
+  \subs{
+    \subs{\tm}{\vartwo}{[b^\alpha]}
+  }{
+    \varthree
+  }{
+    \subs{[w^{[\alpha] \to [\beta] \to \delta}, \vartwo^\beta]}{\vartwo}{a^\beta}
+  }
+  =
+   (\lamp{\lab}{\var}{w^{[\alpha] \to [\beta] \to \delta} [\var^\alpha] [\var^\beta]})
+    [a^\beta,b^\alpha]
+\]
+\end{example}
+
+
+
+\TODO{Charlar como escribir bien esto (permutation / confluence) (pregunta anotada en el cuaderno)}
+

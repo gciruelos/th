@@ -10,6 +10,7 @@ main.pdf: $(SRC)
 	-bibtex main
 	-${PDFLATEX} -interaction=nonstopmode main
 	-${PDFLATEX} -interaction=nonstopmode main
+	-${PDFLATEX} -interaction=nonstopmode main
 
 view: main.pdf $(SRC)
 	zathura main.pdf &

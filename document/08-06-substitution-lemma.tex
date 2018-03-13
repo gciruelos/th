@@ -1,0 +1,147 @@
+
+We want to prove that if $\var \neq \vartwo$ and $\var \not\in \fv{\ls{\tmthree}}$, then
+
+\[
+  \subs{\subs{\tm}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}
+  =
+  \subs{
+    \subs{\tm}{\vartwo}{\ls{\tmthree}_1}
+  }{\var}{
+    \subs{\ls{\tmtwo}}{\vartwo}{\ls{\tmthree}_2}
+  }
+\]
+where $\ls{\tmthree}$ is a permutation of $\ls{\tmthree}_1 + \ls{\tmthree}_2$.
+
+Recall that the equation above requires that both sides be defined;
+in particular
+$\lengthof{\ls{\tmthree}_1} = \numof{\vartwo}{\tm}$
+and $\lengthof{\ls{\tmthree}_2} = \numof{\vartwo}{\ls{\tmtwo}}$.
+When read from left to right, the equation means that given $\ls{\tmthree}$,
+it can always be written as some permutation of $\ls{\tmthree}_1 + \ls{\tmthree}_2$.
+When read from right to left, it means that given $\ls{\tmthree}_1$ and $\ls{\tmthree}_2$,
+taking $\ls{\tmthree}$ to be any permutation of $\ls{\tmthree}_1 + \ls{\tmthree}_2$
+verifies the equality.
+
+\begin{proof}
+By induction on $\tm$.
+\begin{enumerate}
+\item \Case{Variable (same, first case) $\tm = \var$}
+Then $\ls{\tmtwo} = [\tmtwo]$ and $\ls{\tmthree}_1 = \emptylset$,
+so $\ls{\tmthree}_2 = \ls{\tmthree}$.
+
+Firstly,
+\begin{equation*}\begin{split}
+  \subs{\subs{\var}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}} &
+                                        = \subs{\tmtwo}{\vartwo}{\ls{\tmthree}} \\
+\end{split}\end{equation*}
+
+Also,
+\begin{equation*}\begin{split}
+  \subs{\subs{\var}{\vartwo}{[]}}{\var}{\subs{[\tmtwo]}{\vartwo}{\ls{\tmthree}}}
+                   & = \subs{\var}{\var}{\subs{[\tmtwo]}{\vartwo}{\ls{\tmthree}}} \\
+                   & = \subs{\var}{\var}{[\subs{\tmtwo}{\vartwo}{\ls{\tmthree}}]} \\
+                   & = \subs{\tmtwo}{\vartwo}{\ls{\tmthree}} \\
+\end{split}\end{equation*}
+
+\item \Case{Variable (same, second case) $\tm = \vartwo$}
+Then $\ls{\tmtwo} = \emptylset$, so $\ls{\tmthree} = [\tmthree]$.
+
+Firstly,
+\begin{equation*}\begin{split}
+  \subs{\subs{\vartwo}{\var}{\emptylset}}{\vartwo}{[\tmthree]}
+                   & = \subs{\vartwo}{\vartwo}{[\tmthree]} \\
+                   & = \tmthree \\
+\end{split}\end{equation*}
+
+Also,
+\begin{equation*}\begin{split}
+  \subs{\subs{\vartwo}{\vartwo}{[\tmthree]}}{\var}{\subs{\emptylset}{\vartwo}{\emptylset}}
+                   & = \subs{\tmthree}{\var}{\subs{\emptylset}{\vartwo}{\emptylset}} \\
+                   & = \subs{\tmthree}{\var}{\emptylset} \\
+                   & = \tmthree \\
+\end{split}\end{equation*}
+
+\item \Case{Variable (different) $\tm = \varthree$}
+Then $\ls{\tmtwo} = \emptylset$ and $\ls{\tmthree} = \emptylset$.
+
+Firstly,
+\begin{equation*}\begin{split}
+  \subs{\subs{\varthree}{\var}{\emptylset}}{\vartwo}{\emptylset}
+                   & = \subs{\varthree}{\vartwo}{\emptylset} \\
+                   & = \varthree \\
+\end{split}\end{equation*}
+
+Also,
+\begin{equation*}\begin{split}
+  \subs{\subs{\varthree}{\vartwo}{\emptylset}}{\var}{\subs{\emptylset}{\vartwo}{\emptylset}}
+                   & = \subs{\varthree}{\var}{\subs{\emptylset}{\vartwo}{\emptylset}} \\
+                   & = \subs{\varthree}{\var}{\emptylset} \\
+                   & = \varthree \\
+\end{split}\end{equation*}
+
+\item \Case{Abstraction, $\tm = \lamp{\lab}{\varthree}{\tmfour}$}
+\begin{equation*}\begin{split}
+  \subs{\subs{(\lamp{\lab}{\varthree}{\tmfour})}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}
+     & = \subs{(\lamp{\lab}{\varthree}{\subs{\tmfour}{\var}{\ls{\tmtwo}}})}{\vartwo}{\ls{\tmthree}} \\
+     & = \lamp{\lab}{\varthree}{\subs{\subs{\tmfour}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}} \\
+     & = \lamp{\lab}{\varthree}{\subs{\subs{\tmfour}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}} \\
+     & \eqih \lamp{\lab}{\varthree}{\subs{\subs{\tmfour}
+                                               {\vartwo}{\ls{\tmthree}_1}}
+                                         {\var}{\subs{\ls{\tmtwo}}
+                                                     {\vartwo}{\ls{\tmthree}_2}}} \\
+     & = \subs{(\lamp{\lab}{\varthree}{\subs{\tmfour}
+                                            {\vartwo}{\ls{\tmthree}_1}})}
+              {\var}{\subs{\ls{\tmtwo}}{\vartwo}{\ls{\tmthree}_2}} \\
+     & = \subs{\subs{(\lamp{\lab}{\varthree}{\tmfour})}
+                                            {\vartwo}{\ls{\tmthree}_1}}
+              {\var}{\subs{\ls{\tmtwo}}{\vartwo}{\ls{\tmthree}_2}} \\
+\end{split}\end{equation*}
+\item \Case{Application, $\tm = \tmfour [\tmfour_1,\hdots,\tmfour_n]$}
+
+\begin{equation*}\begin{split}
+  \subs{\subs{(\tmfour [\tmfour_1,\hdots,\tmfour_n])}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}
+     & = \subs{(\subs{\tmfour}{\var}{\ls{\tmtwo}_0} [\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}]_{i=0}^n)}
+              {\vartwo}{\ls{\tmthree}} \hspace{1cm}\\
+\end{split}\end{equation*}
+\begin{equation*}\begin{split}
+\hspace{2cm} & = \subs{\subs{\tmfour}{\var}{\ls{\tmtwo}_0}}{\vartwo}{\ls{\tmthree}_0}
+               [\subs{\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}}{\vartwo}{\ls{\tmthree}_i}]_{i=0}^n \\
+     & \eqih \subs{\subs{\tmfour}{\vartwo}{\ls{\tmthree}_{0,1}}}{\var}{\subs{\ls{\tmtwo}_0}
+                  {\vartwo}{\ls{\tmthree}_{0,2}}}
+            [\subs{\subs{\tmfour_i}{\vartwo}{\ls{\tmthree}_{i,1}}}{\var}{\subs{\ls{\tmtwo}_0}
+                  {\vartwo}{\ls{\tmthree}_{i,2}}}]_{i=0}^n \\
+     & = \subs{(\subs{\tmfour}{\vartwo}{\ls{\tmthree}_{0,1}}
+                     [\subs{\tmfour_i}{\vartwo}{\ls{\tmthree}_{i,1}}]_{i=0}^n)}
+              {\var}{\sum_{i=1}^n \subs{\ls{\tmtwo}_i}{\vartwo}{\ls{\tmthree}_{i,2}}} \\
+\end{split}\end{equation*}
+\noindent Because $\sum_{i=0}^n \ls{\tmtwo}_i$ is a permutation of $\ls{\tmtwo}$ and
+we can perform the substitution of each $\ls{\tmthree}_{i,2}$ simultaneously, defining
+$\ls{\tmthreevariant}_2$ as $\sum_{i=0}^n \ls{\tmthree}_{i,2}$, the last term can be rewritten to:
+
+\[
+  \subs{(\subs{\tmfour}{\vartwo}{\ls{\tmthree}_{0,1}}
+           [\subs{\tmfour_i}{\vartwo}{\ls{\tmthree}_{i,1}}]_{i=0}^n)}
+       {\var}{\subs{\ls{\tmtwo}}{\vartwo}{\ls{\tmthreevariant}_2}} \\
+\]
+
+\noindent Lastly, if we define $\ls{\tmthreevariant}_1$ to be $\sum_{i=0}^n \ls{\tmthree}_{i,1}$,
+we get the desired term:
+
+\[
+  \subs{\subs{(\tmfour [\tmfour_1, \hdots, \tmfour_n])}
+             {\vartwo}{\ls{\tmthreevariant}_1}}
+       {\var}{\subs{\ls{\tmtwo}}{\vartwo}{\ls{\tmthreevariant}_2}} \\
+\]
+To conclude observe that $\ls{\tmthreevariant}_1 + \ls{\tmthreevariant}_2$ is indeed a permutation of $\ls{\tmthree}$;
+indeed:
+\[
+  \begin{array}{rcll}
+  \ls{\tmthreevariant}_1 + \ls{\tmthreevariant}_2
+  & = & (\sum_{i=0}^n \ls{\tmthree}_{i,1}) + (\sum_{i=0}^n \ls{\tmthree}_{i,2}) \\
+  & \approx & \sum_{i=0}^n \ls{\tmthree}_{i,1} + \ls{\tmthree}_{i,2} \\
+  & \approx & \sum_{i=0}^n \ls{\tmthree}_i & \text{by \ih on each index $i=0..n$} \\
+  & = & \ls{\tmthree}
+  \end{array}
+\]
+\end{enumerate}
+\end{proof}

@@ -33,7 +33,7 @@ Moreover, $\var : \mtyp$ denotes the context such that $(\var : \mtyp)(\var) = \
 and $\dom(\var : \mtyp) = \set{\var}$.
 \end{definition}
 
-Remark that the (only) difference with the system~$\mathcal{W}$
+One remark that deserves mention is that the difference with the system~$\mathcal{W}$
 at type-level is that we include labels.
 
 Like in system~$\mathcal{W}$, note that it will not be possible for a term to have multiple types,
@@ -49,10 +49,11 @@ A type $\typ$ is said to \defn{occur} in another type $\typtwo$ if
 $\typ \occursin \typtwo$ holds,
 where $(\occursin)$ is the reflexive and transitive closure of
 the axioms
-$\typ_i \occursin [\typ_1,\hdots,\typ_n] \to \typtwo$ for all $i=1..n$,
+$\typ_i \occursin [\typ_1,\hdots,\typ_n] \to \typtwo$ for all $i \in \set{1,\hdots,n}$,
 and $\typtwo \occursin [\typ_1,\hdots,\typ_n] \to \typtwo$.
 This is extended to say that a type $\typ$ occurs in a multiset $[\typtwo_1,\hdots,\typtwo_n]$,
-defined by $\typ \occursin [\typtwo_1,\hdots,\typtwo_n]$ if $\typ \occursin \typtwo_i$ for some $i=1..n$,
+defined by $\typ \occursin [\typtwo_1,\hdots,\typtwo_n]$ if $\typ \occursin \typtwo_i$
+for some $i\in\set{1,\hdots,n}$,
 and that a type $\typ$ occurs in a typing context $\tctx$,
 defined by $\typ \occursin \tctx$ if $\typ \occursin \tctx(\var)$ for some $\var \in \dom\tctx$.
 \end{definition}
