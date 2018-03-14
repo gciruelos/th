@@ -2,9 +2,154 @@ In this section we will develop the theory of residuals of the $\lambdadist$-cal
 The basic concepts of general rewriting theory where outlined in \rsec{rewriting_theory_preliminaries},
 and we will now concentrate in the specifics of our calculus.
 
+Informally, the residual of a step after another is what is left of a step after executing another one; it is a set of steps.
+
+\begin{example} If we consider the term of the pure lambda calculus:
+\[(\lam{\var}{\vartwo})((\lam{\varthree}{\varthree}) w)\]
+Then there are two steps we can perform (we shall call them $\redex$ and $\redextwo$).
+\begin{align*}
+  \redex &:
+    (\lam{\var}{\vartwo})((\lam{\varthree}{\varthree}) w) \to y \\
+  \redextwo &:
+    (\lam{\var}{\vartwo})((\lam{\varthree}{\varthree}) w) \to (\lam{\var}{\vartwo}) w
+\end{align*}
+Then the residual of $\redex$ after $\redextwo$ is the step $(\lam{\var}{\vartwo}) w \to w$.
+On the other hand, the residual of $\redextwo$ after $\redex$ is the empty set:
+$\redextwo$ was erased by $\redex$.
+\end{example}
+
 It is interesting to develop a theory of residuals for $\lambdadist$ because
-residuals allow us to trace a redex through a reduction of a term.
+residuals allow us to trace a redex through the reduction of a term.
 Given that the purpose of $\lambdadist$ is to be able to track
 how resources are used in $\lambda$-terms, it is crucial to
-be able to trace these resources during a reduction.
+be able to learn how these resources interact during a reduction.
+
+As it turns out, the theory of residuals of $\lambdadist$ will prove to be powerful
+enough to represent meaningful information, but simple enough to have a
+comprehensible structure.
+
+
+\begin{definition}
+If $\redex : \tm \todistl{\lab} \tm'$ is a step in the distributive lambda
+calculus, then:
+\[
+  \begin{array}{rcll}
+    \src(\redex) & \eqdef & \tm & \text{ is the \defn{source} of $\redex$} \\
+    \tgt(\redex) & \eqdef & \tm' & \text{ is the \defn{target} of $\redex$} \\
+    \name(\redex) & \eqdef & \lab & \text{ is the \defn{name} of $\redex$}
+  \end{array}
+\]
+Two steps $\redex, \redextwo$
+are \defn{coinitial} if $\src(\redex) = \src(\redextwo)$
+and \defn{cofinal} if $\tgt(\redex) = \tgt(\redextwo)$.
+\end{definition}
+
+\begin{definition}[Residuals in the distributive lambda-calculus]
+\ldef{residuals}
+Given coinitial steps $\redex, \redextwo$,
+the set $\redex/\redextwo$ of \defn{residuals of $\redex$ after $\redextwo$} is defined as follows:
+\[
+  \redex/\redextwo = \set{\redex' \ST \src(\redex') = \tgt(\redextwo) \text{ and } \name(\redex) = \name(\redex')}
+\]
+\end{definition}
+
+\begin{remark}
+Recall that the name of a step is the label that decorates the lambda reduced by the step,
+and that in correct terms all lambdas have pairwise distinct labels.
+Given that our calculus has no duplication or erasure (as per the following lemma),
+names of steps will be useful to name reductions.
+\end{remark}
+
+
+\begin{lemma}[Cardinality of the set of residuals]
+\llem{cardinality_of_the_set_of_residuals}
+\[
+  \#(\redex/\redextwo) = \begin{cases}
+                         0 & \text{ if $\redex = \redextwo$} \\
+                         1 & \text{ otherwise}
+                         \end{cases}
+\]
+\end{lemma}
+\begin{proof}
+Recall that, by definition, lambdas in a correct term have pairwise distinct labels.
+Consider first the case when $\redex = \redextwo$.
+Then
+$
+  \redex = \redextwo : \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}} \todistl{\lab} \conof{\subs{\tm}{\var}{\ls{\tmtwo}}}
+$.
+There is only one lambda decorated with $\lab$ in the source,
+so there are no lambdas decorated with $\lab$ in the target.
+Hence $\redex/\redextwo = \emptyset$.
+
+On the other hand if, $\redex \neq \redextwo$,
+by the Strong Permutation property (\rprop{strong_permutation})
+there exists a step $\redex' \in \redex/\redextwo$
+with the same name as $\redex$.
+There are no other lambdas decorated with $\lab$ in the target.
+Hence $\redex/\redextwo = \set{\redex'}$.
+\end{proof}
+
+\subsubsection{Orthogonality of $\lambdadist$}
+
+\TODO{definir development? definir diagrama de permutacion?}
+
+\begin{lemma}[Finite developments]
+\llem{finite_developments}
+Let $\redexset$ be a set of coinitial steps.
+Then the length of every complete development of $\redexset$
+is precisely the cardinality of $\redexset$.
+In particular, developments are finite.
+\end{lemma}
+\begin{proof}
+By induction on the cardinality of $\redexset$.
+If $\redexset = \emptyset$, the only complete development of $\redexset$ is $\emptyDerivation$ and we are done.
+Otherwise, if $\redseq$ is a complete development of $\redexset$, it is a non-empty derivation, \ie
+$\redseq = \redex\redseqtwo$
+where $\redex \in \redexset$
+and such that $\redseqtwo$ is a complete development of $\redexset/\redex$.
+Since residuals of distinct redexes have distinct names (and hence they are distinct)
+we have that
+$
+  \redexset/\redex = \uplus_{\redextwo \in \redexset} (\redextwo/\redex)
+$,
+where $\uplus$ denotes the disjoint union of sets.
+Moreover, $\#(\redextwo/\redex) = 1$ if and only if $\redex \neq \redextwo$
+by \rlem{cardinality_of_the_set_of_residuals}, so:
+\[
+  \#(\redexset/\redex) =
+  \Sigma_{\redextwo \in \redexset} \#(\redextwo/\redex) =
+  \#(\redexset \setminus \set{\redex}) =
+  \#(\redexset) - 1
+\]
+Hence by \ih the length of $\redseqtwo$ is $\#(\redexset) - 1$
+and we conclude.
+\end{proof}
+
+\begin{proposition}
+The distributive lambda-calculus is an Orthogonal Axiomatic Rewrite System
+in the sense of Melli\`es.
+\end{proposition}
+\begin{proof}
+There are four axioms to check:
+\begin{enumerate}
+\item {\bf Autoerasure.}
+  Immediate from the cardinality of residuals lemma (\rlem{cardinality_of_the_set_of_residuals}).
+\item {\bf Finite Residuals.}
+  Immediate from the cardinality of residuals lemma (\rlem{cardinality_of_the_set_of_residuals}).
+\item {\bf Finite Developments.}
+  Proved in the Finite Developments lemma (\rlem{finite_developments}).
+\item {\bf Semantic Orthogonality.}
+  A consequence of the Strong Permutation property (\rprop{strong_permutation}).
+\end{enumerate}
+\end{proof}
+
+\begin{definition}
+A step $\redex$ \defn{belongs to} a coinitial derivation $\redseq$,
+written $\redex \in \redseq$,
+if and only if some residual of $\redex$ is contracted along $\redseq$. 
+More precisely, $\redex \in \redseq$ if there exist $\redseq_1,\redex',\redseq_2$
+such that $\redseq = \redseq_1\redex'\redseq_2$ and $\redex' \in \redex/\redseq_1$.
+We write $\redex \not\in \redseq$ if it is not the case that $\redex \in \redseq$.
+\end{definition}
+
 
