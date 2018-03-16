@@ -1,0 +1,289 @@
+Recall that we had two steps $\redex : \tm_0 \todistl{\lab} \tm_1$ and $\redextwo : \tm_0 \todistl{\lab'} \tm_2$, going out from $\tm_0$, and we wanted to show that $\tm_1$ and $\tm_2$ have one reduct in common one step away.
+
+We use some auxiliary lemmas that are stated and proven at the end of this section.
+
+\begin{proof}
+We suppose the step $\redex$ is of the form:
+\[
+  \redex : \tm_0 = \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}
+           \todistl{\lab} \conof{\subs{\tm}{\var}{\ls{\tmtwo}}} = \tm_1
+\]
+Recall that $\redex \neq \redextwo$ by hypothesis, so we know it must reduce some other lambda.
+We proceed by induction on $\con$.
+\begin{enumerate}
+\item {\bf Empty context, $\con = \conbase$.}
+  Then
+  \[
+    \redex : \tm_0 = (\lamp{\lab}{\var}{\tm})\ls{\tmtwo}
+             \todistl{\lab} \subs{\tm}{\var}{\ls{\tmtwo}} = \tm_1
+  \]
+  There are two subcases, depending on whether the redex $\redextwo$ is inside $\tm$
+  or inside $\ls{\tmtwo}$:
+  \begin{enumerate}
+  \item {\bf $\redextwo$ is inside $\tm$.}
+    \[
+    \xymatrix@C=.25cm{
+     (\lamp{\lab}{\var}{\conof{(\lamp{\lab'}{\vartwo}{\tmfour}) \ls{\tmthree}}}) \ls{\tmtwo}
+                        \ar[d]^{\lab}
+                        \ar[r]^{\lab'} &
+     (\lamp{\lab}{\var}{\conof{\subs{\tmfour}{\vartwo}{\ls{\tmthree}}}}) \ls{\tmtwo}
+                        \ar@{-->}[d]^{\lab} \\
+     \subs{\conof{(\lamp{\lab'}{\vartwo}{\tmfour}) \ls{\tmthree}}}{\var}{\ls{\tmtwo}}
+                        \ar@{=}[d] &
+     \subs{\conof{\subs{\tmfour}{\vartwo}{\ls{\tmthree}}}}{\var}{\ls{\tmtwo}}
+                        \ar@{=}[d] \\
+     \subs{\con}{\var}{\ls{\tmtwo}_1}
+       \of{(\lamp{\lab'}{\vartwo}{\subs{\tmfour}{\var}{\ls{\tmtwo}_2}})
+           \subs{\ls{\tmthree}}{\var}{\ls{\tmtwo}_3}}
+                        \ar@{-->}[d]^{\lab'} &
+     \subs{\con}{\var}{\ls{\tmtwo}_1}
+       \of{\subs{\subs{\tmfour}{\vartwo}{\ls{\tmthree}}}{\var}{\ls{\tmtwo}_0}} \\
+     \subs{\con}{\var}{\ls{\tmtwo}_1}
+       \of{\subs{\subs{\tmfour}{\var}{\ls{\tmtwo}_2}}{\vartwo}
+                 {\subs{\ls{\tmthree}}{\var}{\ls{\tmtwo}_3}}}
+                         &  \\
+    }
+    \]
+    Note that $\ls{\tmtwo}_2 + \ls{\tmtwo}_3$ is a permutation of $\ls{\tmtwo}_0$.
+    It is enough to see that
+    \[\subs{\subs{\tmfour}{\vartwo}{\ls{\tmthree}}}{\var}{\ls{\tmtwo}_0}
+      =
+      \subs{\subs{\tmfour}{\var}{\ls{\tmtwo}_2}}{\vartwo}
+        {\subs{\ls{\tmthree}}{\var}{\ls{\tmtwo}_3}}
+    \]
+    But that is true because of the Substitution lemma (\rlem{substitution_lemma}).
+  \item {\bf $\redextwo$ is inside $\ls{\tmtwo}$.}
+    In this case,
+
+    \[ \ls{\tmtwo} = [\tmtwo_1, \hdots, \tmtwo_{j-1},
+                      \conof{(\lamp{\lab'}{\vartwo}{\tmfour}) \ls{\tmthree}},
+                      \tmtwo_{j+1}, \hdots, \tmtwo_n]
+                   = [\ls{\tmtwo}_{1:j-1},
+                      \conof{(\lamp{\lab'}{\vartwo}{\tmfour}) \ls{\tmthree}},
+                      \ls{\tmtwo}_{j+1:n}]
+    \]
+    \[
+    \xymatrix@C=1cm{
+     (\lamp{\lab}{\var}{\tm}) [\ls{\tmtwo}_{1:j-1},
+                               \conof{(\lamp{\lab'}{\vartwo}{\tmfour}) \ls{\tmthree}},
+                               \ls{\tmtwo}_{j+1:n}]
+                        \ar[d]^{\lab}
+                        \ar[r]^{\lab'} &
+     (\lamp{\lab}{\var}{\tm}) [\ls{\tmtwo}_{1:j-1},
+                               \subs{\tmfour}{\vartwo}{\ls{\tmthree}},
+                               \ls{\tmtwo}_{j+1:n}]
+                        \ar@{-->}[d]^{\lab} \\
+     \subs{\tm}{\var}{[\ls{\tmtwo}_{1:j-1},
+                       \conof{(\lamp{\lab'}{\vartwo}{\tmfour}) \ls{\tmthree}},
+                       \ls{\tmtwo}_{j+1:n}]}
+                       &
+      \subs{\tm}{\var}{[\ls{\tmtwo}_{1:j-1},
+                        \subs{\tmfour}{\vartwo}{\ls{\tmthree}},\ls{\tmtwo}_{j+1:n}]}        \\
+    }
+    \]
+    We can close the diagram reducing from left to right using \rlem{reduce_in_substitution}.
+  \end{enumerate}
+\item {\bf Under an abstraction, $\con = \lamp{\lab''}{\vartwo}{\con'}$.}
+    Then for some $\tm_1$ and $\tm_2$,
+    \[
+    \xymatrix@C=1.5cm{
+        \lamp{\lab''}{\vartwo}{\contwoof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}}
+                        \ar[d]^{\lab}
+                        \ar[r]^{\lab'} &
+        \lamp{\lab''}{\vartwo}{\tm_2} \\
+        \lamp{\lab''}{\vartwo}{\tm_1} & \\
+    }
+    \]
+    But by inductive hypothesis,
+    \[
+    \xymatrix@C=1.5cm{
+        \contwoof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}
+                        \ar[d]^{\lab}
+                        \ar[r]^{\lab'} &
+        {\tm_2} \ar@{-->}[d]^{\lab} \\ 
+        {\tm_1} \ar@{-->}[r]^{\lab'} &
+        {\tm_3} \\
+    }
+    \]
+
+    So if we consider those steps in the full term we get our desired diagram.
+    \[
+    \xymatrix@C=1.5cm{
+        \lamp{\lab''}{\vartwo}{\contwoof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}}
+                        \ar[d]^{\lab}
+                        \ar[r]^{\lab'} &
+        \lamp{\lab''}{\vartwo}{\tm_2} \ar@{-->}[d]^{\lab} \\ 
+        \lamp{\lab''}{\vartwo}{\tm_1} \ar@{-->}[r]^{\lab'} &
+        \lamp{\lab''}{\vartwo}{\tm_3} \\
+    }
+    \]
+
+\item {\bf Left of an application, $\con = \con'\ls{\tmthree}$.}
+    There are three subcases, depending on whether the redex $\redextwo$ is
+    at the root, to the left of the application, or to the right of the application.
+    %inside $\con'$ or $\ls{\tmthree}$, \pablo{or at the root}.
+    \begin{enumerate}
+    \item {\bf $\redextwo$ is inside $\con'$.} Then by inductive hypothesis,
+        we have the following diagram for some $\tm_1$ and $\tm_2$:
+        \[
+        \xymatrix@C=1.5cm{
+            \contwoof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}
+                            \ar[d]^{\lab}
+                            \ar[r]^{\lab'} &
+            {\tm_2} \ar@{-->}[d]^{\lab} \\ 
+            {\tm_1} \ar@{-->}[r]^{\lab'} &
+            {\tm_3} \\
+        }
+        \]
+        
+        So if we consider those steps in the full term we get our desired diagram.
+        \[
+        \xymatrix@C=1.5cm{
+            {\contwoof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}} \ls{\tmthree}
+                            \ar[d]^{\lab}
+                            \ar[r]^{\lab'} &
+            \tm_2 \ls{\tmthree} \ar@{-->}[d]^{\lab} \\ 
+            \tm_1 \ls{\tmthree} \ar@{-->}[r]^{\lab'} &
+            \tm_3 \ls{\tmthree} \\
+        }
+        \]
+    \item {\bf $\redextwo$ is inside $\ls{\tmthree}$.}
+      What we have can be expressed in the following diagram.
+        \[
+        \xymatrix@C=1cm{
+         \contwoof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}} [\ls{\tmtwo}_{1:j-1},
+                                   \con''\of{(\lamp{\lab'}{\vartwo}{\tmfour}) \ls{\tmthree}},
+                                   \ls{\tmtwo}_{j+1:n}]
+                            \ar[d]^{\lab}
+                            \ar[r]^{\lab'} &
+         (\lamp{\lab}{\var}{\tm}) [\ls{\tmtwo}_{1:j-1},
+                                   \subs{\tmfour}{\vartwo}{\ls{\tmthree}},
+                                   \ls{\tmtwo}_{j+1:n}]
+                           \ar[d]^{\lab} \\
+         \subs{\tm}{\var}{[\ls{\tmtwo}_{1:j-1},
+                           \con''\of{(\lamp{\lab'}{\vartwo}{\tmfour}) \ls{\tmthree}},
+                           \ls{\tmtwo}_{j+1:n}]}
+                           &
+         \subs{\tm}{\var}{[\ls{\tmtwo}_{1:j-1},
+                           \subs{\tmfour}{\vartwo}{\ls{\tmthree}},
+                           \ls{\tmtwo}_{j+1:n}]} \\
+        }
+        \]
+    We can close the diagram reducing from left to right using \rlem{reduce_in_substitution}.
+    \item {\bf $\redextwo$ is at the root}.
+    What this means is that $\contwoof{(\lamp{\lab'}{\var}{\tm})\ls{\tmtwo}}$ has a lambda at its root,
+    so it is equal to $\lamp{\lab'}{\vartwo}{\con'''\of{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}}$
+    for some, $\con'''$ and $\vartwo$.
+
+    Hence, the term we have is
+    $(\lamp{\lab'}{\vartwo}{\con'''\of{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}}) \ls{\tmthree}$,
+    which has already been dealt with in case 1.1.
+    \end{enumerate}
+\item {\bf Right of an application,
+  $\con = \tmfour[\tmthree_1, \hdots, \tmthree_{i-1}, \con',\tmthree_{i+1}, \hdots, \tmthree_n] =
+          \tmfour[\tmthree_{1:i-1}, \con',\tmthree_{i+1:n}]$}.
+  There are four subcases, depending on whether the redex $\redextwo$ is
+  at the root, to the left of the application (that is, inside $\tmfour$),
+  or to the right of the application (that is, either inside $\contwo$ or $\tmthree_j$ for some $j$).
+  \begin{enumerate}
+  \item {\bf $\redextwo$ is inside $\tmfour$.}
+    Notice that the steps are disjoint, so we may close the diagram in a straightforward manner.
+  \item {\bf $\redextwo$ is inside $\tmthree_j$ for some $j \neq i$.}
+    Notice that, again, the steps are disjoint,
+    so we may close the diagram in a straightforward manner.
+  \item {\bf $\redextwo$ is inside $\contwo$.} Then by inductive hypothesis,
+        we have the following diagram for some $\tm_1$ and $\tm_2$:
+        \[
+        \xymatrix@C=1.5cm{
+            \contwoof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}
+                            \ar[d]^{\lab}
+                            \ar[r]^{\lab'} &
+            {\tm_2} \ar@{-->}[d]^{\lab} \\ 
+            {\tm_1} \ar@{-->}[r]^{\lab'} &
+            {\tm_3} \\
+        }
+        \]
+        
+        So if we consider those steps in the full term we get our desired diagram.
+        \[
+        \xymatrix@C=1.5cm{
+          \tmfour \lset{\tmthree_{1:i-1}, \contwoof{(\lamp{\lab}{\var}{\tm}) \ls{\tmtwo}}, \tmthree_{i+1:n}}
+                          \ar[d]^{\lab}
+                          \ar[r]^{\lab'} &
+          \tmfour \lset{\tmthree_{1:i-1}, \tm_2, \tmthree_{i+1:n}} \ar@{-->}[d]^{\lab} \\ 
+          \tmfour \lset{\tmthree_{1:i-1}, \tm_1, \tmthree_{i+1:n}} \ar@{-->}[r]^{\lab'} &
+          \tmfour \lset{\tmthree_{1:i-1}, \tm_3, \tmthree_{i+1:n}} \\
+        }
+        \]
+  \item {\bf $\redextwo$ is at the root.}
+    Hence $\tm$ has a lambda at the root, so
+    $\tmfour[\tmthree_{1:i-1}, \contwoof{(\lamp{\lab}{\var}{\tm})\tmtwo},\tmthree_{i+1:n}] =
+     (\lamp{\lab'}{\vartwo}{\tmthree}) [\tmthree_{1:i-1}, \contwoof{(\lamp{\lab}{\var}{\tm})\tmtwo},\tmthree_{i+1:n}]$,
+     which is the same case we already proved in 1.2.
+  \end{enumerate}
+\end{enumerate}
+\end{proof}
+
+\subsection*{Auxiliary lemma}
+
+\begin{lemma}[Reduction]
+\llem{reduce_in_substitution}
+Suppose that $\tmtwo_k \todistl{\lab} \tmtwo'_k$.
+Then if
+$\subs{\tm}{\var}{\lset{\tmtwo_1, \hdots, \tmtwo_{k-1}, \tmtwo_k, \tmtwo_{k+1}, \hdots, \tmtwo_n}}$
+is defined, so is
+$\subs{\tm}{\var}{\lset{\tmtwo_1, \hdots, \tmtwo_{k-1}, \tmtwo'_k, \tmtwo_{k+1}, \hdots, \tmtwo_n}}$
+and
+\[
+\subs{\tm}{\var}{\lset{\tmtwo_1, \hdots, \tmtwo_{k-1}, \tmtwo_k, \tmtwo_{k+1}, \hdots, \tmtwo_n}}
+\todistl{\lab}
+\subs{\tm}{\var}{\lset{\tmtwo_1, \hdots, \tmtwo_{k-1}, \tmtwo'_k, \tmtwo_{k+1}, \hdots, \tmtwo_n}}
+\]
+\end{lemma}
+\begin{proof}
+By induction on $\tm$. 
+We will write $\lset{\tmtwo_1, \hdots, \tmtwo_{k-1}, \tmtwo_k, \tmtwo_{k+1}, \hdots, \tmtwo_n}$ as
+$\lset{\tmtwo_{1:k-1}, \tmtwo_k, \tmtwo_{k+1:n}}$
+\begin{enumerate}
+\item \Case{Variable (same) $\tm = \var$}
+  \begin{equation*}\begin{split}
+    \subs{\var}{\var}{[\tmtwo_k]}
+       & = \tmtwo_k \\
+       & \todistl{\lab} \tmtwo'_k \\
+       & = \subs{\var}{\var}{[\tmtwo'_k]} \\
+  \end{split}\end{equation*}
+\item \Case{Variable (different) $\tm = \vartwo$}
+  This case cannot happen because $\lset{\tmtwo_1, \hdots, \tmtwo_n}$ must
+  be empty but at the same time must contain $\tmtwo_k$.
+\item \Case{Abstraction, $\tm = \lamp{\lab}{\vartwo}{\tmfour}$}
+  \begin{equation*}\begin{split}
+    \subs{(\lamp{\lab}{\vartwo}{\tmfour})}{\var}{\lset{\tmtwo_{1:k-1}, \tmtwo_k, \tmtwo_{k+1:n}}}
+       & = \subs{\lamp{\lab}{\vartwo}{\tmfour}}{\var}{\lset{\tmtwo_{1:k-1}, \tmtwo_k, \tmtwo_{k+1:n}}} \\
+       & \todistih \subs{\lamp{\lab}{\vartwo}{\tmfour}}{\var}{\lset{\tmtwo_{1:k-1}, \tmtwo'_k, \tmtwo_{k+1:n}}} \\
+       & = \subs{(\lamp{\lab}{\vartwo}{\tmfour})}{\var}{\lset{\tmtwo_{1:k-1}, \tmtwo'_k, \tmtwo_{k+1:n}}} \\
+  \end{split}\end{equation*}
+\item \Case{Application, $\tm = \tmfour [\tmfour_1,\hdots,\tmfour_m]$}
+  \begin{equation*}\begin{split}
+    \subs{(\tmfour [\tmfour_1, \hdots, \tmfour_m])}{\var}{\lset{\tmtwo_{1:k-1}, \tmtwo_k, \tmtwo_{k+1:n}}}
+       & = \subs{\tmfour}{\var}{\ls{\tmtwo}_0} [\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}]_{i=0}^m \\
+  \end{split}\end{equation*}
+  Where $\tmtwo_k$ is one of the terms in the list $\ls{\tmtwo}_i$ for some $i \in \{0, \hdots, m\}$.
+  Suppose that it is in $\ls{\tmtwo}_0$ (if it is in $\ls{\tmtwo}_i$ for some $i > 0$, it is analogous).
+  This means that
+  $\ls{\tmtwo}_0 = [\tmtwo_{0,1}, \hdots, \tmtwo_k, \hdots, \tmtwo_{0, l}]$,
+  where $l = |\ls{\tmtwo}_0|$.
+
+  By inductive hypothesis,
+  \begin{equation*}\begin{split}
+    \subs{\tmfour}{\var}{[\tmtwo_{0,1}, \hdots, \tmtwo_k, \hdots, \tmtwo_{0, l}]} [\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}]_{i=0}^m
+      & \todistl{\lab} \subs{\tmfour}{\var}{[\tmtwo_{0,1}, \hdots, \tmtwo'_k, \hdots, \tmtwo_{0, l}]}
+      [\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}]_{i=0}^m \\
+  \end{split}\end{equation*}
+  \begin{equation*}\begin{split}
+      & = \subs{(\tmfour [\tmfour_1, \hdots, \tmfour_m])}{\var}{[\tmtwo_{0,1}, \hdots, \tmtwo'_k, \hdots, \tmtwo_{0, l}]
+      + \ls{\tmtwo}_1 + \hdots + \ls{\tmtwo}_m} \\
+      & = \subs{(\tmfour [\tmfour_1, \hdots, \tmfour_m])}{\var}{[\tmtwo_{1:k-1}, \hdots, \tmtwo'_k, \hdots,
+      \tmtwo_{k+1:n}]}\\
+  \end{split}\end{equation*}
+\end{enumerate}
+\end{proof}

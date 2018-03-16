@@ -1,3 +1,4 @@
+\input{uppercase.tex}
 
 %%% Inductive rules with prooftree
 \newcommand{\indrulename}[1]{\texttt{#1}}
@@ -29,6 +30,7 @@
 
 %%% Theorem environments
 
+
 %  \newtheoremstyle{break}% name
 %    {}%         Space above, empty = `usual value'
 %    {}%         Space below
@@ -55,14 +57,17 @@
 \newtheorem{remark}[dummythm]{Remark}
 \newtheorem{notation}[dummythm]{Notation}
 
-\newcommand{\llem}[1]{\label{lemma:#1}}
-\newcommand{\rlem}[1]{Lem.~\ref{lemma:#1}}
-\newcommand{\ldef}[1]{\label{def:#1}}
-\newcommand{\rdef}[1]{Def.~\ref{def:#1}}
-\newcommand{\lprop}[1]{\label{prop:#1}}
-\newcommand{\rprop}[1]{Prop.~\ref{prop:#1}}
-\newcommand{\lthm}[1]{\label{thm:#1}}
-\newcommand{\rthm}[1]{Thm.~\ref{thm:#1}}
+% El \expandafter\uppercase es un hack para que anden las refs
+% en los headings.
+% https://tex.stackexchange.com/questions/13885/reference-undefined-in-section-with-amsbook
+\newcommand{\llem}[1]{\expandafter\uppercase\expandafter{\label{lemma:#1}}}
+\newcommand{\rlem}[1]{Lem.~\expandafter\uppercase\expandafter{\ref{lemma:#1}}}
+\newcommand{\ldef}[1]{\expandafter\uppercase\expandafter{\label{def:#1}}}
+\newcommand{\rdef}[1]{Def.~\expandafter\uppercase\expandafter{\ref{def:#1}}}
+\newcommand{\lprop}[1]{\expandafter\uppercase\expandafter{\label{prop:#1}}}
+\newcommand{\rprop}[1]{Prop.~\expandafter\uppercase\expandafter{\ref{prop:#1}}}
+\newcommand{\lthm}[1]{\expandafter\uppercase\expandafter{\label{thm:#1}}}
+\newcommand{\rthm}[1]{Thm.~\expandafter\uppercase\expandafter{\ref{thm:#1}}}
 \newcommand{\lremark}[1]{\label{remark:#1}}
 \newcommand{\rremark}[1]{Rem.~\ref{remark:#1}}
 \newcommand{\lcoro}[1]{\label{coro:#1}}
@@ -286,3 +291,5 @@
 
 \newcommand{\tmlabel}[1]{\mathtt{T}(#1)}
 \newcommand{\varlabel}[2]{\mathtt{T}_{#1}(#2)}
+
+\newcommand{\lefttodist}{\mathrel{\leftarrow_\dist}}

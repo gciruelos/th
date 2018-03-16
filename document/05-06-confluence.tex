@@ -1,5 +1,8 @@
 As we stated in the introduction, the goal of labeling terms and types
-is that we obtain a confluent calculus. Indeed, the resulting calculus
+is that we obtain a confluent calculus.
+Confluence means that every two reduction sequences from a term
+can be extended to a common reduct.
+Indeed, the $\lambdadist$-calculus
 is confluent, and it is the purpose of this section to prove so.
 
 
@@ -78,7 +81,85 @@ of the substitutions we would need to separate the list $[a^\beta, b^\alpha]$ in
 \]
 \end{example}
 
+\bigskip
+
+Altough are going to prove that the $\lambdadist$-calculus is confluent,
+actually a strictly stronger property holds: strong permutation.
+This property says that if we "open" a diagram with two (different) steps,
+we can "close" it with two steps, too; and it also gives us information
+about which are those two steps, via the labels.
+The fact that this stronger property holds gives us the chance of
+developing a functorial residual theory, as we will learn in the next chapter.
 
 
-\TODO{Charlar como escribir bien esto (permutation / confluence) (pregunta anotada en el cuaderno)}
+
+\begin{proposition}[Strong Permutation]
+\lprop{strong_permutation}
+If $\tm_0 \todistl{\lab_1} \tm_1$
+and $\tm_0 \todistl{\lab_2} \tm_2$
+are different steps, then there exists a term $\tm_3 \in \termsdist$ such that
+$\tm_1 \todistl{\lab_2} \tm_3$ and $\tm_2 \todistl{\lab_1} \tm_3$.
+Diagramatically,
+\[
+    \xymatrix{
+      \tm_0 \ar@{->}[d]^{\lab_2}
+            \ar@{->}[r]^{\lab_1} &
+      \tm_1 \ar@{-->}[d]^{\lab_2} \\
+            \ar@{-->}[r]^{\lab_1}
+      \tm_2 &
+      \tm_3 \\
+    }
+\]
+\end{proposition}
+\begin{proof}
+Let $\redex : \tm_0 \todistl{\lab} \tm_1$ and $\redextwo : \tm_0 \todistl{\lab'} \tm_2$
+be steps going out from $\tm_0$, and let us show that the peak may be closed.
+The step $\redex$ is of the form:
+\[
+  \redex : \tm_0 = \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}
+           \todistl{\lab} \conof{\subs{\tm}{\var}{\ls{\tmtwo}}} = \tm_1
+\]
+Recall that $\redex \neq \redextwo$ by hypothesis.
+We proceed by induction on $\con$, and within each case we separate in different
+cases depending on where $\redextwo$ is located.
+\SeeAppendixRef{strong_permutation_proof}
+\end{proof}
+
+The Strong Permutation property may also be called \emph{sub-commutativity}
+or \emph{$WCR^{\leq 1}$} in some contexts.
+\footnote{In reality, sub-commutativity and $WCR^{\leq 1}$ are slightly different,
+but equivalent:
+as they don't ask for the steps to be different,
+but allow the closing steps to be at most one (instead of exactly one).}
+
+\begin{corollary}[Confluence]
+$\lambdadist$ is confluent, \ie,
+if $\tm_0 \tomdist \tm_1$ and $\tm_0 \tomdist \tm_2$, then there exists a term $\tm_3$
+such that $\tm_1 \tomdist \tm_3$ and $\tm_2 \tomdist \tm_3$.
+Diagramatically,
+\[
+    \xymatrix{
+      \tm_0 \ar@{->>}[d]
+            \ar@{->>}[r] &
+      \tm_1 \ar@{-->>}[d] \\
+            \ar@{-->>}[r]
+      \tm_2 &
+      \tm_3 \\
+    }
+\]
+\end{corollary}
+\begin{proof}
+As a consequence of
+\rprop{strong_permutation},
+reduction is subcommutative,
+\ie $(\lefttodist \circ \todist)\ \subseteq (\todist^= \circ \lefttodist^=)$
+where
+$\lefttodist$ denotes $(\todist)^{-1}$
+and $R^=$ denotes the reflexive closure of $R$.
+
+Moreover, it is well-known that subcommutativity implies confluence,
+\ie $(\lefttodist^* \circ \todist^*)\ \subseteq (\todist^* \circ \lefttodist^*)$.
+For a proof, please refer to \cite[Proposition 1.1.10]{Terese}.
+\end{proof}
+
 
