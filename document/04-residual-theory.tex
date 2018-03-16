@@ -1,3 +1,5 @@
+\chapter{Residual theory}
+\lcha{residual_theory}
 In this section we will develop the theory of residuals of the $\lambdadist$-calculus.
 The basic concepts of general rewriting theory where outlined in \rsec{rewriting_theory_preliminaries},
 and we will now concentrate in the specifics of our calculus.
@@ -89,67 +91,19 @@ There are no other lambdas decorated with $\lab$ in the target.
 Hence $\redex/\redextwo = \set{\redex'}$.
 \end{proof}
 
-\subsubsection{Orthogonality of $\lambdadist$}
 
-\TODO{definir development? definir diagrama de permutacion?}
+\section{Orthogonality of $\lambdadist$}
+\input{04-01-orthogonality}
 
-\begin{lemma}[Finite developments]
-\llem{finite_developments}
-Let $\redexset$ be a set of coinitial steps.
-Then the length of every complete development of $\redexset$
-is precisely the cardinality of $\redexset$.
-In particular, developments are finite.
-\end{lemma}
-\begin{proof}
-By induction on the cardinality of $\redexset$.
-If $\redexset = \emptyset$, the only complete development of $\redexset$ is $\emptyDerivation$ and we are done.
-Otherwise, if $\redseq$ is a complete development of $\redexset$, it is a non-empty derivation, \ie
-$\redseq = \redex\redseqtwo$
-where $\redex \in \redexset$
-and such that $\redseqtwo$ is a complete development of $\redexset/\redex$.
-Since residuals of distinct redexes have distinct names (and hence they are distinct)
-we have that
-$
-  \redexset/\redex = \uplus_{\redextwo \in \redexset} (\redextwo/\redex)
-$,
-where $\uplus$ denotes the disjoint union of sets.
-Moreover, $\#(\redextwo/\redex) = 1$ if and only if $\redex \neq \redextwo$
-by \rlem{cardinality_of_the_set_of_residuals}, so:
-\[
-  \#(\redexset/\redex) =
-  \Sigma_{\redextwo \in \redexset} \#(\redextwo/\redex) =
-  \#(\redexset \setminus \set{\redex}) =
-  \#(\redexset) - 1
-\]
-Hence by \ih the length of $\redseqtwo$ is $\#(\redexset) - 1$
-and we conclude.
-\end{proof}
+\section{Names and labels}
+\input{04-02-names}
 
-\begin{proposition}
-The distributive lambda-calculus is an Orthogonal Axiomatic Rewrite System
-in the sense of Melli\`es.
-\end{proposition}
-\begin{proof}
-There are four axioms to check:
-\begin{enumerate}
-\item {\bf Autoerasure.}
-  Immediate from the cardinality of residuals lemma (\rlem{cardinality_of_the_set_of_residuals}).
-\item {\bf Finite Residuals.}
-  Immediate from the cardinality of residuals lemma (\rlem{cardinality_of_the_set_of_residuals}).
-\item {\bf Finite Developments.}
-  Proved in the Finite Developments lemma (\rlem{finite_developments}).
-\item {\bf Semantic Orthogonality.}
-  A consequence of the Strong Permutation property (\rprop{strong_permutation}).
-\end{enumerate}
-\end{proof}
+\section{Stability (and creation)}
+\input{04-03-creation-and-stability}
 
-\begin{definition}
-A step $\redex$ \defn{belongs to} a coinitial derivation $\redseq$,
-written $\redex \in \redseq$,
-if and only if some residual of $\redex$ is contracted along $\redseq$. 
-More precisely, $\redex \in \redseq$ if there exist $\redseq_1,\redex',\redseq_2$
-such that $\redseq = \redseq_1\redex'\redseq_2$ and $\redex' \in \redex/\redseq_1$.
-We write $\redex \not\in \redseq$ if it is not the case that $\redex \in \redseq$.
-\end{definition}
+\section{Lattices and derivation spaces}
+\input{04-04-lattices}
+
+
 
 

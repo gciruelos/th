@@ -1,0 +1,69 @@
+
+\begin{lemma}[Finite developments]
+\llem{finite_developments}
+Let $\redexset$ be a set of coinitial steps.
+Then the length of every complete development of $\redexset$
+is precisely the cardinality of $\redexset$.
+In particular, developments are finite.
+\end{lemma}
+\begin{proof}
+By induction on the cardinality of $\redexset$.
+If $\redexset = \emptyset$, the only complete development of $\redexset$ is $\emptyDerivation$ and we are done.
+Otherwise, if $\redseq$ is a complete development of $\redexset$, it is a non-empty derivation, \ie
+$\redseq = \redex\redseqtwo$
+where $\redex \in \redexset$
+and such that $\redseqtwo$ is a complete development of $\redexset/\redex$.
+Since residuals of distinct redexes have distinct names (and hence they are distinct)
+we have that
+$
+  \redexset/\redex = \uplus_{\redextwo \in \redexset} (\redextwo/\redex)
+$,
+where $\uplus$ denotes the disjoint union of sets.
+Moreover, $\#(\redextwo/\redex) = 1$ if and only if $\redex \neq \redextwo$
+by \rlem{cardinality_of_the_set_of_residuals}, so:
+\[
+  \#(\redexset/\redex) =
+  \Sigma_{\redextwo \in \redexset} \#(\redextwo/\redex) =
+  \#(\redexset \setminus \set{\redex}) =
+  \#(\redexset) - 1
+\]
+Hence by \ih the length of $\redseqtwo$ is $\#(\redexset) - 1$
+and we conclude.
+\end{proof}
+
+\begin{proposition}
+The distributive lambda-calculus is an Orthogonal Axiomatic Rewrite System
+in the sense of Melli\`es.
+\end{proposition}
+\begin{proof}
+There are four axioms to check:
+\begin{enumerate}
+\item {\bf Autoerasure.}
+  Immediate from the cardinality of residuals lemma (\rlem{cardinality_of_the_set_of_residuals}).
+\item {\bf Finite Residuals.}
+  Immediate from the cardinality of residuals lemma (\rlem{cardinality_of_the_set_of_residuals}).
+\item {\bf Finite Developments.}
+  Proved in the Finite Developments lemma (\rlem{finite_developments}).
+\item {\bf Semantic Orthogonality.}
+  A consequence of the Strong Permutation property (\rprop{strong_permutation}).
+\end{enumerate}
+\end{proof}
+
+\begin{definition}
+A step $\redex$ \defn{belongs to} a coinitial derivation $\redseq$,
+written $\redex \in \redseq$,
+if and only if some residual of $\redex$ is contracted along $\redseq$. 
+More precisely, $\redex \in \redseq$ if there exist $\redseq_1,\redex',\redseq_2$
+such that $\redseq = \redseq_1\redex'\redseq_2$ and $\redex' \in \redex/\redseq_1$.
+We write $\redex \not\in \redseq$ if it is not the case that $\redex \in \redseq$.
+\end{definition}
+
+
+\subsubsection{Examples}
+
+Before going any further, we need to get some more residual theory definitions established.
+
+The first is the concept of \defn{permutation equivalence}.
+Permutation equivalence is a sense of equivalence for derivations.
+Intuitively, 
+
