@@ -36,18 +36,12 @@
 \usepackage[margin=1.2cm]{caption}
 \usepackage{leading}
 \leading{14.5pt}
-\usepackage[overload]{textcase}
 
 
 \input{macros.tex}
 
 
 \input{prooftree.tex}
-
-\expandafter\def\expandafter\label\expandafter#\expandafter1\expandafter{\expandafter\lowercase\expandafter{\label{#1}}}
-\expandafter\def\expandafter\ref\expandafter#\expandafter1\expandafter{\expandafter\lowercase\expandafter{\ref{#1}}}
-\expandafter\def\expandafter\eqref\expandafter#\expandafter1\expandafter{\expandafter\lowercase\expandafter{\eqref{#1}}}
-
 
 \usepackage{chngcntr}
 \counterwithout{equation}{section} %this fixes equation numbering

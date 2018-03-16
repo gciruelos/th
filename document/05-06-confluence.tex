@@ -50,9 +50,9 @@ By induction on $\tm$.
 \[
   \tm =
     (\lamp{\lab}{\var}{\varthree^{[\alpha] \to [\beta] \to \delta} [\var^\alpha] [\var^\beta]})
-      [z^\beta,y^\alpha]
+      [z^\beta,y^\alpha].
 \]
-We can perform the following substitution (where $w,a,b$ are all variables).
+We can perform the following substitution (where $w,a,b$ are all variables):
 \[
   \subs{
     \subs{\tm}{\varthree}{[w^{[\alpha] \to [\beta] \to \delta}, \vartwo^\beta]}
@@ -63,10 +63,10 @@ We can perform the following substitution (where $w,a,b$ are all variables).
   }
   =
    (\lamp{\lab}{\var}{w^{[\alpha] \to [\beta] \to \delta} [\var^\alpha] [\var^\beta]})
-    [a^\beta,b^\alpha]
+    [a^\beta,b^\alpha].
 \]
 Note that, as we replaced one $\varthree$ by a $\vartwo$, if we wanted to invert the order
-of the substitutions we would need to separate the list $[a^\beta, b^\alpha]$ in two.
+of the substitutions we would need to separate the list $[a^\beta, b^\alpha]$ in two:
 \[
   \subs{
     \subs{\tm}{\vartwo}{[b^\alpha]}
@@ -77,7 +77,7 @@ of the substitutions we would need to separate the list $[a^\beta, b^\alpha]$ in
   }
   =
    (\lamp{\lab}{\var}{w^{[\alpha] \to [\beta] \to \delta} [\var^\alpha] [\var^\beta]})
-    [a^\beta,b^\alpha]
+    [a^\beta,b^\alpha].
 \]
 \end{example}
 
@@ -87,9 +87,9 @@ Altough are going to prove that the $\lambdadist$-calculus is confluent,
 actually a strictly stronger property holds: strong permutation.
 This property says that if we "open" a diagram with two (different) steps,
 we can "close" it with two steps, too; and it also gives us information
-about which are those two steps, via the labels.
-The fact that this stronger property holds gives us the chance of
-developing a functorial residual theory, as we will learn in the next chapter.
+about which are those closing steps, via their labels.
+The fact that this stronger property holds gives us the chance to
+develop a functorial residual theory, as we will learn in the next chapter.
 
 
 
@@ -107,7 +107,7 @@ Diagramatically,
       \tm_1 \ar@{-->}[d]^{\lab_2} \\
             \ar@{-->}[r]^{\lab_1}
       \tm_2 &
-      \tm_3 \\
+      \tm_3. \\
     }
 \]
 \end{proposition}
@@ -119,18 +119,32 @@ The step $\redex$ is of the form:
   \redex : \tm_0 = \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}
            \todistl{\lab} \conof{\subs{\tm}{\var}{\ls{\tmtwo}}} = \tm_1
 \]
-Recall that $\redex \neq \redextwo$ by hypothesis.
 We proceed by induction on $\con$, and within each case we separate in different
-cases depending on where $\redextwo$ is located.
+cases depending on where $\redextwo$ is located (which recall that is different
+than $\redex$ by hypothesis)
 \SeeAppendixRef{strong_permutation_proof}
 \end{proof}
 
+\bigskip
+
+
 The Strong Permutation property may also be called \emph{sub-commutativity}
-or \emph{$WCR^{\leq 1}$} in some contexts.
-\footnote{In reality, sub-commutativity and $WCR^{\leq 1}$ are slightly different,
+or \emph{WCR$^{\leq 1}$} in some contexts.
+\footnote{In reality, sub-commutativity and WCR$^{\leq 1}$ are slightly different,
 but equivalent:
 as they don't ask for the steps to be different,
 but allow the closing steps to be at most one (instead of exactly one).}
+
+As a consequence of strong permutation, reduction is subcommutative,
+\ie $(\lefttodist \circ \todist)\ \subseteq (\todist^= \circ \lefttodist^=)$
+where
+$\lefttodist$ denotes $(\todist)^{-1}$
+and $R^=$ denotes the reflexive closure of $R$.
+
+Moreover, it is well-known that subcommutativity implies confluence,
+\ie $(\lefttodist^* \circ \todist^*)\ \subseteq (\todist^* \circ \lefttodist^*)$
+(\cf \cite[Proposition 1.1.10]{Terese}). Note that the
+inverse does not hold, hence confluence is weaker than strong permutation, as we previously stated.
 
 \begin{corollary}[Confluence]
 $\lambdadist$ is confluent, \ie,
@@ -144,22 +158,9 @@ Diagramatically,
       \tm_1 \ar@{-->>}[d] \\
             \ar@{-->>}[r]
       \tm_2 &
-      \tm_3 \\
+      \tm_3. \\
     }
 \]
 \end{corollary}
-\begin{proof}
-As a consequence of
-\rprop{strong_permutation},
-reduction is subcommutative,
-\ie $(\lefttodist \circ \todist)\ \subseteq (\todist^= \circ \lefttodist^=)$
-where
-$\lefttodist$ denotes $(\todist)^{-1}$
-and $R^=$ denotes the reflexive closure of $R$.
-
-Moreover, it is well-known that subcommutativity implies confluence,
-\ie $(\lefttodist^* \circ \todist^*)\ \subseteq (\todist^* \circ \lefttodist^*)$.
-For a proof, please refer to \cite[Proposition 1.1.10]{Terese}.
-\end{proof}
 
 
