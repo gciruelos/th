@@ -1,0 +1,403 @@
+
+\begin{lemma}[Projections are decreasing]
+\llem{projections_are_decreasing}
+Let $\redex \in \redseq$. Then $\lengthof{\redseq} = 1 + \lengthof{\redseq/\redex}$.
+\end{lemma}
+\begin{proof}
+Observe that $\redex \permle \redseq$ by \rlem{characterization_of_belonging}.
+So $\redseq \permeq \redex(\redseq/\redex)$, which gives us that:
+\[
+  \begin{array}{rcll}
+  \lengthof{\redseq} & = & \#\names(\redseq) & \text{ by \rcoro{length_of_derivation_is_number_of_distinct_names}} \\
+                     & = & \#\names(\redex(\redseq/\redex)) & \text{ by \rcoro{permutation_equivalence_in_terms_of_names}, since $\redseq \permeq \redex(\redseq/\redex)$} \\
+                     & = & \#(\names(\redex) \uplus \names(\redseq/\redex) & \text{ by \rlem{names_concatenation_disjoint_union}} \\
+                     & = & 1 + \#\names(\redseq/\redex) \\
+                     & = & 1 + \lengthof{\redseq/\redex} & \text{ by \rcoro{length_of_derivation_is_number_of_distinct_names}} \\
+  \end{array}
+\]
+\end{proof}
+
+\begin{proposition}[Meet of derivations]
+\lprop{meet_of_derivations}
+Let $\redseq,\redseqtwo$ be coinitial derivations in the distributive lambda-calculus.
+Then there exists an infimum for $\redseq,\redseqtwo$ with respect to the prefix order $\permle$.
+We write $\redseq \sqcap \redseqtwo$ for the infimum of $\set{\redseq,\redseqtwo}$ obtained by this
+construction.
+\end{proposition}
+\begin{proof}
+If $\redseq$ and $\redseqtwo$ are derivations, we say that a step $\redex$
+is a \defn{common} (to $\redseq$ and $\redseqtwo$) whenever $\redex \in \redseq$ and $\redex \in \redseqtwo$.
+Define $\redseq \sqcap \redseqtwo$ as follows,
+by induction on the length of $\redseq$:
+\[
+  \redseq \sqcap \redseqtwo \eqdef
+    \begin{cases}
+    \emptyDerivation & \text{if there are no common steps to $\redseq$ and $\redseqtwo$} \\
+    \redex((\redseq/\redex) \sqcap (\redseqtwo/\redex)) & \text{if the step $\redex$ is common to $\redseq$ and $\redseqtwo$ } \\
+    \end{cases}
+\]
+In the second case of the definition, there might be more than one $\redex$
+common to $\redseq$ and $\redseqtwo$.
+We suppose that one of them is chosen deterministically but make no further assumptions.
+To see that this recursive construction is well-defined,
+note that the length of $\redseq/\redex$ is lesser than the length of $\redseq$
+by the fact that projections are decreasing (\rlem{projections_are_decreasing}).
+To conclude the construction, we show that $\redseq \sqcap \redseqtwo$ is an infimum, \ie a greatest lower bound:
+\begin{enumerate}
+\item {\bf Lower bound.}
+  Let us show that $\redseq \sqcap \redseqtwo \permle \redseq$
+  by induction on the length of $\redseq$.
+  There are two subcases, depending on whether
+  there is a step common to $\redseq$ and $\redseqtwo$.
+
+  If there is no common step,
+  then $\redseq \sqcap \redseqtwo = \emptyDerivation$
+  trivially verifies $\redseq \sqcap \redseqtwo \permle \redseq$.
+
+  On the other hand, if there is a common step, we have by definition that
+  $\redseq \sqcap \redseqtwo = \redex((\redseq/\redex) \sqcap (\redseqtwo/\redex))$
+  where $\redex$ is common to $\redseq$ and $\redseqtwo$.
+  Recall that projections are decreasing (\rlem{projections_are_decreasing})
+  so $\lengthof{\redseq} > \lengthof{\redseq/\redex}$.
+  This allows us to apply the \ih and conclude:
+  \[
+  \begin{array}{rcll}
+    \redseq \sqcap \redseqtwo & =       & \redex((\redseq/\redex) \sqcap (\redseqtwo/\redex)) & \text{ by definition} \\
+                              & \permle & \redex(\redseq/\redex)   & \text{ since by \ih $(\redseq/\redex) \sqcap (\redseqtwo/\redex) \permle \redseq/\redex$} \\
+                              & \permeq & \redseq(\redex/\redseq)  \\
+                              & =       & \redseq                  & \text{ since $\redex \permle \redseq$ by \rlem{characterization_of_belonging}.} \\
+  \end{array}
+  \]
+  Showing that $\redseq \sqcap \redseqtwo \permle \redseqtwo$ is symmetric,
+  by induction on the length of $\redseqtwo$.
+\item {\bf Greatest lower bound.}
+  Let $\redseqthree$ be a lower bound for $\set{\redseq, \redseqtwo}$,
+  \ie $\redseqthree \permle \redseq$ and $\redseqthree \permle \redseqtwo$,
+  and let us show that $\redseqthree \permle \redseq \sqcap \redseqtwo$.
+  We proceed by induction on the length of $\redseq$.
+  There are two subcases, depending on whether
+  there is a step common to $\redseq$ and $\redseqtwo$.
+
+  If there is no common step,
+  we claim that $\redseqthree$ must be empty.
+  Otherwise we would have that $\redseqthree = \redexthree\redseqthree' \permle \redseq$
+  so in particular $\redexthree \permle \redseq$ and $\redexthree \in \redseq$ by \rlem{characterization_of_belonging}.
+  Similarly, $\redexthree \in \redseqtwo$ so
+  $\redexthree$ is a step common to $\redseq$ and $\redseqtwo$,
+  which is a contradiction.
+  We obtain that $\redseqthree$ is empty,
+  so trivially $\redseqthree = \emptyDerivation \permle \redseq \sqcap \redseqtwo$.
+
+  On the other hand, if there is a common step, we have by definition that
+  $\redseq \sqcap \redseqtwo = \redex((\redseq/\redex) \sqcap (\redseqtwo/\redex))$
+  where $\redex$ is common to $\redseq$ and $\redseqtwo$.
+  Moreover, since $\redseqthree \permle \redseq$ and $\redseqthree \permle \redseqtwo$,
+  by projecting along $\redex$ we know that
+  $\redseqthree/\redex \permle \redseq/\redex$ and $\redseqthree/\redex \permle \redseqtwo/\redex$.
+  So:
+  \[
+    \begin{array}{rcll}
+      \redseqthree & \permle & \redseqthree(\redex/\redseqthree) \\
+                   & \permeq & \redex(\redseqthree/\redex) \\
+                   & \permle & \redex((\redseq/\redex) \sqcap (\redseqtwo/\redex)) & \text{ since by \ih $\redseqthree/\redex \permle (\redseq/\redex) \sqcap (\redseqtwo/\redex)$} \\
+                   & =       & \redseq \sqcap \redseqtwo & \text{ by definition}
+    \end{array}
+  \]
+\end{enumerate}
+\end{proof}
+
+\begin{remark}
+The infimum of $\set{\redseq,\redseqtwo}$ is unique modulo permutation equivalence,
+\ie if $\redseqthree$ is an infimum for $\set{\redseq,\redseqtwo}$ then $\redseqthree \permeq \redseq \sqcap \redseqtwo$.
+\end{remark}
+
+
+
+\begin{lemma}[Properties of disjoint derivations]
+\llem{properties_of_disjoint_derivations}
+Let $\redseq,\redseqtwo$ be coinitial derivations.
+Then the following are equivalent:
+\begin{enumerate}
+\item $\names(\redseq) \cap \names(\redseqtwo) = \emptyset$.
+\item $\redseq \sqcap \redseqtwo = \emptyDerivation$.
+\item There is no step common to $\redseq$ and $\redseqtwo$.
+\end{enumerate}
+In this case we say that $\redseq$ and $\redseqtwo$ are \defn{disjoint}.
+\end{lemma}
+\begin{proof}
+The implication $(1 \implies 2)$ is immediate since if we suppose that $\redseq \sqcap \redseqtwo$ is non-empty
+then the first step of $\redseq \sqcap \redseqtwo$ is a step $\redexthree$
+such that $\redexthree \in \redseq$ and $\redexthree \in \redseqtwo$.
+By Characterization of belonging~(\rlem{characterization_of_belonging}),
+this means that $\name(\redexthree) \in \names(\redseq) \cap \names(\redseqtwo)$,
+contradicting the fact that $\name(\redexthree)$ and $\names(\redseq)$ are disjoint.
+
+The implication
+$(2 \implies 3)$ is immediate by definition of $\redseq \sqcap \redseqtwo$.
+
+Let us check that the implication $(3 \implies 1)$ holds.
+By the contrapositive, suppose that $\names(\redseq)$ and $\names(\redseqtwo)$
+are not disjoint, and let us show that there is a step common to $\redseq$ and $\redseqtwo$.
+Since $\names(\redseq) \cap \names(\redseqtwo) \neq \emptyset$,
+we know that the derivation $\redseq$ can be written as $\redseq = \redseq_1 \redex \redseq_2$
+where $\name(\redex) \in \names(\redseqtwo)$.
+Without loss of generality we may suppose
+that $\redex$ is the first step in $\redseq$ with that property,
+\ie that $\names(\redseq_1) \cap \names(\redseqtwo) = \emptyset$.
+Moreover, let us write $\redseqtwo$ as $\redseqtwo = \redseqtwo_1 \redextwo \redseqtwo_2$ 
+where $\name(\redex) = \name(\redextwo)$.
+
+Observe that the name of $\redex$ does not appear anywhere along the sequence of steps $\redseq_1$,
+\ie that $\name(\redex) \not\in \names(\redseq_1)$, as a consequence of the
+fact that no names are ever repeated in any sequence of steps (\rlem{names_concatenation_disjoint_union}).
+This implies that $\name(\redextwo) \not\in \names(\redseq_1/\redseqtwo_1)$.
+Indeed:
+\[
+  \name(\redextwo)
+  = \name(\redex)
+  \not\in \names(\redseq_1)
+  \supseteq \names(\redseq_1) \setminus \names(\redseqtwo_1)
+  =^{(\text{\rlem{names_after_projection_along_a_step}})} \names(\redseq_1/\redseqtwo_1)
+\]
+This means that $\redextwo$ is not erased by the derivation $\redseq_1/\redseqtwo_1$.
+More precisely, $\redextwo/(\redseq_1/\redseqtwo_1)$ is a singleton.
+
+Symmetrically, $\redex/(\redseqtwo_1/\redseq_1)$ is a singleton.
+Moreover, $\name(\redextwo/(\redseq_1/\redseqtwo_1)) = \name(\redextwo) = \name(\redex) = \name(\redex/(\redseqtwo_1/\redseq_1))$ 
+so we have that $\redextwo/(\redseq_1/\redseqtwo_1) = \redex/(\redseqtwo_1/\redseq_1)$.
+The situation is the following, where $\names(\redseq_1) \cap \names(\redseqtwo_1) = \emptyset$:
+\[
+  \xymatrix{
+    &
+    &
+    & \ar@{->>}[ld]_{\redseq_1} \ar@{->>}[rd]^{\redseqtwo_1} &
+  \\
+    &
+    \ar@{->>}[l]_{\redseq_2}
+    &
+    \ar[l]_{\redex}
+    \ar@{->>}[rd]_{\redseqtwo_1/\redseq_1} & & \ar@{->>}[ld]^{\redseq_1/\redseqtwo_1} \ar[r]^{\redextwo}
+    &
+    \ar@{->>}[r]^{\redseqtwo_2}
+    &
+  \\
+    &
+    &
+    &
+    \ar[d]_{\redex/(\redseqtwo_1/\redseq_1) = \redextwo/(\redseq_1/\redseqtwo_1)}
+    &
+  \\
+    &
+    &&&
+  }
+\]
+By Full stability~(\rlem{full_stability}) this means that there exists a step $\redexthree$
+such that $\redexthree/\redseq_1 = \redex$ and $\redexthree/\redseqtwo_1 = \redextwo$.
+Then $\redexthree \in \redseq_1\redex\redseq_2 = \redseq$
+and also $\redexthree \in \redseqtwo_1\redextwo\redseqtwo_2 = \redseqtwo$
+so $\redexthree$ is common to $\redseq$ and $\redseqtwo$,
+by which we conclude.
+\end{proof}
+
+
+\begin{lemma}
+\llem{names_of_meet_included_in_names}
+Let $\redseq$ and $\redseqtwo$ be coinitial derivations.
+Then $\names(\redseq \sqcap \redseqtwo) \subseteq \names(\redseq)$.
+\end{lemma}
+\begin{proof}
+By induction on the length of $\redseq \cap \redseqtwo$:
+\begin{enumerate}
+\item {\bf Empty, $\redseq \sqcap \redseqtwo = \emptyDerivation$.}
+      Then $\names(\redseq \cap \redseqtwo) = \emptyset \subseteq \names(\redseq)$ is immediate.
+\item {\bf Non-empty, $\redseq \sqcap \redseqtwo = \redexthree(\redseq/\redexthree \sqcap \redseqtwo/\redexthree)$,
+           where $\redexthree$ is a step common to $\redseq$ and $\redseqtwo$.}
+      Then since $\redexthree$ is common to $\redseq$ and $\redseqtwo$,
+      we have that $\name(\redexthree) \in \names(\redseq)$.
+      Moreover, by \ih $\names(\redseq/\redexthree \sqcap \redseqtwo/\redexthree) \subseteq \names(\redseq/\redexthree)$.
+      So:
+      \[
+        \begin{array}{rcll}
+        \names(\redseq \cap \redseqtwo) & = & \set{\name(\redexthree)} \cup \names(\redseq/\redexthree \sqcap \redseqtwo/\redexthree) \\
+                                        & \subseteq & \names(\redseq) \cup \names(\redseq/\redexthree) \\
+                                        & = & \names(\redseq) \cup (\names(\redseq) \setminus \set{\name(\redexthree)} & \text{by \rlem{names_after_projection_along_a_step}} \\
+                                        & = & \names(\redseq)
+        \end{array}
+      \]
+      as required.
+\end{enumerate}
+\end{proof}
+
+
+\begin{proposition}[Names of join and meet]
+\lprop{names_of_join_and_meet}
+The following hold:
+\begin{enumerate}
+\item $\names(\redseq \sqcup \redseqtwo) = \names(\redseq) \cup \names(\redseqtwo)$
+\item $\names(\redseq \sqcap \redseqtwo) = \names(\redseq) \cap \names(\redseqtwo)$
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+Item 1 is easy resorting to the definition of $\sqcup$
+and \rlem{names_after_projection_along_a_step}:
+\[
+  \begin{array}{rcll}
+  \names(\redseq \sqcup \redseqtwo) & = & \names(\redseq(\redseqtwo/\redseq)) & \text{ by definition of $\sqcup$} \\
+                                    & = & \names(\redseq) \cup \names(\redseqtwo/\redseq) \\
+                                    & = & \names(\redseq) \cup (\names(\redseqtwo) \setminus \names(\redseq)) & \text{ by \rlem{names_after_projection_along_a_step}} \\
+                                    & = & \names(\redseq) \cup \names(\redseqtwo) \\
+  \end{array}
+\]
+For item 2., 
+the inclusion $\names(\redseq \sqcap \redseqtwo) \subseteq \names(\redseq) \cap \names(\redseqtwo)$
+is an immediate consequence of \rlem{names_of_meet_included_in_names}.
+For other inclusion, namely to show  $\names(\redseq) \cap \names(\redseqtwo) \subseteq \names(\redseq \sqcap \redseqtwo)$,
+we first prove the following claim:\medskip
+
+{\bf Claim.} $\names(\redseq/(\redseq \sqcap \redseqtwo)) \cap \names(\redseqtwo/(\redseq \sqcap \redseqtwo) = \emptyset$.
+{\em Proof of the claim.}
+By \rlem{properties_of_disjoint_derivations} it suffices to show that
+$(\redseq/(\redseq \sqcap \redseqtwo)) \sqcap (\redseqtwo/(\redseq \sqcap \redseqtwo)) = \emptyDerivation$.
+By contradiction, suppose that there is a step $\redexthree$ common to
+the derivations
+$\redseq/(\redseq \sqcap \redseqtwo)$ and $\redseqtwo/(\redseq \sqcap \redseqtwo)$.
+Then the derivation $(\redseq \sqcap \redseqtwo)\redexthree$ is a lower bound for $\set{\redseq,\redseqtwo}$,
+\ie
+$(\redseq \sqcap \redseqtwo)\redexthree \permle \redseq$
+and
+$(\redseq \sqcap \redseqtwo)\redexthree \permle \redseqtwo$.
+Since $\redseq \sqcap \redseqtwo$ is the greatest lower bound for $\set{\redseq,\redseqtwo}$,
+we have that $(\redseq \sqcap \redseqtwo)\redexthree \permle \redseq \sqcap \redseqtwo$.
+But this implies that $\redexthree \permle \emptyDerivation$, which is a contradiction.
+This concludes the proof of the claim.
+\medskip
+
+Note that $\redseq \sqcap \redseqtwo \permle \redseq$,
+so we have that $\redseq \permeq (\redseq \sqcap \redseqtwo)(\redseq/(\redseq \sqcap \redseqtwo))$,
+and this in turn implies that
+$\names(\redseq) = \names((\redseq \sqcap \redseqtwo)(\redseq/(\redseq \sqcap \redseqtwo)))$
+by \rcoro{permutation_equivalence_in_terms_of_names}.
+Symmetrically,
+$\names(\redseqtwo) = \names((\redseq \sqcap \redseqtwo)(\redseqtwo/(\redseq \sqcap \redseqtwo)))$.
+Then:
+\[
+  \begin{array}{rcll}
+    &&  \names(\redseq) \cap \names(\redseqtwo) \\
+  & = & \names((\redseq \sqcap \redseqtwo)(\redseq/(\redseq \sqcap \redseqtwo))) \cap \names((\redseq \sqcap \redseqtwo)(\redseqtwo/(\redseq \sqcap \redseqtwo))) \\
+  & = & \left(\names(\redseq \sqcap \redseqtwo) \cup \names(\redseq/(\redseq \sqcap \redseqtwo))\right) \cap \left(\names(\redseq \sqcap \redseqtwo) \cup \names(\redseqtwo/(\redseq \sqcap \redseqtwo))\right) \\
+     && \text{ by \rremark{names_concatenation_union}} \\
+  & = &
+        \names(\redseq \sqcap \redseqtwo) \cup 
+        \left( \names(\redseq/(\redseq \sqcap \redseqtwo)) \cap \names(\redseqtwo/(\redseq \sqcap \redseqtwo)) \right) \\
+  && \text{ since $(A \cup B) \cap (A \cup C) = A \cup (B \cap C)$ for arbitrary sets $A,B,C$} \\
+  & = &
+        \names(\redseq \sqcap \redseqtwo) \\
+  && \text{ since $\left( \names(\redseq/(\redseq \sqcap \redseqtwo)) \cap \names(\redseqtwo/(\redseq \sqcap \redseqtwo)) \right) = \emptyset$ by the previous claim} \\
+  \end{array}
+\]
+This concludes the proof.
+\end{proof}
+
+\begin{theorem}[Derivations modulo $\permeq$ form a distributive lattice]
+Let $\tm \in \termsdist$ be a correct term.
+Then derivations modulo $\permeq$ form a lattice $\derivlattice{\tm}$.
+More precisely, let $X$ be the set of derivations in the distributive lambda-calculus going out from $\tm$,
+modulo permutation equivalence:
+\[
+  X \eqdef \frac{\set{\redseq \ST \src(\redseq) = \tm}}{\permeq}
+\]
+Let moreover $\classof{\redseq}$ denote the equivalence class of a derivation $\redseq$
+modulo $\permeq$.
+Then $\derivlattice{\tm} \eqdef (X, \leq, \land, \lor)$ is a distributive lattice, where:
+\[
+  \begin{array}{rcl}
+  \classof{\redseq} \leq \classof{\redseqtwo}  & \iffdef & \redseq \permle \redseqtwo \\
+  \classof{\redseq} \land \classof{\redseqtwo} & \iffdef & \redseq \sqcap \redseqtwo \\
+  \classof{\redseq} \lor \classof{\redseqtwo}  & \iffdef & \redseq \sqcup \redseqtwo \\
+  \end{array}
+\]
+\end{theorem}
+\begin{proof}
+It is straightforward to check that $\leq$ is a partial order,
+and that $\classof{\redseq} \land \classof{\redseqtwo}$ (resp. $\classof{\redseq} \lor \classof{\redseqtwo}$)
+is the infimum (resp. supremum) of $\set{\classof{\redseq},\classof{\redseqtwo}}$.
+
+To see that it is distributive, let us first prove the first distributive law:
+$(\classof{\redseq} \land \classof{\redseqtwo}) \lor \classof{\redseqthree} =
+(\classof{\redseq} \lor \classof{\redseqthree}) \land (\classof{\redseqtwo} \lor \classof{\redseqthree})$.
+Let $\redseq,\redseqtwo,\redseqthree$ be arbitrary coinitial derivations.
+The following equality holds trivially, since
+$(A \cap B) \cup C = (A \cup C) \cap (A \cup B)$ is valid for arbitrary sets $A, B, C$:
+  \[
+    (\names(\redseq) \cap \names(\redseqtwo)) \cup \names(\redseqthree)
+    =
+    (\names(\redseq) \cup \names(\redseqthree)) \cap (\names(\redseqtwo) \cup \names(\redseqthree))
+  \]
+By \rprop{names_of_join_and_meet} this entails:
+  \[
+    \names((\redseq \sqcap \redseqtwo) \sqcup \redseqthree)
+    =
+    \names((\redseq \sqcup \redseqthree) \sqcap (\redseqtwo \sqcup \redseqthree))
+  \]
+By \rcoro{permutation_equivalence_in_terms_of_names} this in turn implies that:
+  \[
+    (\redseq \sqcap \redseqtwo) \sqcup \redseqthree
+    \permeq
+    (\redseq \sqcup \redseqthree) \sqcap (\redseqtwo \sqcup \redseqthree)
+  \]
+So by definition of $\land,\lor$ we obtain:
+  \[
+    (\classof{\redseq} \land \classof{\redseqtwo}) \lor \classof{\redseqthree}
+    =
+    (\classof{\redseq} \lor \classof{\redseqthree}) \land (\classof{\redseqtwo} \lor \classof{\redseqthree})
+  \]
+The other distributive law, namely
+$(\classof{\redseq} \lor \classof{\redseqtwo}) \land \classof{\redseqthree} =
+(\classof{\redseq} \land \classof{\redseqthree}) \lor (\classof{\redseqtwo} \land \classof{\redseqthree})$
+is proved analogously.
+\end{proof}
+
+\begin{remark}
+The function $\names$ that takes a derivation and returns a set of labels
+is well-defined for permutation-equivalence classes,
+as a consequence of \rcoro{permutation_equivalence_in_terms_of_names}:
+\[
+  \names([\redseq]) \eqdef \names(\redseq)
+\]
+\end{remark}
+
+\begin{theorem}[The lattice of derivations is representable as a ring of sets]
+If $\tm \in \termsdist$ is a correct term,
+then $\names : \derivlattice{\tm} \to \powerset(\labelset)$ is a monomorphism of lattices,
+where $\derivlattice{\tm}$ is the lattice of derivations of $\tm$
+and $\powerset(\labelset)$ is the lattice whose elements are sets of labels
+ordered by inclusion, with set intersection and set union as
+the meet and join operators.
+\end{theorem}
+\begin{proof}
+We are to show that $\names$ is monotonic, that it preserves meets and joins,
+and finally that it is a monomorphism:
+\begin{itemize}
+\item {\bf Monotonic.}
+  If $\classof{\redseq} \leq \classof{\redseqtwo}$
+  then $\names(\redseq) \subseteq \names(\redseqtwo)$.
+  This has been proved in \rprop{prefixes_as_subsets}.
+\item {\bf Preserves meets.}
+  $\names(\classof{\redseq} \land \classof{\redseqtwo}) =
+   \names(\redseq) \cap \names(\redseqtwo)$
+  by \rprop{names_of_join_and_meet}.
+\item {\bf Preserves joins.}
+  $\names(\classof{\redseq} \lor \classof{\redseqtwo}) =
+   \names(\redseq) \cup \names(\redseqtwo)$
+  by \rprop{names_of_join_and_meet}.
+\item {\bf Monomorphism.}
+  It suffices to show that $\names$ is injective.
+  Indeed, 
+  suppose that $\names(\classof{\redseq}) = \names(\classof{\redseqtwo})$.
+  By \rcoro{permutation_equivalence_in_terms_of_names}
+  we have that $\redseq \permeq \redseqtwo$,
+  so
+  $\classof{\redseq} = \classof{\redseqtwo}$.
+\end{itemize}
+\end{proof}
+

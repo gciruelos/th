@@ -1,0 +1,315 @@
+
+As we said before, the fact that in $\lambdadist$ names of steps
+are given by labels of lambdas, which are pairwise different,
+and that the calculus has no deletion nor duplication will
+make names of steps suitable to name derivations (\ie series of steps).
+
+Furthermore, giving names to derivations will make them very easy to analyze, as we
+will see in this section.
+
+\begin{definition}[Set of names of a derivation]
+If $\redseq$ is a derivation, its set of names is
+\[
+  \names(\redseq) \eqdef \set{\name(\redex) \ST \exists \redseq_1,\redseq_2.\ \redseq = \redseq_1\redex\redseq_2}
+\]
+\end{definition}
+
+A more precise way to say that our calculus has no duplication nor deletion is the following lemma.
+
+\begin{lemma}[Permanence]
+\llem{redex_permanence}
+If $\redex \not\in \redseq$ then $\redex/\redseq$ is a singleton.
+\end{lemma}
+\begin{proof}
+By induction on $\redseq$. The base case is trivial, so let $\redseq = \redextwo\redseqtwo$. 
+Note that $\redex \neq \redextwo$, so by \rlem{cardinality_of_the_set_of_residuals}
+we have that $\redex/\redextwo = \redextwo'$,
+where $\redextwo' \not\in \redseqtwo$.
+So $\redex/\redextwo\redseqtwo = \redextwo'/\redseqtwo$ is a singleton by \ih.
+\end{proof}
+
+There are several notions that can define the fact that a step $\redex$ is performed in
+a derivation $\redseq$ (where $\redex$ and $\redseq$ are coinitial).
+
+One of this notions is the one that says that whatever $\redex$ does,
+is done by $\redseq$, \ie, $\redex / \redseq = \emptyset$,
+there's no more $\redex$-related work to do. This is usually written as
+$\redex \permle \redseq$. This notion can be easily extended to derivations:
+$\redseqtwo \permle \redseq$ if $\redseqtwo / \redseq = \emptyDerivation$.
+
+Another (weaker) notion asks that \emph{some} of the work that $\redex$ does be
+done in $\redseq$. This is the notion of belonging.
+A step $\redex$ \defn{belongs to} a coinitial derivation $\redseq$,
+written $\redex \in \redseq$,
+if and only if some residual of $\redex$ is contracted along $\redseq$. 
+More precisely, $\redex \in \redseq$ if there exist $\redseq_1,\redex',\redseq_2$
+such that $\redseq = \redseq_1\redex'\redseq_2$ and $\redex' \in \redex/\redseq_1$.
+We write $\redex \not\in \redseq$ if it is not the case that $\redex \in \redseq$.
+
+As it turns out, these two notions are equivalent in our calculus, because
+there is no deletion nor duplication of redexes.
+
+\begin{lemma}[Characterization of belonging]
+\llem{characterization_of_belonging}
+Let $\redex$ be a step and $\redseq$ a coinitial derivation
+in the distributive lambda-calculus.
+Then the following are equivalent:
+\begin{enumerate}
+\item $\redex \in \redseq$,
+\item $\redex \permle \redseq$,
+\item $\name(\redex) \in \names(\redseq)$.
+\end{enumerate}
+{\em Note:} the hypothesis that $\redex$ and $\redseq$ are coinitial is crucial.
+In particular, $(1)$ and $(2)$ by definition only hold when $\redex$ and $\redseq$ are coinitial,
+while $(3)$ might hold even if $\redex$ and $\redseq$ are not coinitial.
+\end{lemma}
+\begin{proof}
+$(1 \Rightarrow 2)$
+  Let $\redseq = \redseq_1\redextwo\redseqtwo_2$ where $\redextwo$ is a residual of $\redex$.
+  Suppose moreover, without loss of generality,
+  that $\redseq_1$ is minimal, \ie that $\redex \not\in \redseq_1$.
+  By Permanence (\rlem{redex_permanence}) $\redex/\redseq_1$ is a singleton,
+  so $\redex/\redseq_1 = \redextwo$.
+  This means that $\redex/\redseq_1\redextwo\redseq_2 = \emptyset$,
+  so indeed $\redex \permle \redseq_1\redextwo\redseq_2$.
+
+$(2 \Rightarrow 3)$
+  By induction on $\redseq$.
+  If $\redseq$ is empty, the implication is vacuously true,
+  so let $\redseq = \redextwo\redseqtwo$
+  and consider two subcases, depending on whether $\redex = \redextwo$.
+  If $\redex = \redextwo$, then indeed the first step of $\redseq = \redex\redseqtwo$
+  has the same name as $\redex$.
+  On the other hand, if $\redex \neq \redextwo$, 
+  then by \rlem{cardinality_of_the_set_of_residuals}
+  we have that $\redex/\redextwo = \redex'$,
+  where $\name(\redex) = \name(\redex')$.
+  Note that $\redex \permle \redextwo\redseqtwo$ 
+  so $\redex/\redextwo = \redex' \permle \redseqtwo$.
+  By applying the \ih we obtain that there must be a step in $\redseqtwo$
+  whose name is $\name(\redex) = \name(\redex')$, and we are done.
+
+$(3 \Rightarrow 1)$
+  By induction on $\redseq$.
+  If $\redseq$ is empty, the implication is vacuously true,
+  so let $\redseq = \redextwo\redseqtwo$
+  and consider two subcases, depending on whether $\name(\redex) = \name(\redextwo)$.
+  If $\name(\redex) = \name(\redextwo)$ then $\redex$ and $\redextwo$ must be the same step,
+  since terms are correct, which means that labels decorating lambdas are pairwise distinct.
+  Hence $\redex \in \redseq = \redex\redseqtwo$.
+  On the other hand, if $\name(\redex) \neq \name(\redextwo)$, then
+  $\redex \neq \redextwo$ so by \rlem{cardinality_of_the_set_of_residuals}
+  we have that $\redex/\redextwo = \redex'$,
+  where $\name(\redex) = \name(\redex')$.
+  By hypothesis, there is a step in the derivation $\redseq = \redextwo\redseqtwo$ whose name
+  is $\name(\redex)$, and it is not $\redextwo$, so there must be at least one step in the
+  derivation $\redseqtwo$ whose name is is $\name(\redex) = \name(\redex')$.
+  By \ih $\redex' \in \redseqtwo$
+  and then, since $\redex'$ is a residual of $\redex$,
+  we conclude that $\redex \in \redextwo\redseqtwo$,
+  as required.
+\end{proof}
+
+\bigskip
+
+It is immediate to note that,
+when composing derivations $\redseq, \redseqtwo$,
+the set of names of $\redseq\redseqtwo$
+results from the union of the names of $\redseq$ and $\redseqtwo$:
+
+\begin{remark}
+\lremark{names_concatenation_union}
+$\names(\redseq\redseqtwo) = \names(\redseq) \cup \names(\redseqtwo)$
+\end{remark}
+
+Indeed, a stronger results holds. Namely, the union is disjoint:
+
+\begin{lemma}
+\llem{names_concatenation_disjoint_union}
+$\names(\redseq\redseqtwo) = \names(\redseq) \uplus \names(\redseqtwo)$
+\end{lemma}
+\begin{proof}
+Let $\redseq : \tm \rtodist \tmtwo$.
+By induction on $\redseq$ we argue that the set of labels decorating the lambdas in $\tmtwo$
+is disjoint from $\names(\redseq)$.
+The base case is immediate, so let $\redseq = \redexthree\redseqthree$.
+The step $\redexthree$ is of the form:
+\[
+  \redexthree \HS:\HS
+  \tm =
+  \conof{(\lamp{\lab}{\var}{\tmthree})\ls{\tmfour}}
+  \todist
+  \conof{\subs{\tmthree}{\var}{\ls{\tmfour}}}
+\]
+hence the target of $\redexthree$ has no lambdas decorated with the label $\lab$.
+Moreover, the derivation $\redseqthree$ is of the form:
+\[
+  \redseqthree \HS:\HS
+  \conof{\subs{\tmthree}{\var}{\ls{\tmfour}}}
+  \rtodist
+  \tmtwo
+\]
+and by \ih the set of labels decorating the lambdas in $\tmtwo$
+is disjoint from $\names(\redseqthree)$.
+As a consequence,
+the set of labels decorating the lambdas in $\tmtwo$
+is disjoint from both $\names(\redseqthree)$
+and $\set{\lab}$.
+This completes the proof.
+\end{proof}
+
+\begin{corollary}[The length of a derivation equals the number of distinct names along it]
+\lcoro{length_of_derivation_is_number_of_distinct_names}
+If $\redseq$ is a derivation in the distributive lambda-calculus
+and $\lengthof{\redseq}$ denotes the length of $\redseq$,
+then
+$\lengthof{\redseq} = \#(\names(\redseq))$.
+\end{corollary}
+\begin{proof}
+Let $\redseq = \redex_1\hdots\redex_n$.
+Then by \rlem{names_concatenation_disjoint_union},
+$\names(\redseq) = \biguplus_{i=1}^{n} \set{\name(\redex_i)}$
+and
+$\#(\names(\redseq)) = n$, as required.
+\end{proof}
+
+\begin{lemma}[Names after a projection]
+\llem{names_after_projection_along_a_step}
+If $\redseq$ and $\redseqtwo$ are coinitial derivations, then
+$\names(\redseq/\redseqtwo) = \names(\redseq) \setminus \names(\redseqtwo)$
+\end{lemma}
+\begin{proof}
+First we claim that $\names(\redseq/\redex) = \names(\redseq) \setminus \set{\name(\redex)}$.
+We proceed by induction on $\redseq$.
+The base case is immediate, so let $\redseq = \redextwo\redseqtwo$
+and consider two subcases, depending on whether $\redex = \redextwo$.
+If $\redex = \redextwo$,
+then:
+\[
+  \begin{array}{rcl}
+  \names(\redseq/\redex) & = & \names(\redex\redseqtwo/\redex) \\
+                         & = & \names(\redseqtwo) \\
+                         & = & \names(\redex\redseqtwo) \setminus \set{\name(\redex)} \\
+  \end{array}
+\]
+On the other hand if $\redex \neq \redextwo$,
+then by \rlem{cardinality_of_the_set_of_residuals}
+we have that $\redex/\redextwo = \redex'$
+where $\name(\redex) = \name(\redex')$
+and, similarly,
+$\redextwo/\redex = \redextwo'$,
+where $\name(\redextwo) = \name(\redextwo')$. Hence:
+\[
+  \begin{array}{rcll}
+  \names(\redseq/\redex) & = & \names(\redextwo\redseqtwo/\redex) \\
+                         & = & \names((\redextwo/\redex)(\redseqtwo/(\redex/\redextwo))) \\
+                         & = & \names(\redextwo/\redex) \cup \names(\redseqtwo/(\redex/\redextwo)) \\
+                         & = & \names(\redextwo') \cup \names(\redseqtwo/\redex') \\
+                         & = & \names(\redextwo') \cup (\names(\redseqtwo) \setminus \set{\name(\redex')} & \text{ by \ih} \\
+                         & = & \names(\redextwo) \cup (\names(\redseqtwo) \setminus \set{\name(\redex)}) \\
+                         & = & (\names(\redextwo) \cup \names(\redseqtwo)) \setminus \set{\name(\redex)} & \text{since $\name(\redex) \neq \name(\redextwo)$} \\
+                         & = & \names(\redextwo\redseqtwo) \setminus \set{\name(\redex)} \\
+                         & = & \names(\redseq) \setminus \set{\name(\redex)} \\
+  \end{array}
+\]
+which completes the claim.
+To see that $\names(\redseq/\redseqtwo) = \names(\redseq) \setminus \names(\redseqtwo)$
+for an arbitrary derivation $\redseqtwo$,
+proceed by induction on $\redseqtwo$.
+If $\redseqtwo$ is empty it is trivial, so
+consider the case in which $\redseqtwo = \redex\redseqthree$.
+Then:
+\[
+  \begin{array}{rcll}
+  \names(\redseq/\redex\redseqthree) & = & \names((\redseq/\redex)/\redseqthree) \\
+                                     & = & \names(\redseq/\redex) \setminus \names(\redseqthree) & \text{ by \ih} \\
+                                     & = & (\names(\redseq) \setminus \set{\name(\redex)}) \setminus \names(\redseqthree) & \text{ by the previous claim} \\
+                                     & = & \names(\redseq) \setminus (\set{\name(\redex)} \cup \names(\redseqthree)) \\
+                                     & = & \names(\redseq) \setminus \names(\redex\redseqthree) \\
+  \end{array}
+\]
+as required.
+\end{proof}
+
+\begin{proposition}[Prefixes as subsets]
+\lprop{prefixes_as_subsets}
+Let $\redseq,\redseqtwo$ be coinitial derivations in the distributive lambda-calculus.
+Then
+$\redseq \permle \redseqtwo$ if and only if $\names(\redseq) \subseteq \names(\redseqtwo)$.
+\end{proposition}
+\begin{proof}
+By induction on $\redseq$.
+The base case is immediate since $\emptyDerivation \permle \redseqtwo$
+and $\emptyset \subseteq \names(\redseqtwo)$ both hold.
+So let $\redseq = \redexthree\redseqthree$. First note that
+the following equivalence holds:
+\begin{equation}
+\leqn{prefixes_as_subsets:1}
+    \redexthree\redseqthree \permle \redseqtwo
+    \HS\iff\HS
+    \redexthree \permle \redseqtwo \ \land\ \redseqthree \permle \redseqtwo/\redexthree
+\end{equation}
+Indeed:
+\begin{itemize}
+\item $(\Rightarrow)$
+    Suppose that $\redexthree\redseqthree \permle \redseqtwo$.
+    Then, on one hand, $\redexthree \permle \redexthree\redseqthree \permle \redseqtwo$.
+    On the other hand, projection is monotonic, so
+    $\redseqthree = \redexthree\redseqthree/\redexthree \permle \redseqtwo/\redexthree$.
+\item $(\Leftarrow)$
+    Since $\redseqthree \permle \redseqtwo/\redexthree$
+    we have that $\redexthree\redseqthree \permle \redexthree(\redseqtwo/\redexthree) \permeq \redseqtwo(\redexthree/\redseqtwo) = \redseqtwo$
+    since $\redexthree/\redseqtwo = \emptyDerivation$.
+\end{itemize}
+So we have that:
+\[
+  \begin{array}{rcll}
+    \redexthree\redseqthree \permle \redseqtwo
+    & \iff &
+    \redexthree \permle \redseqtwo \ \land\ \redseqthree \permle \redseqtwo/\redexthree
+      & \text{ by \reqn{prefixes_as_subsets:1}} \\
+    & \iff &
+    \name(\redexthree) \in \names(\redseqtwo) \ \land\ \redseqthree \permle \redseqtwo/\redexthree
+      & \text{ by \rlem{characterization_of_belonging}} \\
+    & \iff &
+    \name(\redexthree) \in \names(\redseqtwo) \ \land\ \names(\redseqthree) \subseteq \names(\redseqtwo/\redexthree)
+      & \text{ by \ih} \\
+    & \iff &
+    \name(\redexthree) \in \names(\redseqtwo) \ \land\ \names(\redseqthree) \subseteq \names(\redseqtwo) \setminus \set{\name(\redexthree)}
+      & \text{ by \rlem{names_after_projection_along_a_step}} \\
+    & \iff &
+    \names(\redexthree\redseqthree) \subseteq \names(\redseqtwo)
+  \end{array}
+\]
+To justify the very last equivalence, the $(\Rightarrow)$ direction is immediate.
+For the $(\Leftarrow)$ direction,
+the difficulty is ensuring that
+$\names(\redseqthree) \subseteq \names(\redseqtwo) \setminus \set{\name(\redexthree)}$
+from the fact that
+$\names(\redexthree\redseqthree) \subseteq \names(\redseqtwo)$.
+To see this it suffices to observe that by \rlem{names_concatenation_disjoint_union},
+$\names(\redexthree\redseqthree)$
+is the {\em disjoint} union
+$\names(\redexthree) \uplus \names(\redseqthree)$,
+which means that
+$\name(\redexthree) \not\in \names(\redseqthree)$.
+
+\end{proof}
+
+\begin{corollary}[Permutation equivalence in terms of names]
+\lcoro{permutation_equivalence_in_terms_of_names}
+Let $\redseq,\redseqtwo$ be coinitial derivations in the distributive lambda-calculus.
+Then
+$\redseq \permeq \redseqtwo$ if and only if $\names(\redseq) = \names(\redseqtwo)$.
+\end{corollary}
+\begin{proof}
+Immediate since
+\[
+  \begin{array}{rcll}
+  \redseq \permeq \redseqtwo & \iff & \redseq \permle \redseqtwo \ \land\ \redseqtwo \permle \redseq \\
+                             & \iff & \names(\redseq) \subseteq \names(\redseqtwo) \ \land\ \names(\redseqtwo) \subseteq \names(\redseq)
+                                    & \text{ by \rprop{prefixes_as_subsets}}\\
+                             & \iff & \names(\redseq) = \names(\redseqtwo)
+  \end{array}
+\]
+\end{proof}

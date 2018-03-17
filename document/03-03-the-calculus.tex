@@ -44,11 +44,11 @@ such that $\varlabel{\var}{\tmthree_j} = \tmlabel{\ls{\tmtwo}_j}$ for all $j \in
 \end{definition}
 
 For example,
-$\subs{(\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}])}{\var}{[\vartwo^{[\alpha^1] \tolab{2} \beta^3},\varthree^{\alpha^1}]}
-  = \vartwo^{[\alpha^1] \tolab{2} \beta^3}\varthree^{\alpha^1}$
+\[\subs{(\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}])}{\var}{[\vartwo^{[\alpha^1] \tolab{2} \beta^3},\varthree^{\alpha^1}]}
+= \vartwo^{[\alpha^1] \tolab{2} \beta^3}\varthree^{\alpha^1}\]
 and
-$\subs{(\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}])}{\var}{[\vartwo^{\alpha^1},\varthree^{[\alpha^1] \tolab{2} \beta^3}]}
-  = \varthree^{[\alpha^1] \tolab{2} \beta^3}\vartwo^{\alpha^1}$.
+\[\subs{(\var^{[\alpha^1] \tolab{2} \beta^3}[\var^{\alpha^1}])}{\var}{[\vartwo^{\alpha^1},\varthree^{[\alpha^1] \tolab{2} \beta^3}]}
+= \varthree^{[\alpha^1] \tolab{2} \beta^3}\vartwo^{\alpha^1}.\]
 
 
 \begin{remark}
@@ -85,6 +85,119 @@ is derivable.
 By induction on $\tm$, straightforward using the ideas in the last remark.
 \end{proof}
 
+\begin{lemma}[Parameter/argument correspondence]
+\llem{parameter_argument_correspondence}
+If $(\lamp{\lab}{\var}{\tm})[\tmtwo_1,\hdots,\tmtwo_n]$ is a correct term then
+there are exactly $n$ free occurrences of $\var$ in $\tm$.
+More precisely, $\tm$ can be written as $\conhat\of{\var^{\typ_1},\hdots,\var^{\typ_n}}$
+where $\conhat$ is an $n$-hole context
+and type $\typ_i$ is the type of $\tmtwo_i$ for all $1 \leq i \leq n$.
+\end{lemma}
+\begin{proof}
+Consider the (unique) type derivation for $(\lamp{\lab}{\var}{\tm})[\tmtwo_1,\hdots,\tmtwo_n]$.
+The last rule must be:
+\[
+  \indrule{\toE}{
+    \indrule{\toI}{
+      \tctx,\var:[\typtwo_1,\hdots,\typtwo_n] \vdash \tm : \typ
+    }{
+      \tctx \vdash \lamp{\lab}{\var}{\tm} : [\typtwo_1,\hdots,\typtwo_n] \tolab{\lab} \typ
+    }
+    \HS
+    \tctxtwo_i \vdash \tmtwo_i : \typtwo_i \HS\text{ for all $i = 1..n$ }
+  }{
+    \tctx +_{i=1}^{n} \tctxtwo_i \vdash (\lamp{\lab}{\var}{\tm})[\tmtwo_1,\hdots,\tmtwo_n] : \typ
+  }
+\]
+It is then easy to conclude by resorting to Linearity~\rlem{linearity}.
+\end{proof}
+
+Substitution as we presented it can be hard to work with in some environments,
+as we have to track how substitution terms get distributed over the term they are
+being substituted in.
+
+The following alternative definition of deals with this by
+taking advantage of the fact that substitution is type-directed: it
+takes all terms with itself and doesn't distribute it in the application case, but rather
+``picks'' the correct term to substitute in the base case.
+
+\begin{definition}[Alternative definition of substitution]
+Let $\tctx,\var : [\typ_1,\hdots,\typ_n] \vdash \tm : \typtwo$
+and let $\tctxtwo_i \vdash \tmtwo_i : \typthree_i$ for each $i \in \set{1,\hdots,m}$
+in such a way that $\varlabel{\var}{\tm} \subseteq \tmlabel{[\tmtwo_1,\hdots,\tmtwo_m]}$
+and $[\typtwo_1,\hdots,\typtwo_n]$ is sequential.
+Let us write $\ls{\tmtwo}$ for $[\tmtwo_1,\hdots,\tmtwo_m]$.
+Then an alternative definition for substitution $\tm\sub{\var}{\ls{\tmtwo}}$
+may be defined as follows:
+\[
+  \begin{array}{rcll}
+    \var^{\typ}\sub{\var}{\ls{\tmtwo}}                 & \eqdef & \tmtwo_i & \text{ where $i$ is the unique index such that} \\
+                                                                         &&& \text{ $\tmlabel{\tmtwo_i}$ is the external label of $\typ$}\\
+    \vartwo^{\typ}\sub{\var}{\ls{\tmtwo}}              & \eqdef & \vartwo^\typ & \text{ if $\var \neq \vartwo$} \\
+    (\lamp{\lab}{\vartwo}{\tm})\sub{\var}{\ls{\tmtwo}} & \eqdef & \lamp{\lab}{\vartwo}{\tm\sub{\var}{\ls{\tmtwo}}} & \text{ if $\var \neq \vartwo$ and there is no capture}\\
+    (\tm[\tmthree_i]_{i=1}^{k})\sub{\var}{\ls{\tmtwo}} & \eqdef & \tm\sub{\var}{\ls{\tmtwo}}[\tmthree_i\sub{\var}{\ls{\tmtwo}}]_{i=1}^{k}.
+  \end{array}
+\]
+Moreover,
+$[\tm_1,\hdots,\tm_n]\sub{\var}{\ls{\tmtwo}}$
+stands for $[\tm_1\sub{\var}{\ls{\tmtwo}},\hdots,\tm_n\sub{\var}{\ls{\tmtwo}}]$,
+whenever each substitution $\tm_i\sub{\var}{\ls{\tmtwo}}$ is well-defined.
+\end{definition}
+
+\begin{lemma}
+$\subs{\tm}{\var}{\ls{\tmtwo}} = \tm\sub{\var}{\ls{\tmtwo}'}$
+whenever $\varlabel{\var}{\tm} = \tmlabel{\ls{\tmtwo}}$ and $\ls{\tmtwo}$ is a sublist of $\ls{\tmtwo}'$.
+\end{lemma}
+\begin{proof}
+By induction on $\tm$.
+\begin{enumerate}
+\item {\bf Variable (same), $\tm = \var^\typ$.}
+  First $\subs{\var^\typ}{\var}{[\tmtwo]} = \tmtwo$.
+  Also,$\var^\typ\sub{\var}{\ls{\tmtwo}'} = \tmtwo$,
+  because $\tmtwo$ is in $\ls{\tmtwo}'$ and it must be the only one for which the external label is the external label of $\typ$.
+\item {\bf Variable (different), $\tm = \vartwo$.}
+  On the left hand side, $\subs{\vartwo^\typtwo}{\var}{\emptylset} = \vartwo^\typtwo$.
+  On the right hand side, $\vartwo^\typtwo\sub{\var}{\ls{\tmtwo}'} = \vartwo^\typtwo$.
+\item {\bf Abstraction, $\tm = \lamp{\lab}{\vartwo}{\tmthree}$.}
+  On the left, $\subs{(\lamp{\lab}{\vartwo}{\tmthree})}{\var}{\ls{\tmtwo}} = \lamp{\lab}{\vartwo}{\subs{\tmthree}{\var}{\ls{\tmtwo}}}$.
+  On the right $(\lamp{\lab}{\vartwo}{\tmthree})\sub{\var}{\ls{\tmtwo}'} = \lamp{\lab}{\vartwo}{\tmthree\sub{\var}{\ls{\tmtwo}}'}$.
+  The right-hand side of both equantions are the same by inductive hypothesis.
+\item {\bf Application, $\tm = \tmfour [\tmthree_1, \hdots, \tmthree_n]$.}
+  On the left side we have that
+    $\subs{(\tmfour [\tmthree_i]_{i=1}^n)}{\var}{\ls{\tmtwo}} =
+      \subs{\tmfour}{\var}{\ls{\tmtwo}_0} [\subs{\tmthree_i}{\var}{\ls{\tmtwo}_i}]_{i=1}^n$, where
+      $\ls{\tmtwo}_0 +_{i=1}^{n} \ls{\tmtwo}_i$ is a permutation of $\ls{\tmtwo}$,
+      $\varlabel{\var}{\tm} = \tmlabel{\ls{\tmtwo}_0}$ and
+      $\varlabel{\var}{\tmthree_i} = \tmlabel{\ls{\tmtwo}_i}$ for all $i = \set{1,...,n}$.
+  On the other hand, $((\tmfour [\tmthree_i]_{i=1}^n))\sub{\var}{\ls{\tmtwo}'} =
+      \tmfour\sub{\var}{\ls{\tmtwo}'} [\tmthree_i\sub{\var}{\ls{\tmtwo}'}]_{i=1}^n$.
+
+  Note that for every $i \in \set{0, ..., n}$, $\ls{\tmtwo}_i$ is a sublist of $\ls{\tmtwo}$.
+  Then, by inductive hypothesis, $\subs{\tmfour}{\var}{\ls{\tmtwo}_0} = \tmfour\sub{\var}{\ls{\tmtwo}'}$
+  and $\subs{\tmthree_i}{\var}{\ls{\tmtwo}_i} = \tmthree_i\sub{\var}{\ls{\tmtwo}'}$, which is what we wanted.
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[Substitution lemma for the alternative notion of substitution]
+\llem{substitution_lemma_alt}
+The following variant of the substitution lemma holds
+when $\var \not\in \fv{\ls{\tmthree}}$:
+\[
+ \tm\sub{\var}{\ls{\tmtwo}}\sub{\vartwo}{\ls{\tmthree}} =
+ \tm\sub{\vartwo}{\ls{\tmthree}}\sub{\var}{\ls{\tmtwo}\sub{\vartwo}{\ls{\tmthree}}}
+\]
+This equation is intended to mean, in particular, that one side is well-defined
+if and only if the other side is well-defined.
+\end{lemma}
+\begin{proof}
+Straightforward by induction on $\tm$.
+\end{proof}
+
+\begin{remark}
+$\conof{\tm}\sub{\var}{\ls{\tmtwo}} = \con\sub{\var}{\ls{\tmtwo}}\of{\tm\sub{\var}{\ls{\tmtwo}}}$.
+\end{remark}
+
+\bigskip
 
 
 \begin{definition}[The $\lambdadist$-calculus]

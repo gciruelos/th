@@ -1,4 +1,82 @@
 
+Recall from the preliminaries that some abstract rewriting systems have the property of being
+\emph{orthogonal}.
+Being orthtogonal entails a myriad of properties and results that make working
+with orthogonal rewrite systems very easy.
+Informally, in an orthogonal rewrite system residuals behave and have the properties
+that one would expect, some of them are summarized in the table that follows.
+
+{\footnotesize
+\[
+\begin{array}{|c|c|c|}
+\hline
+\begin{array}{r@{\hspace{0.2cm}}c@{\hspace{0.2cm}}l}
+  \emptyDerivation\,\redseq & = & \redseq
+\\
+  \redseq\,\emptyDerivation & = & \redseq
+\\
+  \emptyDerivation/\redseq & = & \emptyDerivation
+\\
+  \redseq/\emptyDerivation & = & \redseq
+\\
+  \redseq/\redseqtwo\redseqthree & = & (\redseq/\redseqtwo)/\redseqthree
+\\
+  \redseq\redseqtwo/\redseqthree & = & (\redseq/\redseqthree)(\redseqtwo/(\redseqthree/\redseq))
+\\
+  \redseq/\redseq & = & \emptyDerivation
+\end{array}
+&
+\begin{array}{r@{\hspace{0.2cm}}c@{\hspace{0.2cm}}l}
+  \redseq \permle \redseqtwo & \iffdef & \redseq/\redseqtwo = \emptyDerivation
+\\
+  \redseq \permeq \redseqtwo & \iffdef & \redseq \permle \redseqtwo \land \redseqtwo \permle \redseq
+\\
+  \redseq \sqcup \redseqtwo  & \eqdef & \redseq(\redseqtwo/\redseq) 
+\\
+  \redseq \permeq \redseqtwo & \implies & \redseqthree/\redseq = \redseqthree/\redseqtwo
+\\
+  \redseq \permle \redseqtwo & \iff & \exists \redseqthree.\ \redseq\redseqthree \permeq \redseqtwo
+\\
+  \redseq \permle \redseqtwo & \iff & \redseq \sqcup \redseqtwo \permeq \redseqtwo
+\end{array}
+&
+\begin{array}{r@{\hspace{0.2cm}}c@{\hspace{0.2cm}}l}
+  \redseq \permle \redseqtwo & \implies & \redseq/\redseqthree \permle \redseqtwo/\redseqthree
+\\
+  \redseq \permle \redseqtwo & \iff & \redseqthree\redseq \permle \redseqthree\redseqtwo
+\\
+  \redseq \sqcup \redseqtwo  & \permeq & \redseqtwo \sqcup \redseq
+\\
+  (\redseq \sqcup \redseqtwo) \sqcup \redseqthree & = & \redseq \sqcup (\redseqtwo \sqcup \redseqthree)
+\\
+  \redseq & \permle & \redseq \sqcup \redseqtwo
+\\
+  (\redseq \sqcup \redseqtwo)/\redseqthree & = & (\redseq/\redseqthree) \sqcup (\redseqtwo/\redseqthree) \\
+\end{array}
+\\
+\hline
+\end{array}
+\]
+}
+
+As we stated in the preliminaries, one must check four axioms in order to prove that
+a given system (in this case $\lambdadist$) is orthogonal.
+
+Let's see why the axiom called Finite Developments is interesting.
+As stated in \cite{thesismellies}, the \emph{Axiome FD}, or finite developments axiom,
+asks that for every set of coinitial steps $\redexset$, then all developments of $\redexset$
+are finite.
+
+This axiom is important because suppose we have two coinitial steps $\redex$ and $\redextwo$,
+such that $\redex : \tm \to \tmtwo$. Then $\redextwo / \redex$ is a set of steps with
+the same source ($\tmtwo$). The idea is that if we had $\tm$ and wanted to ``execute'' both
+$\redex$ and $\redextwo$, if we didn't have finite developments, then in particular
+we don't have finite complete developments, so a reduction that tries to
+execute what's left of $\redextwo$ after $\redex$ may not finish.
+
+The $\lambdadist$-calculus not only enjoys of finite developments, but we can
+give the exact length a complete development of a set of steps will have.
+
 \begin{lemma}[Finite developments]
 \llem{finite_developments}
 Let $\redexset$ be a set of coinitial steps.
@@ -49,21 +127,63 @@ There are four axioms to check:
 \end{enumerate}
 \end{proof}
 
-\begin{definition}
-A step $\redex$ \defn{belongs to} a coinitial derivation $\redseq$,
-written $\redex \in \redseq$,
-if and only if some residual of $\redex$ is contracted along $\redseq$. 
-More precisely, $\redex \in \redseq$ if there exist $\redseq_1,\redex',\redseq_2$
-such that $\redseq = \redseq_1\redex'\redseq_2$ and $\redex' \in \redex/\redseq_1$.
-We write $\redex \not\in \redseq$ if it is not the case that $\redex \in \redseq$.
-\end{definition}
 
 
-\subsubsection{Examples}
+\bigskip
+\begin{example}
+\lexample{derivation-ids-ex}
+Next we present an example that will be useful to illustrate
+some of the upcoming propositions. Consider the following term:
 
-Before going any further, we need to get some more residual theory definitions established.
+\[
+  (\lamp{\lab_1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
+    [\lamp{\lab_2}{\vartwo}{\vartwo^\alpha},
+    (\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha]].
+\]
 
-The first is the concept of \defn{permutation equivalence}.
-Permutation equivalence is a sense of equivalence for derivations.
-Intuitively, 
+What follows is its derivation space, \ie,
+all possible derivations that have the previous term as a source.
 
+{\footnotesize
+\xymatrix{
+  &
+  (\lamp{\lab_1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
+    [\lamp{\lab_2}{\vartwo}{\vartwo^\alpha},
+    (\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha]]
+    \ar@[->][rd]^{\lab_3}_{\redextwo}
+    \ar@[->][ld]_{\lab_1}^{\redex}
+  & \\
+  (\lamp{\lab_2}{\vartwo}{\vartwo^\alpha})
+   ((\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha])
+   \ar@[->][rd]_{\lab_3}^{\redextwo'}
+   \ar@[->][dd]_{\lab_2}^{\redexthree}
+   &
+   &
+  (\lamp{\lab_1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
+    [\lamp{\lab_2}{\vartwo}{\vartwo^\alpha},
+    w^\alpha]
+   \ar@[->][ld]^{\lab_1}_{\redex'} \\
+  &
+  (\lamp{\lab_2}{\vartwo}{\vartwo^\alpha})  [w^\alpha]
+  \ar@[->][d]_{\lab_2}^{\redexthree'}
+  & \\
+  (\lamp{\lab_3}{\varthree}{\varthree^\alpha})  [w^\alpha]
+  \ar@[->][r]_{\lab_3}^{\redextwo''}
+  &
+  w^\alpha
+  & \\}
+}
+\end{example}
+
+Some facts about these derivations:
+
+\begin{itemize}
+  \item $\redex$ creates $\redexthree$: we cannot perform $\redexthree$ until we performed $\redex$. We will expand on the topic of creation later.
+  \item $\redex \redextwo' \permeq \redextwo \redex'$. Remember that two derivations $\redseq$,
+    $\redseqtwo$ are permutation equivalent if $\redseq \permle \redseqtwo \permle \redseq$,
+    \ie if they perform the same amount of work.
+  \item $\redextwo / \redex = \set{\redex''}$ and
+    $\redextwo / \redex \redexthree = \set{\redextwo''}$. Remember that in $\lambdadist$,
+    residuals are either empty or singletons, so we will often skip the parentheses.
+  \item $\name(\redexthree) = \name(\redexthree') = \lab_3$.
+\end{itemize}

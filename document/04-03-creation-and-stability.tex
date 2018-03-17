@@ -1,0 +1,1123 @@
+
+
+In this section we will see two important lemmas that guarantee certain properties
+of residues after steps or derivations.
+
+\bigskip
+
+The first of this lemmas is creation.
+We say that a step $\redex$ is \defn{created} by another step $\redextwo$ if
+there is no step $\redex'$ coinitial with $\redextwo$ such that $\redex \in \redex' / \redextwo$.
+\TODO{checkear def con pablo}
+What this means is that we weren't able to do what $\redex$ does before executing $\redextwo$.
+For example, in \rexample{derivation-ids-ex} we claimed
+that the step $\redexthree$ iscreated by $\redex$, which indeed is.
+
+Having a lemma that characterizes creation is relevant because in proofs,
+it is common to have edge cases where a new redex is created.
+A creation lemma can help handle those edge cases more easily.
+
+The following lemma says that if $\redextwo$ creates $\redex$, then $\redextwo$ follows
+one of three general forms.
+
+
+\begin{lemma}[Creation]
+\llem{creation}
+There are three creation cases in the distributive lambda-calculus:
+\begin{enumerate}
+\item {\bf Creation case I.}
+  $
+    \con\of{ (\lamp{\lab}{\var}{\var^{\typ}})\,[\lamp{\labtwo}{\vartwo}{\tm}]\, \ls{\tmtwo}}
+    \ \todist\ %
+    \con\of{ (\lamp{\labtwo}{\vartwo}{\tm})\,\ls{\tmtwo} }
+    \ \todist\ %
+    \con\of{ \tm\sub{\vartwo}{\ls{\tmtwo}} }
+  $.
+\item {\bf Creation case II.}
+  $
+     \con\of{ (\lamp{\lab}{\var}{ \lamp{\labtwo}{\vartwo}{\tm} })\,\ls{\tmtwo}\,\ls{\tmthree} }
+     \ \todist\ %
+     \con\of{ (\lamp{\labtwo}{\vartwo}{\tm'})\,\ls{\tmthree} }
+     \ \todist\ %
+     \con\of{ \tm'\sub{\vartwo}{\ls{\tmthree}} }
+  $, where:
+  \[
+     \begin{array}{rcl}
+     \tm' & = & \tm\sub{\var}{\ls{\tmtwo}}
+     \end{array}
+  \]
+\item {\bf Creation case III.}
+  $
+    \con_1\of{(\lamp{\lab}{\var}{\con_2\of{\var^{\typ}\,\ls{\tm}}})\ls{\tmtwo}}
+    \ \todist\ %
+    \con_1\of{\con'_2\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,\ls{\tm'}}}
+    \ \todist\ %
+    \con_1\of{\con'_2\of{\tmthree\sub{\vartwo}{\ls{\tm'}}}}
+  $,
+  where:
+  \[
+  \begin{array}{rcl}
+    \con_2\sub{\var}{\ls{\tmtwo}}      & = & \con'_2 \\
+    \var^{\typ}\sub{\var}{\ls{\tmtwo}} & = & \lamp{\labtwo}{\vartwo}{\tmthree} \\
+    \ls{\tm}\sub{\var}{\ls{\tmtwo}}    & = & \ls{\tm'} \\
+    \ls{\tmtwo}                        & = & [\ls{\tmtwo_1},\lamp{\labtwo}{\vartwo}{\tmthree},\ls{\tmtwo_2}] \\
+  \end{array}
+  \]
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Let $\redex : \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}} \todist \conof{\tm\sub{\var}{\ls{\tmtwo}}}$ be a step,
+and let $\redextwo : \conof{\tm\sub{\var}{\ls{\tmtwo}}} \todist \tmfive$ another step
+such that $\redex$ creates $\redextwo$.
+The redex contracted by the step $\redextwo$ is below a context $\con_1$,
+so let $\conof{\tm\sub{\var}{\ls{\tmtwo}}} = \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}$,
+where $(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}$ is the redex contracted by $\redextwo$.
+We consider three cases, depending on the relative positions of the holes of $\con$ and $\con_1$,
+namely they may be disjoint,
+$\con$ may be a prefix of $\con_1$,
+or $\con_1$ may be a prefix of $\con$:
+\begin{enumerate}
+\item {\bf If the holes of $\con$ and $\con_1$ are disjoint.}
+  Then there is a two-hole context $\conhat$ such that
+  \[
+    \con = \conhat\of{\conbase,(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}
+    \HS
+    \con_1 = \conhat\of{\tm\sub{\var}{\ls{\tmtwo}},\conbase}
+  \]
+  So the situation is the following:
+  \[
+    \conhat\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo},(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}
+    \todist \conhat\of{\tm\sub{\var}{\ls{\tmtwo}},(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}
+    \todist \conhat\of{\tm\sub{\var}{\ls{\tmtwo}},\tmthree\sub{\vartwo}{\tmfour}}
+  \]
+  Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+  So this case is impossible.
+\item {\bf If $\con$ is a prefix of $\con_1$.}
+  Then there exists a context $\con_2$ such that $\con_1 = \conof{\con_2}$,
+  and we have that
+  $\tm\sub{\var}{\ls{\tmtwo}} = \con_2\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}$.
+  We consider two subcases, depending on whether the position of the hole $\con_2$ lies
+  inside the term $\tm$, or it reaches a free occurrence of $\var$ in $\tm$
+  and ``jumps'' to one of the arguments in the list $\ls{\tmtwo}$.
+  \begin{enumerate}
+  \item {\bf If the position of the hole of $\con_2$ lies in $\tm$.}
+    More precisely, there is a context $\con'_2$ and a term $\tm'$ such that:
+    \[
+      \begin{array}{rcl}
+      \tm & = & \con'_2\of{\tm'} \\
+      \con_2 & = & \con'_2\sub{\var}{\ls{\tmtwo}} \\
+      (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} & = & \tm'\sub{\var}{\ls{\tmtwo}}
+      \end{array}
+    \]
+    We consider three further subcases for the term $\tm'$:
+    it cannot be an abstraction, so it may be a variable $\var^{\typ}$,
+    or an application.
+    Besides, if it is an application, the head may be a variable $\var^{\typ}$ or an abstraction.
+    \begin{enumerate}
+    \item {\bf Variable, \ie $\tm' = \var^{\typ}$.}
+      Then the list $\ls{\tmtwo}$ may be split as $\ls{\tmtwo} = [\ls{\tmtwo_1},(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour},\ls{\tmtwo_2}]$,
+      and the situation is:
+      \[
+        \conof{(\lamp{\lab}{\var}{\con'_2\of{\var^{\typ}}})[\ls{\tmtwo_1},(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour},\ls{\tmtwo_2}]}
+        \ \todist\ %
+        \conof{\con_2\of{ (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} }}
+        \ \todist\ %
+        \conof{\con_2\of{ \tmthree\sub{\vartwo}{\ls{\tmfour}} }}
+      \]
+      Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+      So this case is impossible.
+    \item {\bf Application of a variable, \ie $\tm' = \var^{\typ}\,\ls{\tmfour'}$.}
+      Observe that, since
+      $(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} = \tm'\sub{\var}{\ls{\tmtwo}}$,
+      we have that $\ls{\tmfour} = \ls{\tmfour'}\sub{\var}{\ls{\tmtwo}}$,
+      and the list $\ls{\tmtwo}$ may be split as $\ls{\tmtwo} = [\ls{\tmtwo_1},\lamp{\labtwo}{\vartwo}{\tmthree},\ls{\tmtwo_2}]$.
+      The situation is:
+      \[
+        \conof{(\lamp{\lab}{\var}{\con_2'\of{\var^{\typ}\,\ls{\tmfour'}}})[\ls{\tmtwo_1},\lamp{\labtwo}{\vartwo}{\tmthree},\ls{\tmtwo_2}]}
+        \ \todist\ %
+        \conof{\con_2\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,\ls{\tmfour}}}
+        \ \todist\ %
+        \conof{\con_2\of{\tmthree\sub{\vartwo}{\ls{\tmfour}}}}
+      \]
+      and we are in the situation of {\bf Creation case III}.
+    \item {\bf Application of an abstraction, \ie $\tm' = (\lamp{\lab}{\vartwo}{\tmthree'})\,\ls{\tmfour'}$.}
+      Observe that, since
+      $(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} = \tm'\sub{\var}{\ls{\tmtwo}}$,
+      we have that $\ls{\tmthree} = \ls{\tmthree'}\sub{\var}{\ls{\tmtwo}}$
+      and $\ls{\tmfour} = \ls{\tmfour'}\sub{\var}{\ls{\tmtwo}}$.
+      Then the situation is:
+      \[
+        \conof{(\lamp{\lab}{\var}{\con_2'\of{ (\lamp{\lab}{\vartwo}{\tmthree'})\,\ls{\tmfour'} }})\ls{\tmtwo}}
+        \ \todist\ %
+        \conof{\con_2\of{ (\lamp{\lab}{\vartwo}{\tmthree})\,\ls{\tmfour} }}
+        \ \todist\ %
+        \conof{\con_2\of{ \tmthree\sub{\varthree}{\ls{\tmfour}} }}
+      \]
+      Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+      So this case is impossible.
+    \end{enumerate}
+  \item {\bf If the position of the hole of $\con_2$ ``jumps'' through a free occurrence of $\var$.}
+    More precisely,
+    there exist $\con_3$, $\typ$, $\ls{\tmtwo_1}$, $\ls{\tmtwo_2}$, and $\con_4$
+    such that:
+    \[
+      \tm = \con_3\of{\var^{\typ}}
+      \HS
+      \ls{\tmtwo} = [\ls{\tmtwo_1},\con_4\of{ (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} },\ls{\tmtwo_2}]
+    \]
+    in such a way that $\tmlabel{\con_4\of{ (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} }} = \varlabel{\var}{\var^{\typ}}$,
+    and $\con_2 = \con_3\sub{\var}{\ls{\tmtwo}}\of{\con_4}$.
+    Hence the situation is:
+    \[
+      \begin{array}{rl}
+              & \conof{(\lamp{\lab}{\var}{\con_3\of{\var^{\typ}}})[\ls{\tmtwo_1},\con_4\of{ (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} },\ls{\tmtwo_2}]} \\
+      \todist & \conof{\con_3\sub{\var}{\ls{\tmtwo}}\of{\con_4\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}}} \\
+      \todist & \conof{\con_3\sub{\var}{\ls{\tmtwo}}\of{\con_4\of{ \tmthree\sub{\vartwo}{\ls{\tmfour}} }}}
+      \end{array}
+    \]
+    Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+    So this case is impossible.
+  \end{enumerate}
+\item {\bf If $\con_1$ is a prefix of $\con$.}
+  Then there exists a context $\con_2$ such that $\con = \con_1\of{\con_2}$.
+  This means that $\con_2\of{\tm\sub{\var}{\ls{\tmtwo}}} = (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}$.
+  We consider three subcases, depending on whether $\con_2$ is empty,
+  or the hole of $\con_2$ lies to the left or to the right of the application.
+  \begin{enumerate}
+  \item {\bf Empty, $\con_2 = \conbase$.}
+    Then $\con = \con_1$ so $\con$ is a prefix of $\con_1$. We have already considered this case.
+  \item {\bf Left, $\con_2 = \con'_2\,\ls{\tmfour}$.}
+    Then the step $\redex$ is of the form:
+    \[
+      \redex :
+      \con_1\of{\con'_2\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}\,\ls{\tmfour}}
+      \todist
+      \con_1\of{\con'_2\of{\tm\sub{\var}{\ls{\tmtwo}}}\,\ls{\tmfour}}
+    \]
+    in particular we know that $\con'_2\of{\tm\sub{\var}{\ls{\tmtwo}}} = \lamp{\labtwo}{\vartwo}{\tmthree}$.
+    There are two cases, depending on whether $\con'_2$ is empty or non-empty.
+    \begin{enumerate}
+    \item {\bf Empty, $\con'_2 = \conbase$}
+      Then we have that $\tm\sub{\var}{\ls{\tmtwo}} = \lamp{\labtwo}{\vartwo}{\tmthree}$.
+      We consider two further subcases, depending on whether $\tm$ is an occurrence of the variable $\var$.
+      \begin{enumerate}
+      \item {\bf If $\tm = \var^{\typ}$ for some type $\typ$.}
+        Then the list $\ls{\tmtwo}$ must be of the form $[\lamp{\labtwo}{\vartwo}{\tmthree}]$
+        where the external label of $\typ$ is precisely $\labtwo$.
+        Then the situation is:
+        \[
+          \con_1\of{(\lamp{\lab}{\var}{\var^{\typ}})[\lamp{\labtwo}{\vartwo}{\tmthree}]\,\ls{\tmfour}}
+          \todist
+          \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,\ls{\tmfour}}
+          \todist
+          \con_1\of{\tmthree\sub{\vartwo}{\ls{\tmfour}}}
+        \]
+        and we are in the situation of {\bf Creation case I}.
+      \item {\bf If $\tm \neq \var^{\typ}$ for any type $\typ$.}
+        Then $\tm$ must be an abstraction, namely $\tm = \lamp{\labtwo}{\vartwo}{\tmthree'}$
+        where $\tmthree'\sub{\var}{\ls{\tmtwo}} = \tmthree$. 
+        The situation is:
+        \[
+          \con_1\of{(\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmthree'}})\,\ls{\tmtwo}\,\ls{\tmfour}}
+          \todist
+          \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree'\sub{\var}{\ls{\tmtwo}}})\,\ls{\tmfour}}
+          \todist
+          \con_1\of{\tmthree'\sub{\var}{\ls{\tmtwo}}\sub{\vartwo}{\ls{\tmfour}}}
+        \]
+        and we are in the situation of {\bf Creation case II}.
+      \end{enumerate}
+    \item {\bf Non-empty, $\con'_2 \neq \conbase$}
+      Then necessarily $\con'_2$ must be an abstraction, namely $\con'_2 = \lamp{\labtwo}{\vartwo}{\con''_2}$.
+      The situation is:
+      \[
+        \begin{array}{rcl}
+        \con_1\of{(\lamp{\labtwo}{\vartwo}{\con''_2\of{ (\lamp{\lab}{\var}{\tm})\,\ls{\tmtwo} }})\,\ls{\tmfour}}
+        & \todist &
+        \con_1\of{(\lamp{\labtwo}{\vartwo}{\con''_2\of{ \tm\sub{\var}{\ls{\tmtwo}} }})\,\ls{\tmfour}}
+        \\
+        & \todist &
+        \con_1\of{\con''_2\of{ \tm\sub{\var}{\ls{\tmtwo}} }\sub{\vartwo}{\ls{\tmfour}}}
+        \end{array}
+      \]
+      Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+      So this case is impossible.
+    \end{enumerate}
+  \item {\bf Right, $\con_2 = (\lamp{\labtwo}{\vartwo}{\tmthree})[\ls{\tmfour}_1,\con'_2,\ls{\tmfour}_2]$.}
+    The situation is:
+    \[
+      \begin{array}{rcl}
+      \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,[\ls{\tmfour}_1,\con'_2\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}},\ls{\tmfour}_2]}
+      & \todist &
+      \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,[\ls{\tmfour}_1,\con'_2\of{\tm\sub{\var}{\ls{\tmtwo}}},\ls{\tmfour}_2]}
+      \\
+      & \todist &
+      \con_1\of{\tmthree\sub{\vartwo}{[\ls{\tmfour}_1,\con'_2\of{\tm\sub{\var}{\ls{\tmtwo}}},\ls{\tmfour}_2]}}
+      \end{array}
+    \]
+    Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+    So this case is impossible.
+  \end{enumerate}
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[Stability]
+\llem{basic_stability}
+If $\redex,\redextwo$ are different coinitial steps such that
+$\redex$ creates a step $\redexthree$,
+then $\redex/\redextwo$ creates the step $\redexthree/(\redextwo/\redex)$.
+
+Diagramatically:
+\[
+  \xymatrix@R=.5cm@C=2cm{
+    \ar[r]^{\redex}
+    \ar[d]_{\redextwo}
+    &
+    \ar[r]^{\redexthree}
+    \ar[d]_{\redextwo/\redex}
+    &
+    \ar[d]_{\redextwo/\redex\redexthree}
+  \\
+    \ar[r]_{\redex/\redextwo}
+    &
+    \ar[r]_{\redexthree/(\redextwo/\redex)}
+    &
+  }
+\]
+{\em Note.}
+It is an easy observation that this property is equivalent to stability in the sense of L\'evy,
+which can be traced back to Berry's notion of stability.
+Recall that L\'evy's stability states that for any $\redex \neq \redextwo$,
+if $\redexthree_1$ and $\redexthree_2$ have a common descendant $\redexthree_3$, as in the figure below,
+then they have a common ancestor $\redexthree_0$:
+\[
+  \xymatrix@C=.5cm@R=.5cm{
+    &&&
+  \\
+    &
+    & \ar@{.>}[u]^{\redexthree_0} \ar[dl]_{\redex} \ar[dr]^{\redextwo} &
+  \\
+    &
+    \ar[l]_{\redexthree_1}
+    \ar[dr]_{\redextwo/\redex} & & \ar[dl]^{\redex/\redextwo} \ar[r]^{\redexthree_2} &
+  \\
+    &
+    & \ar[d]_{\redexthree_3} &
+  \\
+    &&&
+  }
+\]
+\end{lemma}
+\begin{proof}
+Let $\redex : \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}} \todist \conof{\subs{\tm}{\var}{\ls{\tmtwo}}}$,
+let $\redextwo \neq \redex$ be a step coinitial to $\redex$,
+and suppose that $\redex$ creates a step $\redexthree$.
+By induction on the context $\con$ we argue that $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$.
+\begin{enumerate}
+\item {\bf Empty context, $\con = \conbase$.}
+  Then $\redex : (\lamp{\lab}{\var}{\tm})\ls{\tmtwo} \todist \tm\sub{\var}{\ls{\tmtwo}}$.
+  There are two cases for $\redextwo$, depending on whether it is internal to $\tm$
+  or internal to one of the arguments of the list $\ls{\tmtwo}$.
+  \begin{enumerate}
+  \item {\bf If $\redextwo$ is internal to $\tm$.}
+    Then $\tm = \con_1\of{\Sigma}$ where $\Sigma$ is the redex contracted by $\redextwo$.
+    Let $\Sigma'$ denote the contractum of $\Sigma$.
+    Then the situation is:
+    \[
+      \xymatrix{
+        (\lamp{\lab}{\var}{\con_1\of{\Sigma}})\,\ls{\tmtwo}
+        \ar[r]^-{\redex}
+        \ar[d]_-{\redextwo}
+      &
+        \con_1\of{\Sigma}\sub{\var}{\ls{\tmtwo}}
+        \ar[d]_-{\redextwo/\redex}
+        \ar[r]^-{\redexthree}
+      &
+      \\
+        (\lamp{\lab}{\var}{\con_1\of{\Sigma'}})\,\ls{\tmtwo}
+        \ar[r]^-{\redex/\redextwo}
+      &
+        \con_1\of{\Sigma'}\sub{\var}{\ls{\tmtwo}}
+        \ar[r]^-{\redexthree/(\redextwo/\redex)}
+      &
+      }
+    \]
+    By Creation~(\rlem{creation}), $\redexthree$ must be created by case III,
+    since there are no applications surrounding the subterm contracted by $\redex$.
+    This means that $\con_1\of{\Sigma} = \con_2\of{\var^{\typ}\,\ls{\tmthree}}$
+    where, moreover, $\ls{\tmtwo}$ may be split as $[\ls{\tmtwo}_1,\lamp{\labtwo}{\vartwo}{\tmfour},\ls{\tmtwo}_2]$
+    in such a way that $\labtwo$ is the external label of $\typ$.
+
+    We consider three subcases, depending on whether the contexts
+    $\con_1$ and $\con_2$ are disjoint,
+    $\con_1$ is a prefix of $\con_2$,
+    or $\con_2$ is a prefix of $\con_1$.
+    \begin{enumerate}
+    \item {\bf If $\con_1$ and $\con_2$ are disjoint.}
+      Then there is a two-hole context $\conhat$ such that
+      \[
+        \conhat\of{\conbase,\var^{\typ}\ls{\tmthree}} = \con_1
+        \HS
+        \conhat\of{\Sigma,\conbase} = \con_2
+      \]
+      Given any term, context, or list of terms $\anon$ let us write $\anon^*$ to denote $\anon\sub{\var}{\ls{\tmtwo}}$.
+      Then the situation is:
+      \[
+        \xymatrix{
+          (\lamp{\lab}{\var}{\conhat\of{\Sigma,\var^{\typ}\ls{\tmthree}}})\,\ls{\tmtwo}
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          \conhat^*\of{\Sigma^*,(\lamp{\labtwo}{\vartwo}{\tmfour})\ls{\tmthree}^*}
+          \ar[d]_-{\redextwo/\redex}
+          \ar[r]^-{\redexthree}
+        &
+          \conhat^*\of{\Sigma^*,\tmfour\sub{\vartwo}{\ls{\tmthree}}}
+        \\
+          (\lamp{\lab}{\var}{\conhat\of{\Sigma',\var^{\typ}\ls{\tmthree}}})\,\ls{\tmtwo}
+          \ar[r]^-{\redex/\redextwo}
+        &
+          \conhat^*\of{\Sigma'^*,(\lamp{\labtwo}{\vartwo}{\tmfour})\ls{\tmthree}^*}
+          \ar[r]^-{\redexthree/(\redextwo/\redex)}
+        &
+          \conhat^*\of{\Sigma'^*,\tmfour\sub{\vartwo}{\ls{\tmthree}^*}}
+        }
+      \]
+      Then it is indeed the case that $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$.
+    \item {\bf If $\con_1$ is a prefix of $\con_2$.}
+      Then $\con_2 = \con_1\of{\con'_2}$ which means that $\Sigma = \con'_2\of{\var^{\typ}\ls{\tmthree}}$.
+      Recall that $\Sigma$ is a redex, so let us write
+      $\Sigma = (\lamp{\labthree}{\varthree}{\tmfive})\ls{\tmsix}$.
+      We consider two further subcases, depending on whether the hole of $\con'_2$
+      lies to the left or to the right of the application (observe that it cannot be at the root
+      since $\lamp{\labthree}{\varthree}{\tmfive}$ is not a variable).
+      \begin{enumerate}
+      \item {\bf If the hole of $\con'_2$ lies to the left of $(\lamp{\labthree}{\varthree}{\tmfive})\ls{\tmsix}$.}
+        More precisely, we have that
+        $\con'_2 = (\lamp{\labthree}{\varthree}{\con''_2})\ls{\tmsix}$ and $\tmfive = \con''_2\of{\var^{\typ}\ls{\tmthree}}$.
+        Given any term, context, or list of terms $\anon$ let us write $\anon^*$ to denote $\anon\sub{\var}{\ls{\tmtwo}}$.
+        Then the situation is:
+        {\footnotesize
+        \[
+          \xymatrix@C=.5cm{
+            (\lamp{\lab}{\var}{\con_1\of{  (\lamp{\labthree}{\varthree}{\con''_2\of{\var^{\typ}\ls{\tmthree}} })\ls{\tmsix} }})\,\ls{\tmtwo}
+            \ar[r]^-{\redex}
+            \ar[d]_-{\redextwo}
+          &
+            \con_1^*\of{  (\lamp{\labthree}{\varthree}{{\con''_2}^*\of{(\lamp{\labtwo}{\vartwo}{\tmfour})\ls{\tmthree}^*} })\ls{\tmsix}^* }
+            \ar[d]_-{\redextwo/\redex}
+            \ar[r]^-{\redexthree}
+          &
+            \con_1^*\of{  (\lamp{\labthree}{\varthree}{{\con''_2}^*\of{ \tmfour\sub{\vartwo}{\ls{\tmthree}^*} } })\ls{\tmsix}^* }
+          \\
+            (\lamp{\lab}{\var}{\con_1\of{  \con''_2\of{\var^{\typ}\ls{\tmthree}} \sub{\varthree}{\ls{\tmsix}} }})\,\ls{\tmtwo}
+            \ar[r]^-{\redex/\redextwo}
+          &
+            %\con_1\of{\Sigma'}\sub{\var}{\ls{\tmtwo}}
+            \con_1^*\of{  {\con''_2}^*\of{(\lamp{\labtwo}{\vartwo}{\tmfour})\ls{\tmthree}^*} \sub{\varthree}{\ls{\tmsix}^*} }
+            \ar[r]^-{\redexthree/(\redextwo/\redex)}
+          &
+            \con_1^*\of{  {\con''_2}^*\of{ \tmfour\sub{\vartwo}{\ls{\tmthree}^*} } \sub{\varthree}{\ls{\tmsix}^*} }
+          }
+        \]}
+        and it is indeed the case that $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$.
+        Observe that we use the Substitution lemma~(\rlem{substitution_lemma_alt}).
+      \item {\bf If the hole of $\con'_2$ lies to the right of $(\lamp{\labthree}{\varthree}{\tmfive})\ls{\tmsix}$.}
+        More precisely, we have that $\con'_2 = (\lamp{\labthree}{\varthree}{\tmfive})[\ls{\tmsix}_1,\con''_2,\ls{\tmsix}_2]$
+        and $\ls{\tmsix} = [\ls{\tmsix}_1,\con''_2\of{\var^\typ\,\ls{\tmthree}},\ls{\tmsix}_2]$.
+        Given any term, context, or list of terms $\anon$ let us write $\anon^*$ to denote $\anon\sub{\var}{\ls{\tmtwo}}$.
+
+        Moreover, by the parameter/argument correspondence (\rlem{parameter_argument_correspondence})
+        there is exactly one free occurrence of $\varthree$ in $\tmfive$ whose type coincides with
+        the type of $\con''_2\of{\var^\typ\,\ls{\tmthree}}$.
+        Let $\tmfive = \con_3\of{\varthree^{\typtwo}}$ where the hole of $\con_3$ marks the position
+        of such occurrence.
+        Observe that
+        $\con_3\of{\varthree^{\typtwo}}\sub{\varthree}{\ls{\tmsix}} = \con_3\sub{\varthree}{\ls{\tmsix}}\of{\con''_2\of{\var^\typ\,\ls{\tmthree}}}$.
+        Observe that:
+        \[
+          \begin{array}{rcl}
+          \con_3\of{\varthree^{\typtwo}}\sub{\varthree}{\ls{\tmsix}^*}
+          & = & \con_3\sub{\varthree}{\ls{\tmsix}^*}\of{(\con''_2\of{\var^\typ\,\ls{\tmthree}})^*} \\
+          & = & \con_3\sub{\varthree}{\ls{\tmsix}^*}\of{{\con''_2}^*\of{(\lamp{\labtwo}{\vartwo}{\tmfour})\,\ls{\tmthree}^*})}
+          \end{array}
+        \]
+        Moreover, if we write $\con'_3$ for the context $\con_3\sub{\varthree}{\ls{\tmsix}}$,
+        then we have that
+        \[
+          \begin{array}{rcll}
+          (\con'_3)^*
+          & = & (\con_3\sub{\varthree}{\ls{\tmsix}})^* \\
+          & = & \con_3^*\sub{\varthree}{\ls{\tmsix}^*} & \text{ by the Substitution lemma~(\rlem{substitution_lemma_alt})}
+          \end{array}
+        \]
+        Then the situation is as follows:
+        \[
+          \xymatrix{
+            (\lamp{\lab}{\var}{\con_1\of{ (\lamp{\labthree}{\varthree}{\con_3\of{\varthree^\typtwo}})\ls{\tmsix} }})\,\ls{\tmtwo}
+            \ar[r]^-{\redex}
+            \ar[d]_-{\redextwo}
+          &
+            \con_1^*\of{ (\lamp{\labthree}{\varthree}{\con_3^*\of{\varthree^\typtwo}})\ls{\tmsix}^* }
+            \ar[d]_-{\redextwo/\redex}
+            \ar[r]^-{\redexthree}
+          &
+          \\
+            (\lamp{\lab}{\var}{\con_1\of{ \con'_3\of{ \con''_2\of{\var^\typ\,\ls{\tmthree}} } }})\,\ls{\tmtwo}
+            \ar[r]^-{\redex/\redextwo}
+          &
+            \con_1^*\of{ (\con'_3)^*\of{ {\con''_2}^*\of{(\lamp{\labtwo}{\vartwo}{\tmfour})\,\ls{\tmthree}^*} } }
+            \ar[r]^-{\redexthree/(\redextwo/\redex)}
+          &
+          }
+        \]
+        Observe that the names of the steps $\redexthree$ and $\redexthree/(\redextwo/\redex)$ are both $\labtwo$,
+        which means that indeed $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$.
+      \end{enumerate}
+    \item {\bf If $\con_2$ is a prefix of $\con_1$.}
+      Then $\con_1 = \con_2\of{\con'_1}$
+      which means $\var^{\typ}\,\ls{\tmthree} = \con'_1\of{\Sigma}$.
+      Since $\Sigma$ is a redex, $\con'_1$ must be of the form $\var^\typ\,[\ls{\tmthree}_1,\con''_1,\ls{\tmthree}_2]$
+      and $\ls{\tmthree} = [\ls{\tmthree}_1,\con''_1\of{\Sigma},\ls{\tmthree}_2]$.
+      Given any term, context, or list of terms $\anon$ let us write $\anon^*$ to denote $\anon\sub{\var}{\ls{\tmtwo}}$.
+      Then the situation is:
+      {\small
+      \[
+        \xymatrix{
+          (\lamp{\lab}{\var}{\con_2\of{\var^\typ[\ls{\tmthree}_1,\con''_1\of{\Sigma},\ls{\tmthree}_2]}})\ls{\tmtwo}
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          \con_2^*\of{(\lamp{\labtwo}{\vartwo}{\tmfour})[\ls{\tmthree}_1^*,{\con''_1}^*\of{\Sigma^*},\ls{\tmthree}_2^*]}
+          \ar[d]_-{\redextwo/\redex}
+          \ar[r]^-{\redexthree}
+        &
+          \con_2^*\of{ \tmfour\sub{\vartwo}{[\ls{\tmthree}_1^*,{\con''_1}^*\of{\Sigma^*},\ls{\tmthree}_2^*]} }
+        \\
+          (\lamp{\lab}{\var}{\con_2\of{\var^\typ[\ls{\tmthree}_1,\con''_1\of{\Sigma'},\ls{\tmthree}_2]}})\ls{\tmtwo}
+          \ar[r]^-{\redex/\redextwo}
+        &
+          \con_2^*\of{(\lamp{\labtwo}{\vartwo}{\tmfour})[\ls{\tmthree}_1^*,{\con''_1}^*\of{\Sigma'^*},\ls{\tmthree}_2^*]}
+          \ar[r]^-{\redexthree/(\redextwo/\redex)}
+        &
+          \con_2^*\of{ \tmfour\sub{\vartwo}{[\ls{\tmthree}_1^*,{\con''_1}^*\of{\Sigma'^*},\ls{\tmthree}_2^*]} }
+        }
+      \]}
+      Note that indeed $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$.
+    \end{enumerate}
+  \item {\bf If $\redextwo$ is internal to $\ls{\tmtwo}$.}
+    Then $\ls{\tmtwo} = [\ls{\tmtwo}_1,\con_1\of{\Sigma},\ls{\tmtwo}_2]$
+    where $\Sigma$ is the redex contracted by $\redextwo$.
+    Let $\Sigma'$ denote the contractum of $\Sigma$. Then the situation is:
+    \[
+      \xymatrix{
+        (\lamp{\lab}{\var}{\tm})\,[\ls{\tmtwo}_1,\con_1\of{\Sigma},\ls{\tmtwo}_2]
+        \ar[r]^-{\redex}
+        \ar[d]_-{\redextwo}
+      &
+        \tm\sub{\var}{[\ls{\tmtwo}_1,\con_1\of{\Sigma},\ls{\tmtwo}_2]}
+        \ar[d]_-{\redextwo/\redex}
+        \ar[r]^-{\redexthree}
+      &
+      \\
+        (\lamp{\lab}{\var}{\tm})\,[\ls{\tmtwo}_1,\con_1\of{\Sigma'},\ls{\tmtwo}_2]
+        \ar[r]^-{\redex/\redextwo}
+      &
+        \tm\sub{\var}{[\ls{\tmtwo}_1,\con_1\of{\Sigma'},\ls{\tmtwo}_2]}
+        \ar[r]^-{\redexthree/(\redextwo/\redex)}
+      &
+      }
+    \]
+    By Creation~(\rlem{creation}), $\redexthree$ must be created by case III,
+    since there are no applications surrounding the subterm contracted by $\redex$.
+    This means that $\tm = \con_2\of{\var^\typ\,\ls{\tmthree}}$,
+    and there is a term in the list $[\ls{\tmtwo}_1,\con_1\of{\Sigma},\ls{\tmtwo}_2]$ 
+    of the form $\lamp{\labtwo}{\vartwo}{\tmfour}$
+    such that $\labtwo$ is also the external label of the type $\typ$.
+    There are two subcases, depending on whether such term is $\con_1\of{\Sigma}$
+    or a different term in the list $[\ls{\tmtwo}_1,\con_1\of{\Sigma},\ls{\tmtwo}_2]$.
+    \begin{enumerate}
+    \item {\bf If $\lamp{\labtwo}{\vartwo}{\tmfour} = \con_1\of{\Sigma}$.}
+      Note that $\con_1$ cannot be empty, since this would imply that $\lamp{\labtwo}{\vartwo}{\tmfour} = \Sigma$;
+      however $\Sigma$ is a redex, and in particular an application, so this cannot be the case.
+      Hence the context $\con_1$ must be non-empty, \ie $\con_1 = \lamp{\labtwo}{\vartwo}{\con'_1}$ with $\tmfour = \con'_1\of{\Sigma}$.
+      Given any term, context, or list of terms $\anon$ let us write $\anon^*$ to denote $\anon\sub{\var}{[\ls{\tmtwo}_1,\ls{\tmtwo}_2]}$.
+      Then the situation is:
+      \[
+        \xymatrix{
+          (\lamp{\lab}{\var}{\con_2\of{\var^\typ\,\ls{\tmthree}}})[\ls{\tmtwo}_1,\lamp{\labtwo}{\vartwo}{\con'_1\of{\Sigma}},\ls{\tmtwo}_2]
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          \con_2^*\of{(\lamp{\labtwo}{\vartwo}{\con'_1\of{\Sigma}})\,\ls{\tmthree}^*}
+          \ar[d]_-{\redextwo/\redex}
+          \ar[r]^-{\redexthree}
+        &
+        \\
+          (\lamp{\lab}{\var}{\con_2\of{\var^\typ\,\ls{\tmthree}}})[\ls{\tmtwo}_1,\lamp{\labtwo}{\vartwo}{\con'_1\of{\Sigma'}},\ls{\tmtwo}_2]
+          \ar[r]^-{\redex/\redextwo}
+        &
+          \con_2^*\of{(\lamp{\labtwo}{\vartwo}{\con'_1\of{\Sigma'}})\,\ls{\tmthree}^*}
+          \ar[r]^-{\redexthree/(\redextwo/\redex)}
+        &
+        }
+      \]
+      Note that indeed $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$.
+    \item {\bf If $\lamp{\labtwo}{\vartwo}{\tmfour} \neq \con_1\of{\Sigma}$.}
+      Then $\lamp{\labtwo}{\vartwo}{\tmfour}$
+      is either one of the terms in the list $\ls{\tmtwo}_1$
+      or one of the terms in the list $\ls{\tmtwo}_2$.
+      Given any term, context,
+      or list of terms $\anon$ let $\anon^*$ denote $\anon\sub{\var}{[\ls{\tmtwo}_1,\con_1\of{\Sigma}\ls{\tmtwo}_2]}$
+      and let $\anon^\dagger$ denote $\anon\sub{\var}{[\ls{\tmtwo}_1,\con_1\of{\Sigma'}\ls{\tmtwo}_2]}$.
+      The situation is as follows:
+      \[
+        \xymatrix{
+          (\lamp{\lab}{\var}{\con_2\of{\var^\typ\,\ls{\tmthree}}})\,[\ls{\tmtwo}_1,\con_1\of{\Sigma},\ls{\tmtwo}_2]
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          \con_2^*\of{(\lamp{\labtwo}{\vartwo}{\tmfour})\,\ls{\tmthree}^*}
+          \ar[d]_-{\redextwo/\redex}
+          \ar[r]^-{\redexthree}
+        &
+          \con_2^*\of{  \tmfour\sub{\vartwo}{\ls{\tmthree}^*} }
+        \\
+          (\lamp{\lab}{\var}{\con_2\of{\var^\typ\,\ls{\tmthree}}})\,[\ls{\tmtwo}_1,\con_1\of{\Sigma'},\ls{\tmtwo}_2]
+          \ar[r]^-{\redex/\redextwo}
+        &
+          \con_2^\dagger\of{(\lamp{\labtwo}{\vartwo}{\tmfour})\,\ls{\tmthree}^\dagger}
+          \ar[r]^-{\redexthree/(\redextwo/\redex)}
+        &
+          \con_2^\dagger\of{  \tmfour\sub{\vartwo}{\ls{\tmthree}^\dagger} }
+        }
+      \]
+      Note that indeed $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$.
+    \end{enumerate}
+  \end{enumerate}
+\item {\bf Under an abstraction, $\con = \lamp{\lab}{\vartwo}{\con'}$.}
+      \label{stability:case_under_abstraction}
+  Let $\Delta$ be the redex contracted by $\redex$,
+  and let $\Delta'$ denote its contractum.
+  The step $\redex$ is of the form
+  $\lamp{\lab}{\vartwo}{\con'[\Delta]} \todist \lamp{\lab}{\vartwo}{\con'[\Delta']}$.
+  The steps $\redextwo$ and $\redexthree$ cannot be located at the root of the term
+  since the root of the term is not an application.
+  Hence the positions of $\redextwo$ and $\redexthree$ are necessarily internal
+  to the outermost abstraction, \ie the situation is as follows:
+  \[
+    \xymatrix{
+      \lamp{\lab}{\vartwo}{\con'[\Delta]}
+      \ar[r]^-{\redex}
+      \ar[d]_-{\redextwo}
+    &
+      \lamp{\lab}{\vartwo}{\con'[\Delta']}
+      \ar[d]_-{\redextwo/\redex}
+      \ar[r]^-{\redexthree}
+    &
+      \lamp{\lab}{\vartwo}{\tmtwo}
+    \\
+      \lamp{\lab}{\vartwo}{\tmthree}
+      \ar[r]^-{\redex/\redextwo}
+    &
+      \ar[r]^-{\redexthree/(\redextwo/\redex)}
+      \lamp{\lab}{\vartwo}{\tmthree'}
+    &
+      \lamp{\lab}{\vartwo}{\tmthree''}
+    &
+    }
+  \]
+  Consider the diagram without the outermost abstraction,
+  where $\redex'$, $\redextwo'$, and $\redexthree'$
+  are the steps isomorphic to $\redex$, $\redextwo$, and $\redexthree$ respectively:
+  \[
+    \xymatrix{
+      \con'[\Delta]
+      \ar[r]^-{\redex'}
+      \ar[d]_-{\redextwo'}
+    &
+      \con'[\Delta']
+      \ar[d]_-{\redextwo'/\redex'}
+      \ar[r]^-{\redexthree'}
+    &
+      \tmtwo
+    \\
+      \tmthree
+      \ar[r]^-{\redex'/\redextwo'}
+    &
+      \ar[r]^-{\redexthree'/(\redextwo'/\redex')}
+      \tmthree'
+    &
+      \tmthree''
+    &
+    }
+  \]
+  Note that $\redex'$ creates $\redexthree'$, so by \ih $\redex'/\redextwo'$ creates $\redexthree'/(\redextwo'/\redex')$.
+  Hence we conclude that $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$,
+  as required.
+\item {\bf Left of an application, $\con = \con'\ls{\tmthree}$.}
+  Let $\Delta$ be the redex contracted by $\redex$, and let $\Delta'$ denote its contractum.
+  The step $\redex$ is of the form $\con'\of{\Delta}\ls{\tmthree} \todist \con'\of{\Delta'}\ls{\tmthree}$.
+  We consider three subcases, according to Creation~(\rlem{creation}), depending on whether
+  $\redexthree$ is created by the creation case I, II, or III.
+  \begin{enumerate}
+  \item {\bf Creation case I.}
+    Then $\con'$ is empty and $\Delta$ has the following particular shape:
+    $\Delta = (\lamp{\lab}{\var}{\var^{\typ}})[\lamp{\labtwo}{\vartwo}{\tmfour}]$.
+    The step $\redextwo$ can be either internal to the subterm $\tmfour$,
+    or internal to one of the subterms in the list $\ls{\tmthree}$.
+    If $\redextwo$ is internal to $\tmfour$, let $\tmfour'$ denote the term that results
+    from $\tmfour$ after the step $\redextwo$. Then the situation is:
+    \[
+      \xymatrix{
+        (\lamp{\lab}{\var}{\var^{\typ}})[\lamp{\labtwo}{\vartwo}{\tmfour}]\,\ls{\tmthree}
+        \ar[r]^-{\redex}
+        \ar[d]_-{\redextwo}
+      &
+        (\lamp{\labtwo}{\vartwo}{\tmfour})\,\ls{\tmthree}
+        \ar[d]_-{\redextwo/\redex}
+        \ar[rr]^-{\redexthree}
+      &&
+        \tmfour\sub{\vartwo}{\ls{\tmthree}}
+      \\
+        (\lamp{\lab}{\var}{\var^{\typ}})[\lamp{\labtwo}{\vartwo}{\tmfour'}]\,\ls{\tmthree}
+        \ar[r]^-{\redex/\redextwo}
+      &
+        (\lamp{\labtwo}{\vartwo}{\tmfour'})\,\ls{\tmthree}
+        \ar[rr]^-{\redexthree/(\redextwo/\redex)}
+      &&
+        \tmfour'\sub{\vartwo}{\ls{\tmthree}}
+      }
+    \]
+    Note that indeed $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$, as required.
+    If, on the other hand, $\redextwo$ is internal to $\ls{\tmthree}$, the situation is similar.
+  \item {\bf Creation case II.}
+    Then $\con'$ is empty and $\Delta$ has the following particular shape:
+    $\Delta = (\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour}})\,\ls{\tmtwo}$.
+    The step $\redextwo$ can be either internal to $\tmfour$, internal to $\ls{\tmtwo}$,
+    or internal to $\ls{\tmthree}$.
+    If $\redextwo$ is internal to $\tmfour$, let $\tmfour'$ denote the term that results
+    from $\tmfour$ after the step $\redextwo$. Then the situation is:
+    \[
+      \xymatrix{
+        (\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour}})\,\ls{\tmtwo}\,\ls{\tmthree}
+        \ar[r]^-{\redex}
+        \ar[d]_-{\redextwo}
+      &
+        (\lamp{\labtwo}{\vartwo}{\tmfour\sub{\var}{\ls{\tmtwo}}})\,\ls{\tmthree}
+        \ar[d]_-{\redextwo/\redex}
+        \ar[r]^-{\redexthree}
+      &
+        \tmfour\sub{\var}{\ls{\tmtwo}}\sub{\vartwo}{\ls{\tmthree}}
+      \\
+        (\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})\,\ls{\tmtwo}\,\ls{\tmthree}
+        \ar[r]^-{\redex/\redextwo}
+      &
+        (\lamp{\labtwo}{\vartwo}{\tmfour'\sub{\var}{\ls{\tmtwo}}})\,\ls{\tmthree}
+        \ar[r]^-{\redexthree/(\redextwo/\redex)}
+      &
+        \tmfour'\sub{\var}{\ls{\tmtwo}}\sub{\vartwo}{\ls{\tmthree}}
+      }
+    \]
+    Note that indeed $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$, as required.
+    If, on the other hand, $\redextwo$ is internal to $\ls{\tmtwo}$ or $\ls{\tmthree}$, the situation is similar.
+  \item {\bf Creation case III.}
+    Recall that the step $\redex$ is of the form
+    $\redex : \con'\of{\Delta}\,\ls{\tmthree} \todist \con'\of{\Delta'}\,\ls{\tmthree}$.
+    Since the step $\redexthree$ is created by creation case III,
+    it does not take place at the root of $\con'[\Delta']\,\ls{\tmthree}$,
+    but rather it is internal to $\con'[\Delta']$.
+    We consider three subcases, depending on whether the step $\redextwo$ takes place
+    at the root, to the left of the application or to the right of the application.
+    \begin{enumerate}
+    \item {\bf If $\redextwo$ takes place at the root.}
+      Then $\con'\of{\Delta}$ is an abstraction,
+      so $\con'$ cannot be empty, \ie we have that $\con' = \lamp{\labtwo}{\vartwo}{\con''}$.
+      Moreover, since $\redexthree$ is created by Creation~case~III,
+      we have that $\Delta$ has the following specific shape:
+      $\Delta = (\lamp{\lab}{\var}{\con_2\of{\var^\typ\,\ls{\tmfour}}})\,\ls{\tmtwo}$
+      where $\ls{\tmtwo} = [\ls{\tmtwo}_1,\lamp{\labthree}{\varthree}{\tmfive},\ls{\tmtwo}_2]$
+      and such that $\labthree$ is the external label of $\typ$.
+
+      Given any term, context, or list of terms $\anon$ let $\anon^*$ denote $\anon\sub{\var}{\ls{\tmtwo}}$
+      and let $\anon^\dagger$ denote $\anon\sub{\vartwo}{\ls{\tmthree}}$.
+      Note also that by the Substitution lemma~(\rlem{substitution_lemma_alt}) we have that
+      $\anon^\dagger\sub{\var}{\ls{\tmtwo}^\dagger} = {\anon^*}^\dagger$.
+      Then the situation is the following:
+      {\small
+      \[
+        \xymatrix{
+          (\lamp{\labtwo}{\vartwo}{\con''\of{ (\lamp{\lab}{\var}{\con_2\of{\var^\typ\,\ls{\tmfour}}})\,\ls{\tmtwo} }})\,\ls{\tmthree}
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          (\lamp{\labtwo}{\vartwo}{\con''\of{ \con_2^*\of{(\lamp{\labthree}{\varthree}{\tmfive})\,\ls{\tmfour}^*}}})\,\ls{\tmthree}
+          \ar[d]_-{\redextwo/\redex}
+          \ar[r]^-{\redexthree}
+        &
+          (\lamp{\labtwo}{\vartwo}{\con''\of{ \con_2^*\of{  \tmfive\sub{\varthree}{\ls{\tmfour}^*} }}})\,\ls{\tmthree}
+        \\
+          {\con''}^\dagger\of{(\lamp{\lab}{\var}{\con_2^\dagger\of{\var^\typ\,\ls{\tmfour}^\dagger}})\,\ls{\tmtwo}^\dagger}
+          \ar[r]^-{\redex/\redextwo}
+        &
+          {\con''}^\dagger\of{ {\con_2^*}^\dagger\of{(\lamp{\labthree}{\varthree}{\tmfive^\dagger})\,{\ls{\tmfour}^*}{}^\dagger} }
+          \ar[r]^-{\redexthree/(\redextwo/\redex)}
+        &
+          {\con''}^\dagger\of{ {\con_2^*}^\dagger\of{  \tmfive^\dagger\sub{\varthree}{{\ls{\tmfour}^*}{}^\dagger} } }
+        }
+      \]}
+      Note that, indeed, $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$.
+    \item {\bf If $\redextwo$ is internal to $\con'\of{\Delta}$.}
+      Observe that in such case all three steps $\redex$, $\redextwo$, and $\redexthree$ are internal to the left 
+      of the application. Then situation is:
+      \[
+        \xymatrix{
+          \con'\of{\Delta}\,\ls{\tmthree}
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          \con'\of{\Delta'}\,\ls{\tmthree}
+          \ar[d]_-{\redextwo/\redex}
+          \ar[rr]^-{\redexthree}
+        &&
+          \tmfour\,\ls{\tmthree}
+        \\
+          \tmfive\,\ls{\tmthree}
+          \ar[r]^-{\redex/\redextwo}
+        &
+          \tmfive'\,\ls{\tmthree}
+          \ar[rr]^-{\redexthree/(\redextwo/\redex)}
+        &&
+          \tmfive''\,\ls{\tmthree}
+        }
+      \]
+      and we may conclude by \ih, similarly as in item~\ref{stability:case_under_abstraction} of this lemma.
+    \item {\bf If $\redextwo$ is internal to $\ls{\tmthree}$.}
+          \label{stability:case_left_application:III:internal_left}
+      Then the situation is:
+      \[
+        \xymatrix{
+          \con'\of{\Delta}\,\ls{\tmthree}
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          \con'\of{\Delta'}\,\ls{\tmthree}
+          \ar[d]_-{\redextwo/\redex}
+          \ar[rr]^-{\redexthree}
+        &&
+          \tmfive\,\ls{\tmthree}
+        \\
+          \con'\of{\Delta}\,\ls{\tmfour}
+          \ar[r]^-{\redex/\redextwo}
+        &
+          \con'\of{\Delta'}\,\ls{\tmfour}
+          \ar[rr]^-{\redexthree/(\redextwo/\redex)}
+        &&
+          \tmfive\,\ls{\tmfour}
+        }
+      \]
+      It is immediate to note in this case that $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$,
+      since the two-step sequences $\redex\redexthree$ and $(\redex/\redextwo)(\redexthree/(\redextwo/\redex))$
+      are both isomorphic to
+      $\con'\of{\Delta} \todist \con'\of{\Delta'} \todist \tmfive$, only going below different contexts.
+    \end{enumerate}
+  \end{enumerate}
+\item {\bf Right of an application, $\con = \tmthree[\ls{\tmfour}_1,\con',\ls{\tmfour}_2]$.}
+  Let $\Delta$ be the redex contracted by $\redex$, and let $\Delta'$ denote its contractum.
+  The step $\redex$ is of the form
+  $\tmthree[\ls{\tmfour}_1,\con'\of{\Delta},\ls{\tmfour}_2] \todist \tmthree[\ls{\tmfour}_1,\con'\of{\Delta'},\ls{\tmfour}_2]$.
+  We consider three subcases, depending on whether the step $\redextwo$ takes place at the root,
+  to the left of the application, or to the right of the application.
+  \begin{enumerate}
+  \item {\bf If $\redextwo$ takes place at the root.}
+    Then $\tmthree$ is an abstraction $\tmthree = \lamp{\labtwo}{\vartwo}{\tmthree'}$.
+    Moreover, by the parameter/argument correspondence (\rlem{parameter_argument_correspondence}),
+    there is a free occurrence of $\vartwo$ in $\tmthree'$ whose type is also the type of
+    the argument $\con'\of{\Delta}$. Let us write $\tmthree'$ as $\tmthree' = \con_1\of{\vartwo^\typ}$,
+    where the hole of $\con_1$ marks the position of such occurrence.
+    Given any term, context, or list of terms $\anon$ let $\anon^*$ denote $\anon\sub{\var}{\ls{\tmfour}_1,\ls{\tmfour}_2}$.
+    Then we have that the situation is:
+    \[
+      \xymatrix{
+        (\lamp{\labtwo}{\vartwo}{\con_1\of{\vartwo^\typ}})[\ls{\tmfour}_1,\con'\of{\Delta},\ls{\tmfour}_2]
+        \ar[r]^-{\redex}
+        \ar[d]_-{\redextwo}
+      &
+        (\lamp{\labtwo}{\vartwo}{\con_1\of{\vartwo^\typ}})[\ls{\tmfour}_1,\con'\of{\Delta'},\ls{\tmfour}_2]
+        \ar[d]_-{\redextwo/\redex}
+        \ar[r]^-{\redexthree}
+      &
+        (\lamp{\labtwo}{\vartwo}{\con_1\of{\vartwo^\typ}})[\ls{\tmfour}_1,\tmfive,\ls{\tmfour}_2]
+      \\
+        \con_1^*\of{ \con'\of{\Delta} }
+        \ar[r]^-{\redex/\redextwo}
+      &
+        \con_1^*\of{ \con'\of{\Delta'} }
+        \ar[r]^-{\redexthree/(\redextwo/\redex)}
+      &
+        \con_1^*\of{ \tmfive }
+      }
+    \]
+    It is then immediate to note that $\redex/\redextwo$ creates $\redexthree/(\redextwo/\redex)$,
+    since the two-step sequences $\redex\redexthree$ and $(\redex/\redextwo)(\redexthree/(\redextwo/\redex))$
+    are both isomorphic to $\con'\of{\Delta} \todist \con'\of{\Delta'} \todist \tmfive$,
+    only going below different contexts.
+  \item {\bf If $\redextwo$ is internal to the left of the application.}
+    Then the situation is:
+    \[
+      \xymatrix{
+        \tmthree[\ls{\tmfour}_1,\con'\of{\Delta},\ls{\tmfour}_2]
+        \ar[r]^-{\redex}
+        \ar[d]_-{\redextwo}
+      &
+        \tmthree[\ls{\tmfour}_1,\con'\of{\Delta'},\ls{\tmfour}_2]
+        \ar[d]_-{\redextwo/\redex}
+        \ar[r]^-{\redexthree}
+      &
+        \tmthree[\ls{\tmfour}_1,\tmfive,\ls{\tmfour}_2]
+      \\
+        \tmthree'[\ls{\tmfour}_1,\con'\of{\Delta},\ls{\tmfour}_2]
+        \ar[r]^-{\redex/\redextwo}
+      &
+        \tmthree'[\ls{\tmfour}_1,\con'\of{\Delta'},\ls{\tmfour}_2]
+        \ar[r]^-{\redexthree/(\redextwo/\redex)}
+      &
+        \tmthree'[\ls{\tmfour}_1,\tmfive,\ls{\tmfour}_2]
+      }
+    \]
+    Then since $\redex\redexthree$ and $(\redex/\redextwo)(\redexthree/(\redextwo/\redex))$
+    are isomorphic, it is immediate to conclude,
+    similarly as in item~\ref{stability:case_left_application:III:internal_left} of this lemma.
+  \item {\bf If $\redextwo$ is internal to the right of the application.}
+    We consider two further subcases, depending on whether $\redextwo$ is
+    internal to the argument $\con'\of{\Delta}$, or otherwise.
+    \begin{enumerate}
+    \item {\bf If $\redextwo$ is internal to the argument $\con'\of{\Delta}$.}
+      Then the situation is:
+      \[
+        \xymatrix{
+          \tmthree[\ls{\tmfour}_1,\con'\of{\Delta},\ls{\tmfour}_2]
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          \tmthree[\ls{\tmfour}_1,\con'\of{\Delta'},\ls{\tmfour}_2]
+          \ar[d]_-{\redextwo/\redex}
+          \ar[r]^-{\redexthree}
+        &
+          \tmthree[\ls{\tmfour}_1,\tmfive,\ls{\tmfour}_2]
+        \\
+          \tmthree[\ls{\tmfour}_1,\tmsix,\ls{\tmfour}_2]
+          \ar[r]^-{\redex/\redextwo}
+        &
+          \tmthree[\ls{\tmfour}_1,\tmsix',\ls{\tmfour}_2]
+          \ar[r]^-{\redexthree/(\redextwo/\redex)}
+        &
+          \tmthree[\ls{\tmfour}_1,\tmsix'',\ls{\tmfour}_2]
+        }
+      \]
+      and we may conclude by \ih, similarly as in item~\ref{stability:case_under_abstraction} of this lemma.
+    \item {\bf If $\redextwo$ is not internal to the argument $\con'\of{\Delta}$.}
+      Then it is either internal to $\ls{\tmfour}_1$ or to $\ls{\tmfour}_2$.
+      If it is internal to $\ls{\tmfour}_1$, the situation is:
+      \[
+        \xymatrix{
+          \tmthree[\ls{\tmfour}_1,\con'\of{\Delta},\ls{\tmfour}_2]
+          \ar[r]^-{\redex}
+          \ar[d]_-{\redextwo}
+        &
+          \tmthree[\ls{\tmfour}_1,\con'\of{\Delta'},\ls{\tmfour}_2]
+          \ar[d]_-{\redextwo/\redex}
+          \ar[r]^-{\redexthree}
+        &
+          \tmthree[\ls{\tmfour}_1,\tmfive,\ls{\tmfour}_2]
+        \\
+          \tmthree[\ls{\tmfour}'_1,\con'\of{\Delta},\ls{\tmfour}_2]
+          \ar[r]^-{\redex/\redextwo}
+        &
+          \tmthree[\ls{\tmfour}'_1,\con'\of{\Delta'},\ls{\tmfour}_2]
+          \ar[r]^-{\redexthree/(\redextwo/\redex)}
+        &
+          \tmthree[\ls{\tmfour}'_1,\tmfive,\ls{\tmfour}_2]
+        }
+      \]
+      Then since $\redex\redexthree$ and $(\redex/\redextwo)(\redexthree/(\redextwo/\redex))$
+      are isomorphic, it is immediate to conclude,
+      similarly as in item~\ref{stability:case_left_application:III:internal_left} of this lemma.
+    \end{enumerate}
+  \end{enumerate}
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[Full stability]
+\llem{full_stability}
+Let $\redseq$ and $\redseqtwo$ be coinitial derivations such that
+$\names(\redseq) \cap \names(\redseqtwo) = \emptyset$.
+Let $\redexthree_1$, $\redexthree_2$, and $\redexthree_3$
+be steps such that
+$\redexthree_3 = \redexthree_1/(\redseqtwo/\redseq) = \redexthree_2/(\redseq/\redseqtwo)$.
+Then there exists a step $\redexthree_0$ such that
+$\redexthree_1 = \redexthree_0/\redseq$ and $\redexthree_2 = \redexthree_0/\redseqtwo$.
+Diagramatically:
+\[
+  \xymatrix@R=.5cm@C=.5cm{
+    &&&
+  \\
+    &
+    & \ar@{.>}[u]^{\redexthree_0} \ar@{->>}[ld]_{\redseq} \ar@{->>}[rd]^{\redseqtwo} &
+  \\
+    &
+    \ar[l]_{\redexthree_1}
+    \ar@{->>}[rd]_{\redseqtwo/\redseq} & & \ar@{->>}[ld]^{\redseq/\redseqtwo} \ar[r]^{\redexthree_2}
+    &
+  \\
+    &
+    &
+    \ar[d]_{\redexthree_3}
+    &
+  \\
+    &&&
+  }
+\]
+\end{lemma}
+\begin{proof}
+We first prove the proposition in the particular case in which $\redseq$ is a single step, \ie $\redseq = \redex$
+By induction on $\redseqtwo$:
+\begin{enumerate}
+\item {\bf Empty, $\redseqtwo = \emptyDerivation$.}
+  Then $\redexthree_1 = \redexthree_3 = \redexthree_2/\redex$,
+  so it suffices to take $\redexthree_0 := \redexthree_2$.
+\item {\bf Non-empty, $\redseqtwo = \redextwo\,\redseqtwo'$.}
+  Recall that permutation diagrams in the distributive lambda-calculus are {\em square},
+  (\ie steps always have exactly one residual, except for the trivial case $\redex/\redex = \emptyset$,
+  as was proved in \rlem{cardinality_of_the_set_of_residuals}).
+  Since $\name(\redex) \not\in \names(\redextwo\redseqtwo')$,
+  we know that $\redex$ is not any of the steps along $\redextwo\redseqtwo'$,
+  so in particular $\redex/\redextwo$ and $\redex/\redextwo\redseqtwo'$
+  are singletons, which means that the situation is the following:
+  \[
+    \xymatrix{
+      &
+      &
+        \ar[ld]_{\redex} \ar[rd]^{\redextwo}
+      &
+    \\
+      &
+      \ar[l]_{\redexthree_1}
+      \ar[rd]_{\redextwo/\redex}
+      &
+      &
+        \ar[ld]_-{\redex/\redextwo} \ar@{->>}[rd]^{\redseqtwo'}
+      & 
+      &
+    \\
+      &
+      &
+        \ar@{->>}[rd]_-{\redseqtwo'/(\redex/\redextwo)}
+      &
+      &
+        \ar@{->}[dl]^{\redex/\redextwo\redseqtwo'}
+        \ar[r]^{\redexthree_2}
+      &
+    \\
+      &
+      &
+      &
+      \ar[d]_{\redexthree_3}
+      &
+    \\
+      &
+      &
+      &
+    }
+  \]
+  Observe that $\redexthree_3 = \redexthree_1/((\redextwo/\redex)(\redseqtwo'/(\redex/\redextwo)))$,
+  so by taking $\redexthree'_1 := \redexthree_1/(\redextwo/\redex)$
+  we have that $\redexthree_3 = \redexthree'_1/(\redseqtwo'/(\redex/\redextwo))$.
+  By \ih on $\redseqtwo'$ we have that
+  there exists a step $\redexthree'_2$ such that
+  $\redexthree'_1 = \redexthree'_2/(\redex/\redextwo)$ and
+  $\redexthree_2 = \redexthree'_2/\redseqtwo'$.
+
+  To conclude, note that $\redex \neq \redextwo$ and
+  $\redexthree'_1 = \redexthree_1/(\redextwo/\redex) = \redexthree_0/(\redex/\redextwo)$
+  so by the Stability~lemma (\rlem{basic_stability})
+  there must exist a step $\redexthree_0$ such that
+  $\redexthree_1 = \redexthree_0/\redex$
+  and $\redexthree'_2 = \redexthree_0/\redextwo$.
+  Moreover $\redexthree_2 = \redexthree'_2/\redseqtwo' = \redexthree_0/\redextwo\redseqtwo'$,
+  as required.
+\end{enumerate}
+Having established the previous claim, let us now prove the main statement of the
+proposition by induction on $\redseq$.
+\begin{enumerate}
+\item {\bf Empty, $\redseq = \emptyDerivation$.}
+  Then $\redexthree_2 = \redexthree_3 = \redexthree_1/\redseqtwo$ so by taking $\redexthree_0 := \redexthree_1$
+  we conclude.
+\item {\bf Non-empty, $\redseq = \redex\redseq'$.}
+  First observe that, since $\names(\redex\redseq') \cap \names(\redseqtwo) = \emptyset$,
+  we have that $\names(\redex) \cap \names(\redseqtwo) = \emptyset$ 
+  and $\names(\redseq') \cap \names(\redseqtwo) = \emptyset$.
+  The situation is the following:
+  \[
+    \xymatrix{
+      &
+      &
+      &
+        \ar[dl]_{\redex}
+        \ar[dr]^{\redseqtwo}
+      &
+    \\
+      &
+      &
+        \ar@{->>}[dl]_{\redseq'}
+        \ar@{->>}[dr]^{\redseqtwo/\redex}
+      &
+      &
+        \ar[dl]^{\redex/\redseqtwo}
+        \ar[r]^{\redexthree_2}
+      &
+    \\
+      &
+        \ar[l]_{\redexthree_1}
+        \ar@{->>}[dr]^{\redseqtwo/\redex\redseq'}
+      &
+      &
+        \ar@{->>}[dl]^{\redseq'/(\redseqtwo/\redex)}
+      &
+    \\
+      &
+      &
+        \ar[d]_{\redexthree_3}
+      &
+      &
+    \\
+      &
+      &
+      &
+      &
+    \\
+    }
+  \]
+  Observe that $\redexthree_3 = \redexthree_2/((\redex/\redseqtwo)(\redseq'/(\redseqtwo/\redex)))$,
+  so by taking $\redexthree'_2 := \redexthree_2/(\redex/\redseqtwo)$
+  we have that $\redexthree_3 = \redexthree'_2/(\redseq'/(\redseqtwo/\redex))$.
+  By \rlem{names_after_projection_along_a_step}
+  we have that $\names(\redseqtwo/\redex) = \names(\redseqtwo) \setminus \set{\name(\redex)}$
+  and $\name(\redex) \not\in \names(\redseqtwo)$,
+  so $\names(\redseqtwo/\redex) = \names(\redseqtwo)$.
+  In particular, $\names(\redseq') \cap \names(\redseqtwo/\redex) = \emptyset$
+  so we may apply the \ih on $\redseq'$ to conclude that there exists
+  a step $\redexthree'_1$ such that
+  $\redexthree_1 = \redexthree'_1/\redseq'$
+  and
+  $\redexthree'_2 = \redexthree'_1/(\redseqtwo/\redex)$.
+
+  To conclude, observe that $\redexthree'_2 = \redexthree'_1/(\redseqtwo/\redex) = \redexthree_2/(\redex/\redseqtwo)$,
+  where $\name(\redex) \not\in \names(\redseqtwo)$,
+  so by the previous claim we have that
+  there is a step $\redexthree_0$ such that
+  $\redexthree_0/\redex = \redexthree'_1$ and
+  $\redexthree_0/\redseqtwo = \redexthree_2$.
+  Moreover, $\redexthree_0/\redex\redseq' = \redexthree'_1/\redex = \redexthree_1$ 
+  so we are done.
+\end{enumerate}
+\end{proof}

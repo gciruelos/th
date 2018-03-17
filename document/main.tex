@@ -18,6 +18,10 @@
 \usepackage{xcolor}
 \usepackage{geometry}
 
+
+% https://tex.stackexchange.com/questions/2773
+\usepackage{microtype}
+
 \bibliographystyle{alpha}% the recommended bibstyle
 %\usepackage[hidelinks]{hyperref} % Hyperref package for url's and [hidelinks] option to remove collouring
 
@@ -35,7 +39,10 @@
 % \usepackage{showlabels}
 \usepackage[margin=1.2cm]{caption}
 \usepackage{leading}
-\leading{14.5pt}
+\usepackage[space]{cite}
+\usepackage{breakcites}
+
+\leading{13.5pt}
 
 
 \input{macros.tex}
@@ -49,25 +56,23 @@
 \frontmatter
 \setcounter{page}{-3}
 \input{./caratula.tex}
-
-\thispagestyle{empty}
-\tableofcontents
-\newpage \input{./00-abstract_es.tex}
-\newpage \input{./00-abstract_en.tex}
-\newpage \input{./01-introduction.tex}
+\cleardoublepage \input{./00-abstract_es.tex}
+\cleardoublepage \input{./00-abstract_en.tex}
+\cleardoublepage \tableofcontents
+\cleardoublepage \input{./01-introduction.tex}
 
 \mainmatter
-\newpage \input{./02-preliminaries.tex}
-\newpage \input{./03-distributive.tex}
-\newpage \input{./04-residual-theory.tex}
-\newpage \input{./05-simulation.tex}
-\newpage \input{./06-factorization.tex}
+\cleardoublepage \input{./02-preliminaries.tex}
+\cleardoublepage \input{./03-distributive.tex}
+\cleardoublepage \input{./04-residual-theory.tex}
+\cleardoublepage \input{./05-simulation.tex}
+\cleardoublepage \input{./06-factorization.tex}
 
-\newpage \input{./07-conclusion.tex}
+\cleardoublepage \input{./07-conclusion.tex}
 
 \appendix
 \begin{appendix}
-\newpage \input{./08-appendix.tex}
+\cleardoublepage \input{./08-appendix.tex}
 \end{appendix}
 
 \backmatter
