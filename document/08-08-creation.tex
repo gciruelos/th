@@ -1,0 +1,239 @@
+
+\begin{proof}
+We wanted to check that the cases of creation in the distributive lambda-calculus where
+\begin{enumerate}
+\item {\bf Creation case I.}
+  $
+    \con\of{ (\lamp{\lab}{\var}{\var^{\typ}})\,[\lamp{\labtwo}{\vartwo}{\tm}]\, \ls{\tmtwo}}
+    \ \todist\ %
+    \con\of{ (\lamp{\labtwo}{\vartwo}{\tm})\,\ls{\tmtwo} }
+    \ \todist\ %
+    \con\of{ \tm\sub{\vartwo}{\ls{\tmtwo}} }
+  $.
+\item {\bf Creation case II.}
+  $
+     \con\of{ (\lamp{\lab}{\var}{ \lamp{\labtwo}{\vartwo}{\tm} })\,\ls{\tmtwo}\,\ls{\tmthree} }
+     \ \todist\ %
+     \con\of{ (\lamp{\labtwo}{\vartwo}{\tm'})\,\ls{\tmthree} }
+     \ \todist\ %
+     \con\of{ \tm'\sub{\vartwo}{\ls{\tmthree}} }
+  $, where:
+  \[
+     \begin{array}{rcl}
+     \tm' & = & \tm\sub{\var}{\ls{\tmtwo}}
+     \end{array}
+  \]
+\item {\bf Creation case III.}
+  $
+    \con_1\of{(\lamp{\lab}{\var}{\con_2\of{\var^{\typ}\,\ls{\tm}}})\ls{\tmtwo}}
+    \ \todist\ %
+    \con_1\of{\con'_2\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,\ls{\tm'}}}
+    \ \todist\ %
+    \con_1\of{\con'_2\of{\tmthree\sub{\vartwo}{\ls{\tm'}}}}
+  $,
+  where:
+  \[
+  \begin{array}{rcl}
+    \con_2\sub{\var}{\ls{\tmtwo}}      & = & \con'_2 \\
+    \var^{\typ}\sub{\var}{\ls{\tmtwo}} & = & \lamp{\labtwo}{\vartwo}{\tmthree} \\
+    \ls{\tm}\sub{\var}{\ls{\tmtwo}}    & = & \ls{\tm'} \\
+    \ls{\tmtwo}                        & = & [\ls{\tmtwo_1},\lamp{\labtwo}{\vartwo}{\tmthree},\ls{\tmtwo_2}] \\
+  \end{array}
+  \]
+\end{enumerate}
+
+We supposed that $\redex : \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}} \todist \conof{\tm\sub{\var}{\ls{\tmtwo}}}$ wasstep,
+and $\redextwo : \conof{\tm\sub{\var}{\ls{\tmtwo}}} \todist \tmfive$ was another step
+such that $\redex$ creates $\redextwo$.
+The said that the redex contracted by the step $\redextwo$ is below a context $\con_1$,
+and $\conof{\tm\sub{\var}{\ls{\tmtwo}}} = \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}$,
+where $(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}$ is the redex contracted by $\redextwo$.
+
+
+We are to consider three cases, depending on the relative positions of the holes of $\con$ and $\con_1$,
+namely they may be disjoint,
+$\con$ may be a prefix of $\con_1$,
+or $\con_1$ may be a prefix of $\con$:
+\begin{enumerate}
+\item {\bf If the holes of $\con$ and $\con_1$ are disjoint.}
+  Then there is a two-hole context $\conhat$ such that
+  \[
+    \con = \conhat\of{\conbase,(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}
+    \HS
+    \con_1 = \conhat\of{\tm\sub{\var}{\ls{\tmtwo}},\conbase}
+  \]
+  So the situation is the following:
+  \[
+    \conhat\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo},(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}
+    \todist \conhat\of{\tm\sub{\var}{\ls{\tmtwo}},(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}
+    \todist \conhat\of{\tm\sub{\var}{\ls{\tmtwo}},\tmthree\sub{\vartwo}{\tmfour}}
+  \]
+  Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+  So this case is impossible.
+\item {\bf If $\con$ is a prefix of $\con_1$.}
+  Then there exists a context $\con_2$ such that $\con_1 = \conof{\con_2}$,
+  and we have that
+  $\tm\sub{\var}{\ls{\tmtwo}} = \con_2\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}$.
+  We consider two subcases, depending on whether the position of the hole $\con_2$ lies
+  inside the term $\tm$, or it reaches a free occurrence of $\var$ in $\tm$
+  and ``jumps'' to one of the arguments in the list $\ls{\tmtwo}$.
+  \begin{enumerate}
+  \item {\bf If the position of the hole of $\con_2$ lies in $\tm$.}
+    More precisely, there is a context $\con'_2$ and a term $\tm'$ such that:
+    \[
+      \begin{array}{rcl}
+      \tm & = & \con'_2\of{\tm'} \\
+      \con_2 & = & \con'_2\sub{\var}{\ls{\tmtwo}} \\
+      (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} & = & \tm'\sub{\var}{\ls{\tmtwo}}
+      \end{array}
+    \]
+    We consider three further subcases for the term $\tm'$:
+    it cannot be an abstraction, so it may be a variable $\var^{\typ}$,
+    or an application.
+    Besides, if it is an application, the head may be a variable $\var^{\typ}$ or an abstraction.
+    \begin{enumerate}
+    \item {\bf Variable, \ie $\tm' = \var^{\typ}$.}
+      Then the list $\ls{\tmtwo}$ may be split as $\ls{\tmtwo} = [\ls{\tmtwo_1},(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour},\ls{\tmtwo_2}]$,
+      and the situation is:
+      \[
+        \conof{(\lamp{\lab}{\var}{\con'_2\of{\var^{\typ}}})[\ls{\tmtwo_1},(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour},\ls{\tmtwo_2}]}
+        \ \todist\ %
+        \conof{\con_2\of{ (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} }}
+        \ \todist\ %
+        \conof{\con_2\of{ \tmthree\sub{\vartwo}{\ls{\tmfour}} }}
+      \]
+      Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+      So this case is impossible.
+    \item {\bf Application of a variable, \ie $\tm' = \var^{\typ}\,\ls{\tmfour'}$.}
+      Observe that, since
+      $(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} = \tm'\sub{\var}{\ls{\tmtwo}}$,
+      we have that $\ls{\tmfour} = \ls{\tmfour'}\sub{\var}{\ls{\tmtwo}}$,
+      and the list $\ls{\tmtwo}$ may be split as $\ls{\tmtwo} = [\ls{\tmtwo_1},\lamp{\labtwo}{\vartwo}{\tmthree},\ls{\tmtwo_2}]$.
+      The situation is:
+      \[
+        \conof{(\lamp{\lab}{\var}{\con_2'\of{\var^{\typ}\,\ls{\tmfour'}}})[\ls{\tmtwo_1},\lamp{\labtwo}{\vartwo}{\tmthree},\ls{\tmtwo_2}]}
+        \ \todist\ %
+        \conof{\con_2\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,\ls{\tmfour}}}
+        \ \todist\ %
+        \conof{\con_2\of{\tmthree\sub{\vartwo}{\ls{\tmfour}}}}
+      \]
+      and we are in the situation of {\bf Creation case III}.
+    \item {\bf Application of an abstraction, \ie $\tm' = (\lamp{\lab}{\vartwo}{\tmthree'})\,\ls{\tmfour'}$.}
+      Observe that, since
+      $(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} = \tm'\sub{\var}{\ls{\tmtwo}}$,
+      we have that $\ls{\tmthree} = \ls{\tmthree'}\sub{\var}{\ls{\tmtwo}}$
+      and $\ls{\tmfour} = \ls{\tmfour'}\sub{\var}{\ls{\tmtwo}}$.
+      Then the situation is:
+      \[
+        \conof{(\lamp{\lab}{\var}{\con_2'\of{ (\lamp{\lab}{\vartwo}{\tmthree'})\,\ls{\tmfour'} }})\ls{\tmtwo}}
+        \ \todist\ %
+        \conof{\con_2\of{ (\lamp{\lab}{\vartwo}{\tmthree})\,\ls{\tmfour} }}
+        \ \todist\ %
+        \conof{\con_2\of{ \tmthree\sub{\varthree}{\ls{\tmfour}} }}
+      \]
+      Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+      So this case is impossible.
+    \end{enumerate}
+  \item {\bf If the position of the hole of $\con_2$ ``jumps'' through a free occurrence of $\var$.}
+    More precisely,
+    there exist $\con_3$, $\typ$, $\ls{\tmtwo_1}$, $\ls{\tmtwo_2}$, and $\con_4$
+    such that:
+    \[
+      \tm = \con_3\of{\var^{\typ}}
+      \HS
+      \ls{\tmtwo} = [\ls{\tmtwo_1},\con_4\of{ (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} },\ls{\tmtwo_2}]
+    \]
+    in such a way that $\tmlabel{\con_4\of{ (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} }} = \varlabel{\var}{\var^{\typ}}$,
+    and $\con_2 = \con_3\sub{\var}{\ls{\tmtwo}}\of{\con_4}$.
+    Hence the situation is:
+    \[
+      \begin{array}{rl}
+              & \conof{(\lamp{\lab}{\var}{\con_3\of{\var^{\typ}}})[\ls{\tmtwo_1},\con_4\of{ (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour} },\ls{\tmtwo_2}]} \\
+      \todist & \conof{\con_3\sub{\var}{\ls{\tmtwo}}\of{\con_4\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}}}} \\
+      \todist & \conof{\con_3\sub{\var}{\ls{\tmtwo}}\of{\con_4\of{ \tmthree\sub{\vartwo}{\ls{\tmfour}} }}}
+      \end{array}
+    \]
+    Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+    So this case is impossible.
+  \end{enumerate}
+\item {\bf If $\con_1$ is a prefix of $\con$.}
+  Then there exists a context $\con_2$ such that $\con = \con_1\of{\con_2}$.
+  This means that $\con_2\of{\tm\sub{\var}{\ls{\tmtwo}}} = (\lamp{\labtwo}{\vartwo}{\tmthree})\ls{\tmfour}$.
+  We consider three subcases, depending on whether $\con_2$ is empty,
+  or the hole of $\con_2$ lies to the left or to the right of the application.
+  \begin{enumerate}
+  \item {\bf Empty, $\con_2 = \conbase$.}
+    Then $\con = \con_1$ so $\con$ is a prefix of $\con_1$. We have already considered this case.
+  \item {\bf Left, $\con_2 = \con'_2\,\ls{\tmfour}$.}
+    Then the step $\redex$ is of the form:
+    \[
+      \redex :
+      \con_1\of{\con'_2\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}\,\ls{\tmfour}}
+      \todist
+      \con_1\of{\con'_2\of{\tm\sub{\var}{\ls{\tmtwo}}}\,\ls{\tmfour}}
+    \]
+    in particular we know that $\con'_2\of{\tm\sub{\var}{\ls{\tmtwo}}} = \lamp{\labtwo}{\vartwo}{\tmthree}$.
+    There are two cases, depending on whether $\con'_2$ is empty or non-empty.
+    \begin{enumerate}
+    \item {\bf Empty, $\con'_2 = \conbase$}
+      Then we have that $\tm\sub{\var}{\ls{\tmtwo}} = \lamp{\labtwo}{\vartwo}{\tmthree}$.
+      We consider two further subcases, depending on whether $\tm$ is an occurrence of the variable $\var$.
+      \begin{enumerate}
+      \item {\bf If $\tm = \var^{\typ}$ for some type $\typ$.}
+        Then the list $\ls{\tmtwo}$ must be of the form $[\lamp{\labtwo}{\vartwo}{\tmthree}]$
+        where the external label of $\typ$ is precisely $\labtwo$.
+        Then the situation is:
+        \[
+          \con_1\of{(\lamp{\lab}{\var}{\var^{\typ}})[\lamp{\labtwo}{\vartwo}{\tmthree}]\,\ls{\tmfour}}
+          \todist
+          \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,\ls{\tmfour}}
+          \todist
+          \con_1\of{\tmthree\sub{\vartwo}{\ls{\tmfour}}}
+        \]
+        and we are in the situation of {\bf Creation case I}.
+      \item {\bf If $\tm \neq \var^{\typ}$ for any type $\typ$.}
+        Then $\tm$ must be an abstraction, namely $\tm = \lamp{\labtwo}{\vartwo}{\tmthree'}$
+        where $\tmthree'\sub{\var}{\ls{\tmtwo}} = \tmthree$. 
+        The situation is:
+        \[
+          \con_1\of{(\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmthree'}})\,\ls{\tmtwo}\,\ls{\tmfour}}
+          \todist
+          \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree'\sub{\var}{\ls{\tmtwo}}})\,\ls{\tmfour}}
+          \todist
+          \con_1\of{\tmthree'\sub{\var}{\ls{\tmtwo}}\sub{\vartwo}{\ls{\tmfour}}}
+        \]
+        and we are in the situation of {\bf Creation case II}.
+      \end{enumerate}
+    \item {\bf Non-empty, $\con'_2 \neq \conbase$}
+      Then necessarily $\con'_2$ must be an abstraction, namely $\con'_2 = \lamp{\labtwo}{\vartwo}{\con''_2}$.
+      The situation is:
+      \[
+        \begin{array}{rcl}
+        \con_1\of{(\lamp{\labtwo}{\vartwo}{\con''_2\of{ (\lamp{\lab}{\var}{\tm})\,\ls{\tmtwo} }})\,\ls{\tmfour}}
+        & \todist &
+        \con_1\of{(\lamp{\labtwo}{\vartwo}{\con''_2\of{ \tm\sub{\var}{\ls{\tmtwo}} }})\,\ls{\tmfour}}
+        \\
+        & \todist &
+        \con_1\of{\con''_2\of{ \tm\sub{\var}{\ls{\tmtwo}} }\sub{\vartwo}{\ls{\tmfour}}}
+        \end{array}
+      \]
+      Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+      So this case is impossible.
+    \end{enumerate}
+  \item {\bf Right, $\con_2 = (\lamp{\labtwo}{\vartwo}{\tmthree})[\ls{\tmfour}_1,\con'_2,\ls{\tmfour}_2]$.}
+    The situation is:
+    \[
+      \begin{array}{rcl}
+      \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,[\ls{\tmfour}_1,\con'_2\of{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}},\ls{\tmfour}_2]}
+      & \todist &
+      \con_1\of{(\lamp{\labtwo}{\vartwo}{\tmthree})\,[\ls{\tmfour}_1,\con'_2\of{\tm\sub{\var}{\ls{\tmtwo}}},\ls{\tmfour}_2]}
+      \\
+      & \todist &
+      \con_1\of{\tmthree\sub{\vartwo}{[\ls{\tmfour}_1,\con'_2\of{\tm\sub{\var}{\ls{\tmtwo}}},\ls{\tmfour}_2]}}
+      \end{array}
+    \]
+    Observe that $\redextwo$ has an ancestor $\redextwo_0$, contradicting the hypothesis that $\redex$ creates $\redextwo$.
+    So this case is impossible.
+  \end{enumerate}
+\end{enumerate}
+\end{proof}

@@ -13,7 +13,7 @@ In contrast, the space of computations of a function application $f(A)$ is not s
 to characterize. The difficulty is that $f$ may use the value of $A$ zero, one, or
 possibly many times.
 
-The motivation of this paper is attempting to {\bf understand spaces of computations}.
+The motivation of this work is attempting to {\bf understand spaces of computations}.
 We hope that this may be helpful to better understand the properties of {\em evaluation strategies},
 such as call-by-name or call-by-value,
 from a quantitative point of view.
@@ -40,7 +40,7 @@ Melli\`es generalized many of these results to the abstract setting of {\em axio
 Let us discuss ``spaces of computations'' more precisely.
 The \emph{derivation space} of an object~$x$ in some rewriting system
 is the set of all {\em derivations}, \ie sequences of rewrite steps, starting from $x$.
-In this paper, our rewriting system of interest will be the pure $\lambda$-calculus,
+In this work, our rewriting system of interest will be the pure $\lambda$-calculus,
 and we will be interested in \emph{finite} derivations only.
 In the $\lambda$-calculus,
 a transitive relation between derivations may be defined, the {\em prefix order}.
@@ -117,41 +117,50 @@ not necessarily exist, meaning that the derivation space of a term does not form
 Even when it forms a lattice, it may not necessarily be a {\em distributive} lattice, as observed for example by
 Laneve~\cite{laneve1994distributive}.
 
-Consider the following counterexample,
-due to L\'evy, showing that the meet of derivations is not well-defined.
+Consider the following counterexample
+\footnote{Similar to an example due to Laneve~\cite{laneve1994distributive}.}, showing that the meet of derivations is not well-defined.
 Let $\Omega = (\lam{\var}{\var\var})\lam{\var}{\var\var}$,
-and consider the reduction space of $(\lam{\var}{a})((\lam{\var}{b})\Omega)$,
-where the steps $T_i$ contract $\Omega$:
+and consider the reduction space of
+  $(\lam{\var}{(\lam{\vartwo}{a})(\var \Omega)}) (\lam{\varthree}{b})$,
+where the steps $U_i$ contract $\Omega$:
 \[
   \xymatrix{
     &
-    (\lam{\var}{a})((\lam{\var}{b})\Omega)
-    \ar_{T_1}[d]
-    \ar@/_1cm/_{R}[dddl]
-    \ar@/^1cm/^{S}[dddr]
+    (\lam{\var}{(\lam{\vartwo}{a})(\var \Omega)}) (\lam{\varthree}{b})
+    \ar_{U_1}[d]
+    \ar@/_1cm/_{S}[dddl]
+    \ar@/^1cm/^{R}[dddr]
     &
   \\
     &
-    (\lam{\var}{a})((\lam{\var}{b})\Omega)
+    (\lam{\var}{(\lam{\vartwo}{a})(\var \Omega)}) (\lam{\varthree}{b})
     \ar@/_1cm/[ddl] \ar@/^1cm/[ddr]
-    \ar_{T_2}[d]
+    \ar_{U_2}[d]
     &
   \\
     &
-    (\lam{\var}{a})((\lam{\var}{b})\Omega)
+    (\lam{\var}{(\lam{\vartwo}{a})(\var \Omega)}) (\lam{\varthree}{b})
     \ar@/_1cm/[dl] \ar@/^1cm/[dr]
-    \ar_{T_3}[d]
+    \ar_{U_3}[d]
     &
   \\
-    a
+    (\lam{\vartwo}{a})((\lam{\varthree}{b}) \Omega)
+    \ar_{T}[d]
     &
     \vdots
     &
-    (\lam{\var}{a})b
+    (\lam{\var}{a})(\lam{\varthree}{b})
+  \\
+    (\lam{\vartwo}{a}) b
+    &
+    &
+    &
   }
 \]
-Observe that for all $n \in \mathbb{N}$ we have that $T_1 \hdots T_n \sqsubseteq R$
-and $T_1 \hdots T_n \sqsubseteq S$ so the meet $R \sqcap S$ does not exist.
+Observe that $ST$ and $R$ do not have a greatest lower bound: $ST$ and $R$ are not
+comparable, and neither are $S$ and $R$.
+Furthermore, for all $n \in \mathbb{N}$ we have that $U_1 \hdots U_n \sqsubseteq R$
+and $T_1 \hdots T_n \sqsubseteq ST$ so the meet $R \sqcap ST$ does not exist.
 
 
 In \cite{DBLP:conf/ctcs/Mellies97}, Melli\`es showed that
