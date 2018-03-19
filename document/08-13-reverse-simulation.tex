@@ -1,0 +1,132 @@
+
+We repeat the statement of reverse simulation in its entirety.
+
+Let $\tm',\tmtwo' \in \termsdist$ be distributive-terms and let $\tm \in \terms$ be a lambda-term such that:
+\[
+  \tm \refinedby \tm' \todist \tmtwo'
+\]
+then there is a distributive term $\tmtwo'' \in \termsdist$ and a lambda-term $\tmtwo \in \terms$ such that:
+\[
+  \tm \tobeta \tmtwo \refinedby \tmtwo''
+\]
+and the step $\tm' \todist \tmtwo'$ is contained in the multistep $\tm' \tomdist \tmtwo''$.
+Diagramatically:
+\[
+\xymatrix@C=.25cm{
+\tm' \ar[d]^{\dist} \ar@{.>>}@/_1cm/[dd]^{\dist} & \refines  & \tm    \ar@{.>}[dd]^{\beta} \\
+\tmtwo' \ar@{.>>}[d]^{\dist}                     &            &                             \\
+\tmtwo''                                         & \refines  & \tmtwo                      \\
+}
+\]
+
+
+\begin{proof}
+By induction on $\tm'$.
+\begin{enumerate}
+\item \Case{Variable $\tm' = \var$} This case cannot happen because a variable cannot be reduced.
+\item \Case{Abstraction, $\tm' = \lamp{\lab}{\vartwo}{\tmfour'}$}
+  In this case $\tm = \lam{\vartwo}{\tmfour}$, where $\tmfour \refinedby \tmfour'$.
+  Also, we have that $\tm' \todist \tmtwo'$,
+  so then necessarily $\tmtwo' = \lamp{\lab}{\vartwo}{\tmfour'_1}$
+  where $\tmfour' \todist \tmfour'_1$.
+
+  Then, by inductive hypothesis we have that
+  \[
+  \xymatrix@C=.25cm{
+  \tmfour' \ar[d]^{\dist} \ar@{.>>}@/_1cm/[dd]^{\dist} & \refines  & \tmfour  \ar@{.>}[dd]^{\beta} \\
+  \tmfour'_1 \ar@{.>>}[d]^{\dist}                     &            &                             \\
+  \tmfour''_1                                         & \refines  & \tmfour_1                      \\
+  }
+  \]
+
+  So adding a lambda at the beggining of every term in the diagram we get our desired result
+  \[
+  \xymatrix@C=.25cm{
+  \lamp{\lab}{\vartwo}{\tmfour'} \ar[d]^{\dist} \ar@{.>>}@/_1cm/[dd]^{\dist} & \refines  & \lam{\vartwo}{\tmfour}  \ar@{.>}[dd]^{\beta} \\
+  \lamp{\lab}{\vartwo}{\tmfour'_1} \ar@{.>>}[d]^{\dist}  &            &    \\
+  \lamp{\lab}{\vartwo}{\tmfour''_1} & \refines  & \lam{\vartwo}{\tmfour_1} \\
+  }
+  \]
+
+\item \Case{Application, $\tm' = \tmthree' [\tmfour'_1,\hdots,\tmfour'_m]$}
+  In this case we have several subcases, depending on where the reduction step is done.
+  It can be done inside $\tmthree'$, inside a $\tmfour'_i$ for some $i \in \set{1, \hdots, m}$,
+  or in the head of the term (in the case that $\tmthree'$ is a lambda).
+  Let $\redex : \tm' \todist \tmtwo'$ be the name of the step.
+
+  Also, $\tm = \tmthree \tmfour$, such that $\tmthree \refinedby \tmthree'$
+  and $\tmfour \refinedby \tmfour'_i$ for all $i \in \set{1, \hdots, m}$.
+
+  \begin{enumerate}
+  \item {\bf $\redex$ is inside $\tmthree'$.}
+    So then $\tmthree' \todist \tmthree'_1$, and by inductive hypothesis we have that
+  \[
+  \xymatrix@C=.25cm{
+  \tmthree' \ar[d]^{\dist} \ar@{.>>}@/_1cm/[dd]^{\dist} & \refines & \tmthree  \ar@{.>}[dd]^{\beta} \\
+  \tmthree'_1 \ar@{.>>}[d]^{\dist}                     &           &                             \\
+  \tmthree''_1                                         & \refines  & \tmthree_1                    \\
+  }
+  \]
+
+  So adding the arguments at the end of every term in the diagram we get our desired result
+  \[
+  \xymatrix@C=.25cm{
+  \tmthree' [\tmfour'_i]_{i=1}^m \ar[d]^{\dist} \ar@{.>>}@/_1cm/[dd]^{\dist} & \refines & \tmthree \tmfour \ar@{.>}[dd]^{\beta} \\
+  \tmthree'_1 [\tmfour'_i]_{i=1}^m \ar@{.>>}[d]^{\dist} &           &           \\
+  \tmthree''_1 [\tmfour'_i]_{i=1}^m & \refines  & \tmthree_1 \tmfour            \\
+  }
+  \]
+  \item {\bf $\redex$ is inside $\tmfour'_i$ for some $i \in \set{1, \hdots, m}$.}
+    We have that $\tmfour'_i \todist \tmfour'_{i, 1}$, so by inductive hypothesis
+  \[
+  \xymatrix@C=.25cm{
+  \tmfour'_i \ar[d]^{\dist} \ar@{.>>}@/_1cm/[dd]^{\dist} & \refines & \tmfour \ar@{.>}[dd]^{\beta}\\
+  \tmfour'_{i,1} \ar@{.>>}[d]^{\dist}                     &           &                             \\
+  \tmfour''_{i,1}                                         & \refines  & \tmfour_1                   \\
+  }
+  \]
+    Now, we would like to reduce the rest of the $\tmfour'_j$ to something that refines $\tmfour_1$.
+    Luckily, we can do that using simulation.
+
+    As for every $j \neq i$ we have that $\tmfour'_j \refines \tmfour$ and
+      $\tmfour \tobeta \tmfour_1$ then because of simulation we get the following diagram
+      for every $j \neq i$.
+    \[
+    \xymatrix@C=1cm{
+     \tmfour \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta} & \tmfour_1 \ar@{}[d]|*=0[@]{\rtimes} \\
+     \tmfour'_j \ar@{.>>}[r]^{\dist} & \tmfour'_{j,1} \\
+    }
+    \]
+
+    Using all those reductions we obtained, we can construct the following diagram, which proves
+    what we wanted.
+
+    \[
+    \xymatrix@C=1cm{
+    \tmthree' [\tmfour'_0, \hdots, \tmfour'_{i-1}, \tmfour'_i, \tmfour'_{i+1}, \hdots, \tmfour'_m]
+      \ar[d]^{\dist} & \refines & \tmthree \tmfour \ar@{.>}[ddddddddd]^{\beta} \\
+    \tmthree' [\tmfour'_0, \hdots, \tmfour'_{i-1}, \tmfour'_{i,1}, \tmfour'_{i+1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
+    \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1}, \tmfour'_{i,1}, \tmfour'_{i+1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
+    \vdots \ar@{.>>}[d]^{\dist} & & \\
+    \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour'_{i,1}, \tmfour'_{i+1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
+    \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour''_{i,1}, \tmfour'_{i+1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
+    \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour''_{i,1}, \tmfour'_{i+1,1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
+    \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour''_{i,1}, \tmfour'_{i+1,1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
+    \vdots \ar@{.>>}[d]^{\dist} & & \\
+    \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour''_{i,1}, \tmfour'_{i+1,1}, \hdots, \tmfour'_{m,1}] & \refines  & \tmthree \tmfour_1                    \\
+    }
+    \]
+  \item {\bf $\redex$ is at the root.} In this case $\tmthree' = \lamp{\lab}{\var}{\tmtwo}$, and
+    we have the following diagram.
+  \[
+  \xymatrix@C=.25cm{
+  (\lamp{\lab}{\var}{\tmtwo'}) [\tmfour'_1, \hdots, \tmfour'_n] \ar[d]^{\dist} & \refines & (\lam{\var}{\tmtwo}) \tmfour
+  \ar@{->}[d]^{\beta}\\
+  \subs{\tmtwo'}{\var}{[\tmfour'_1, \hdots, \tmfour'_n]} &  & \subs{\tmtwo}{\var}{\tmfour} \\
+  }
+  \]
+  But $\subs{\tmtwo'}{\var}{[\tmfour'_1, \hdots, \tmfour'_n]} \refines \subs{\tmtwo}{\var}{\tmfour}$
+  because of \rlem{refinement_substitution}, so we are done.
+  \end{enumerate}
+\end{enumerate}
+\end{proof}

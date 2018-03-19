@@ -2,10 +2,40 @@
 \chapter{Simulation of the $\lambda$-calculus}
 \lcha{simulation}
 
+In this chapter we will focus on establishing a correspondance between
+the $\lambda$-calculus and the $\lambdadist$-calculus.
+
+First, we will learn how to relate terms from one calculus to terms in the other,
+via what we call \emph{refinements}.
+Then, we will look at how the derivation spaces of two related terms are connected.
+After that we will learn that the fact that a term of the lambda calculus is
+related to another in the distributive lambda calculus
+says that it has a head normal form.
+Finally, we will link and combine the residual theories of both calculi.
+
+
+\begin{notation}
+If $\tm$ is a term of the distributive lambda calculus,
+we already defined $\ulbDerivDist{\tm}$ to be its derivation space,
+which we proved is a distributive lattice.
+$\termsdist$ is the set of all (correct) terms.
+
+If $\tmtwo$ is a term of the pure lambda calculus,
+we write $\ulbDerivLam{\tmtwo}$ to mean
+the derivation space of $\tmtwo$, which
+is an join semilattice.
+$\terms$ is the set of all terms of the pure lambda calculus.
+\end{notation}
+
+
 \section{Refinements}
+\input{05-01-refinements}
 
 \section{Simulation}
-
-\section{Simulation residuals}
+\input{05-02-simulation}
 
 \section{Head normal forms}
+\input{05-03-hnf}
+
+\section{Simulation residuals}
+\input{05-04-simulation-residuals}

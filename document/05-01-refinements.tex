@@ -1,0 +1,54 @@
+\lsec{refinements}
+
+\begin{definition}[Refinement]
+A lambda-term $\tm \in \terms$ is \defn{refined}
+by a distributive term $\tm' \in \termsdist$,
+written $\tm \refinedby \tm'$ according to the following inductive definition:
+\[
+  \indrule{r-var}{
+  }{
+    \var \refinedby \var^\typ
+  }
+  \indrule{r-lam}{
+    \tm \refinedby \tm'
+  }{
+    \lam{\var}{\tm} \refinedby \lamp{\lab}{\var}{\tm'}
+  }
+  \indrule{r-app}{
+    \tm \refinedby \tm'
+    \HS
+    \tmtwo \refinedby \tmtwo_i \text{ for all $i=1..n$}
+  }{
+    \tm\,\tmtwo \refinedby \tm'[\tmtwo_1,\hdots,\tmtwo_n]
+  }
+\]
+We write $\tm' \refines \tm$ if $\tm \refinedby \tm'$.
+Refinement is also generalized to contexts, by declaring that $\conbase \refines \conbase$.
+\end{definition}
+
+Note that a term can have more than one refinement.
+For example, the following terms refine $(\lam{\var}{\var\var})\vartwo$:
+\[
+  \begin{array}{cc}
+  (\lamp{1}{\var}{\var^{[\,] \tolab{2} \alpha^3}[\,]})[\vartwo^{[\,] \tolab{2} \alpha^3}]
+  &
+  (\lamp{1}{\var}{\var^{[\alpha^2,\beta^3] \tolab{4} \gamma^5}[\var^{\alpha^2},\var^{\beta^3}]})[\vartwo^{[\alpha^2,\beta^3] \tolab{4} \gamma^5},\vartwo^{\alpha^2},\vartwo^{\beta^3}]
+  \\
+  (\lamp{1}{\var}{\var^{[\alpha^2] \tolab{3} \beta^4}[\var^{\alpha^2}]})[\vartwo^{[\alpha^2] \tolab{3} \beta^4},\vartwo^{\alpha^2}]
+  &
+  (\lamp{1}{\var}{\var^{[\alpha^2] \tolab{3} \beta^4}[\var^{\alpha^2}]})[\vartwo^{\alpha^2}, \vartwo^{[\alpha^2] \tolab{3} \beta^4}]
+  \end{array}
+\]
+
+Also, a term may have no refinements---for example,
+$\Omega = (\lam{\var}{\var \var}) (\lam{\var}{\var \var})$.
+We leave this as an exercise to the reader.
+
+The fact that a term doesn't have a refinement doesn't imply that subterms or
+terms that contain it as a subterm don't have refinements.
+For example $\lam{\var}{\var \var}$ is refinable by
+$\lamp{\lab}{\var}{\var^{[] \to \alpha}} []$,
+and $(\lam{\var}{a}) \Omega$
+is refinable by $(\lamp{\lab}{\var}{a^{\alpha}}) []$.
+
+

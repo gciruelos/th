@@ -1,0 +1,104 @@
+We want to prove that if $\tm,\tmtwo \in \terms$ and
+$\tm' \in \termsdist$ be a distributive term
+such that $\tm' \refines \tm \tobeta \tmtwo$,
+then there is a distributive term $\tmtwo' \in \termsdist$
+such that $\tm' \rtodist \tmtwo' \refines \tmtwo$.
+
+\begin{proof}
+Let $\tm = \conof{(\lam{\var}{\tmfive}) \tmsix} \to \conof{\subs{\tmfive}{\var}{\tmsix}} = \tmtwo$.
+We proceed by induction on $\con$.
+\begin{enumerate}
+\item {\bf Empty context, $\con = \conbase$.}
+Then $\tm = (\lam{\var}{\tmfive}) \tmsix \to {\subs{\tmfive}{\var}{\tmsix}} = \tmtwo$.
+Then $\tm' = (\lamp{\lab}{\var}{\tmfive'}) [\tmsix_1', \hdots, \tmsix_n']$, for some
+  $\lab$, $\tmfive' \refines \tmfive$ and $\tmsix_i' \refines \tmsix$.
+
+We can do the step $\tm' \todist \subs{\tmfive'}{\var}{[\tmsix_1', \hdots, \tmsix_n']}$.
+We choose $\tmtwo'$ to be the latter term, which by \rlem{refinement_substitution} refines $\tmtwo$.
+\item {\bf Under an abstraction, $\con = \lam{\vartwo}{\con'}$.}
+Then $\tm = \lam{\vartwo}{\contwoof{(\lam{\var}{\tmfive}) \tmsix}}
+        \to \lam{\vartwo}{\contwoof{\subs{\tmfive}{\var}{\tmsix}}} = \tmtwo$.
+If $\tm' \refines \tm$, then $\tm' = \lamp{\lab}{\vartwo}{\tmfour}$,
+  with $\tmfour \refines \contwoof{(\lam{\var}{\tmfive}) \tmsix}$.
+
+By inductive hypothesis, there is a term $\tmfour'$ such that
+\[
+\xymatrix@C=1cm{
+ \contwoof{(\lam{\var}{\tmfive}) \tmsix} \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta}
+    & \contwoof{\subs{\tmfive}{\var}{\tmsix}} \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tmfour \ar@{.>>}[r]^{\dist} & \tmfour' \\
+}
+\]
+
+Then,
+\[
+\xymatrix@C=1cm{
+ \lam{\vartwo}{\contwoof{(\lam{\var}{\tmfive}) \tmsix}} \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta}
+    & \lam{\vartwo}{\contwoof{\subs{\tmfive}{\var}{\tmsix}}} \ar@{}[d]|*=0[@]{\rtimes} \\
+ \lamp{\lab}{\vartwo}{\tmfour} \ar@{.>>}[r]^{\dist} & \lamp{\lab}{\vartwo}{\tmfour'} \\
+}
+\]
+
+\item {\bf Left of an application, $\con = \con' \tmthree$.}
+Then $\tm = \contwoof{(\lam{\var}{\tmfive}) \tmsix} \tmthree
+        \to \contwoof{\subs{\tmfive}{\var}{\tmsix}} \tmthree = \tmtwo$.
+If $\tm' \refines \tm$, then $\tm' = \tmfour [\tmthree'_1, \hdots, \tmthree'_n]$,
+  with $\tmfour \refines \contwoof{(\lam{\var}{\tmfive}) \tmsix}$
+  and $\tmthree'_i \refines \tmthree$.
+
+By inductive hypothesis, there is a term $\tmfour'$ such that
+\[
+\xymatrix@C=1cm{
+ \contwoof{(\lam{\var}{\tmfive}) \tmsix} \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta}
+    & \contwoof{\subs{\tmfive}{\var}{\tmsix}} \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tmfour \ar@{.>>}[r]^{\dist} & \tmfour' \\
+}
+\]
+
+Then,
+\[
+\xymatrix@C=1cm{
+ \contwoof{(\lam{\var}{\tmfive}) \tmsix} \tmthree \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta}
+    & \contwoof{\subs{\tmfive}{\var}{\tmsix}} \tmthree \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tmfour [\tmthree'_1, \hdots, \tmthree'_n] \ar@{.>>}[r]^{\dist}
+    & \tmfour' [\tmthree'_1, \hdots, \tmthree'_n] \\
+}
+\]
+\item {\bf Right of an application, $\con = \tmthree \con'$.}
+Then $\tm = \tmthree \contwoof{(\lam{\var}{\tmfive}) \tmsix}
+        \to \tmthree \contwoof{\subs{\tmfive}{\var}{\tmsix}} = \tmtwo$.
+If $\tm' \refines \tm$, then $\tm' = \tmthree' [\tmthree'_1, \hdots, \tmthree'_n]$,
+  with $\tmthree' \refines \tmthree$
+  and $\tmthree'_i \refines \contwoof{(\lam{\var}{\tmfive}) \tmsix}$.
+
+We can  apply the inductive hypothesis to every $\tmthree'_i$, obtaining
+\[
+\xymatrix@C=1cm{
+ \contwoof{(\lam{\var}{\tmfive}) \tmsix} \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta}
+    & \contwoof{\subs{\tmfive}{\var}{\tmsix}} \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tmthree'_i \ar@{.>>}[r]^{\dist} & \tmthree''_i \\
+}
+\]
+
+Then,
+\[
+\xymatrix@C=1cm{
+ \contwoof{(\lam{\var}{\tmfive}) \tmsix} \tmthree \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta}
+    & \contwoof{\subs{\tmfive}{\var}{\tmsix}} \tmthree \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tmthree' [\tmthree'_1, \hdots, \tmthree'_n] \ar@{.>>}[r]^{\dist}
+    & \tmthree' [\tmthree''_1, \hdots, \tmthree''_n] \\
+}
+\]
+Because
+\begin{equation*}\begin{split}
+ \tmthree' [\tmthree'_1, \hdots, \tmthree'_{i-1}, \tmthree'_i, \tmthree_{i+1}, \hdots, \tmthree'_n]
+    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree'_{i-1}, \tmthree'_i, \tmthree'_{i+1}, \hdots, \tmthree'_n] \\
+    & \tomdist \hdots \\
+    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree'_i, \tmthree'_{i+1}, \hdots, \tmthree''_n] \\
+    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree''_i, \tmthree'_{i+1}, \hdots, \tmthree''_n] \\
+    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree''_i, \tmthree''_{i+1}, \hdots, \tmthree''_n] \\
+    & \tomdist \hdots \\
+    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree''_i, \tmthree''_{i+1}, \hdots, \tmthree''_n] \\
+\end{split}\end{equation*}
+\end{enumerate}
+\end{proof}
