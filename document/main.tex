@@ -44,6 +44,15 @@
 
 \leading{13.5pt}
 
+% format proofs.
+\usepackage{letltxmacro}
+\LetLtxMacro\oldproof\proof
+\let\endoldproof\endproof
+\renewenvironment{proof}[1][\proofname]
+  {\begin{small}\oldproof[#1]}
+  {\endoldproof\end{small}}
+
+
 
 \input{macros.tex}
 

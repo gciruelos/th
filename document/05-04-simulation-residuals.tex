@@ -417,3 +417,115 @@ Note that the step $\redextwo_{22}$ is erased by the simulation: $\redextwo_{22}
 Intuitively, $\redextwo_{22}$ is ``garbage'' with respect to the refinement $\hat{\vartwo}[\varthree^{\alpha^2}][\,]$,
 because it lies inside an {\em untyped} argument.
 \end{example}
+
+\begin{example}
+We can do a larger example. Consider the term
+$(\lam{\var}{\var \var}) ((\lam{\vartwo}{\vartwo a}) (\lam{\varthree}{\varthree}))$,
+which is refined by
+$(\lamp{1}{\var}{\var []}) [(\lamp{2}{\vartwo}{\vartwo [a]}) [\lamp{3}{\varthree}{\varthree}]]$, among others
+\footnote{
+The fully labeled term is
+$
+  (\lamp{1}{\var}{\var^{[] \tolab{5} \alpha^4} []})
+    [(\lamp{2}{
+      \vartwo^{([] \tolab{5} \alpha^4) \tolab{3} ([] \tolab{5} \alpha^4)}
+      }{\vartwo [a^{[] \tolab{5} \alpha^4}]})
+        [\lamp{3}{\varthree}{\varthree^{[] \tolab{5} \alpha^4}}]
+    ].
+$
+}.
+Let's take a look at the derivation space of the distributive term. We use the labels of the
+steps to name the steps ($\redex_n, \redex_n', \redex_n'', \hdots$ are steps that have the name $n$).
+
+\[
+  \xymatrix{
+  (\lamp{1}{\var}{\var []}) [(\lamp{2}{\vartwo}{\vartwo [a]}) [\lamp{3}{\varthree}{\varthree}]]
+  \ar[r]^-{\redex_1}
+  \ar[d]^-{\redex_2}
+  &
+  (\lamp{2}{\vartwo}{\vartwo [a]}) [\lamp{3}{\varthree}{\varthree}]] []
+  \ar[d]^-{\redex_2'}
+  \\
+  (\lamp{1}{\var}{\var []}) [(\lamp{3}{\varthree}{\varthree}) [a]]
+  \ar[r]^-{\redex_1'}
+  \ar[d]^-{\redex_3}
+  &
+  (\lamp{3}{\varthree}{\varthree}) [a] []
+  \ar[d]^-{\redex_3'}
+  \\
+  (\lamp{1}{\var}{\var []}) [a]
+  \ar[r]^-{\redex_1''}
+  &
+  a []
+  }
+\]
+
+Next, the derivation space of the pure lambda term.
+We name the steps such that a derivation below with a step $\redextwo_i^n$ maps to
+the derivation with $\redex_i^n$ above. The steps with no name are mapped to the empty
+derivation above.
+{\tiny
+\[
+\xymatrix@R=.3cm@C=.1cm{
+  &
+  &
+  & (\lam{\var}{\var \var})((\lam{\vartwo}{\vartwo a}) (\lam{\varthree}{\varthree}))
+  \ar[dl]^-{\redextwo_1}
+  \ar[drr]^-{\redextwo_2}
+  &
+  &
+  \\
+  &
+  & ((\lam{\vartwo}{\vartwo a}) (\lam{\varthree}{\varthree})) ((\lam{\vartwo}{\vartwo a}) (\lam{\varthree}{\varthree}))
+  \ar[dl]^-{\redextwo_2'}
+  \ar[dr]
+  &
+  &
+  & (\lam{\var}{\var \var}) ((\lam{\varthree}{\varthree}) a)
+  \ar[ddd]^-{\redextwo_3}
+  \ar@/^.5cm/[ddlll]^{\redextwo_1'}
+  \\
+  & ((\lam{\varthree}{\varthree}) a) ((\lam{\vartwo}{\vartwo a}) (\lam{\varthree}{\varthree}))
+  \ar[dl]^-{\redextwo_3'}
+  \ar[dr]
+  &
+  & ((\lam{\vartwo}{\vartwo a}) (\lam{\varthree}{\varthree})) ((\lam{\varthree}{\varthree}) a)
+  \ar[dl]_-{\redextwo_2'}
+  \ar[dr]
+  &
+  &
+  \\
+  a ((\lam{\vartwo}{\vartwo a}) (\lam{\varthree}{\varthree}))
+  \ar[dr]
+  &
+  & ((\lam{\varthree}{\varthree}) a) ((\lam{\varthree}{\varthree}) a)
+  \ar[dl]^-{\redextwo_3'}
+  \ar[dr]
+  &
+  & ((\lam{\vartwo}{\vartwo a}) (\lam{\varthree}{\varthree})) a
+  \ar[dl]^-{\redextwo_2'}
+  &
+  \\
+  & a ((\lam{\varthree}{\varthree}) a)
+  \ar@/_.3cm/[drr]
+  &
+  & ((\lam{\varthree}{\varthree}) a) a
+  \ar[d]^-{\redextwo_3'}
+  &
+  & (\lam{\var}{\var \var}) a
+  \ar@/^.3cm/[dll]^-{\redextwo_1''}
+  \\
+  &
+  &
+  & a a
+  &
+  &
+  \\
+}
+\]
+}
+
+Note that, for example, the derivation $\redextwo_2 \redextwo_3 \redextwo_1''$ maps to
+the derivation $\redex_2 \redex_3 \redex_1''$.
+We invite the reader to find other correspondences.
+\end{example}
