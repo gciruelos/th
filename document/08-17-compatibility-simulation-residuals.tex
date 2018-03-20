@@ -1,0 +1,116 @@
+We are to prove that the operation of taking simulation residuals on two
+derivations of the lambda calculus is compatible with permutation equivalence.
+With symbols, if $\redex \permeq \redextwo$ then $\redex / \tm' \permeq \redextwo / \tm'$.
+
+We first prove the result for complete developments and then for arbitrary derivations.
+
+
+\begin{lemma}[Compatibility for developments]
+\llem{compatibility_for_developments}
+Let $\redexset$ be a set of coinitial steps,
+and let $\redseq$ and $\redseqtwo$ be complete developments of $\redexset$,
+and let $\tm' \in \termsdist$ be a correct term such that $\tm' \refines \src(\redseq)$.
+Then $\redseq/\tm' \equiv \redseqtwo/\tm'$.
+\end{lemma}
+\begin{proof}
+This is an immediate consequence of \rlem{simulation_residual_of_a_development},
+since $\redseq/\tm'$ and $\redseqtwo/\tm'$ are both complete developments of $\redexset/\tm'$,
+hence permutation equivalent.
+\end{proof}
+
+\begin{proposition}[Compatibility of simulation residuals and permutation equivalence]
+\lprop{compatibility_of_simulation_residuals_and_permutation_equivalence}
+Let $\redseq \permeq \redseqtwo$ be permutation equivalent derivations in the $\lambda$-calculus,
+and let $\tm' \in \termsdist$ be a correct term such that $\tm' \refines \src(\redseq)$.
+Then:
+\begin{enumerate}
+\item $\tm'/\redseq = \tm'/\redseqtwo$
+\item $\redseq/\tm' \permeq \redseqtwo/\tm'$
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+\begin{pabloenv}
+Recall that permutation equivalence is defined as the reflexive and transitive closure of the
+permutation axiom $\redseqthree_1 \redex \redseqtwo \redseqthree_2 \permeq \redseqthree_1 \redextwo \redseq \redseqthree_2$,
+where
+$\redseqthree_1$ and $\redseqthree_2$ are arbitrary derivations,
+$\redseqtwo$ is a complete development of $\redextwo/\redex$,
+and $\redseq$ is a complete development of $\redex/\redextwo$.
+We prove each item separately:
+\begin{enumerate}
+\item
+  For item 1., we proceed by induction on the derivation that $\redseq \permeq \redseqtwo$.
+  Reflexivity and transitivity are trivial, so we concentrate on the permutation axiom itself.
+  The interesting case is the permutation axiom.
+  Let $\redseqthree_1 \redex \redseqtwo \redseqthree_2 \permeq \redseqthree_1 \redextwo \redseq \redseqthree_2$,
+  where
+  $\redseqthree_1$ and $\redseqthree_2$ are arbitrary derivations,
+  $\redseqtwo$ is a complete development of $\redextwo/\redex$,
+  and $\redseq$ is a complete development of $\redex/\redextwo$,
+  and let us show that $\tm'/\redseqthree_1 \redex \redseqtwo \redseqthree_2 = \tm'/\redseqthree_1 \redextwo \redseq \redseqthree_2$.
+  By \rlem{simulation_residuals_composition} we have that:
+  \[
+    \tm'/\redseqthree_1 \redex \redseqtwo \redseqthree_2 = ((\tm'/\redseqthree_1)/\redex \redseqtwo)/\redseqthree_2
+    \HS
+    \text{ and }
+    \HS
+    \tm'/\redseqthree_1 \redextwo \redseq \redseqthree_2 = ((\tm'/\redseqthree_1)/\redextwo \redseq)/ \redseqthree_2
+  \]
+  so, without loss of generality,
+  it suffices to show that the following holds for an arbitrary term $\tmtwo' \in \termsdist$:
+  \[
+    \tmtwo'/\redex\redseqtwo = \tmtwo'/\redextwo\redseq
+  \]
+  Note that, by definition of simulation residual, the derivations below have the indicated sources and targets:
+  \[
+    \begin{array}{rcl}
+    \redex\redseqtwo/\tmtwo' & : & \tmtwo' \to \tmtwo'/\redex\redseqtwo \\
+    \redextwo\redseq/\tmtwo' & : & \tmtwo' \to \tmtwo'/\redextwo\redseq \\
+    \end{array}
+  \]
+  Moreover:
+  \[
+    \begin{array}{rcll}
+      \redex\redseqtwo/\tmtwo'
+    & = & (\redex/\tmtwo')(\redseqtwo/(\tmtwo'/\redex)) \\
+    & \permeq & (\redex/\tmtwo')((\redextwo/\redex)/(\tmtwo'/\redex))     & \text{by \rlem{compatibility_for_developments}} \\
+    & \permeq & (\redex/\tmtwo')((\redextwo/\tmtwo')/(\redex/\tmtwo'))    & \text{by the basic cube lemma~(\rlem{cube_lemma_for_simulation_residuals})} \\
+    & \permeq & (\redextwo/\tmtwo')((\redex/\tmtwo')/(\redextwo/\tmtwo')) & \text{since $A(B/A) \permeq B(A/B)$ holds in general} \\
+    & \permeq & (\redextwo/\tmtwo')((\redex/\redextwo)/(\tmtwo'/\redextwo)) & \text{by the basic cube lemma~(\rlem{cube_lemma_for_simulation_residuals})} \\
+    & = & (\redextwo/\tmtwo')(\redseq/(\tmtwo'/\redextwo)) & \text{by \rlem{compatibility_for_developments}} \\
+    & = & \redextwo\redseq/\tmtwo'
+    \end{array}
+  \]
+  So $\redex\redseqtwo/\tmtwo'$ and $\redextwo\redseq/\tmtwo'$ are permutation equivalent.
+  In particular, they have the same target, so
+  $\tmtwo'/\redex\redseqtwo = \tmtwo'/\redextwo\redseq$ as required.
+\item
+  The proof of item 2. is also by induction on the derivation that $\redseq \permeq \redseqtwo$.
+  Let $\redseqthree_1 \redex \redseqtwo \redseqthree_2 \permeq \redseqthree_1 \redextwo \redseq \redseqthree_2$,
+  where
+  $\redseqthree_1$ and $\redseqthree_2$ are arbitrary derivations,
+  $\redseqtwo$ is a complete development of $\redextwo/\redex$,
+  and $\redseq$ is a complete development of $\redex/\redextwo$,
+  and let us show that $\redseqthree_1 \redex \redseqtwo \redseqthree_2/\tm' = \redseqthree_1 \redextwo \redseq \redseqthree_2/\tm'$.
+  By \rlem{simulation_residuals_composition} we have that:
+  \[
+    \redseqthree_1 \redex \redseqtwo \redseqthree_2/\tm' = (\redseqthree_1/\tm') (\redex \redseqtwo/\tmtwo') (\redseqthree_2/\tmthree')
+    \HS
+    \text{ and }
+    \HS
+    \gonza{\redseqthree_1 \redextwo \redseq \redseqthree_2 / \tm'= (\redseqthree_1 / \tm') (\redextwo \redseq/\tmtwo') (\redseqthree_2/\tmthree'')}
+  \]
+  where $\tmtwo' = \tm'/\redseqthree_1$,
+        $\tmthree' = \tmtwo'/\redseqthree_1\redex\redseqtwo$,
+        and
+        $\tmthree'' = \tmtwo'/\redseqthree_1\redextwo\redseq$.
+  \\
+  \gonza{
+  In a manner similar as before, we can prove that $\redex\redseqtwo/\tmtwo' \permeq \redextwo\redseq/\tmtwo'$.
+  And, with that and Item 1, we can see that $\tmthree' = \tmthree''$,
+  hence $(\redseqthree_2/\tmthree') \permeq (\redseqthree_2/\tmthree'')$,
+  which finishes the proof.
+  }
+\end{enumerate}
+\end{pabloenv}
+\end{proof}

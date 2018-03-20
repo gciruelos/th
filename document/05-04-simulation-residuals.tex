@@ -1,0 +1,419 @@
+
+Simulation~(\rprop{simulation})
+ensures that every step $\tm \tobeta \tmtwo$ can be simulated
+in $\lambdadist$ starting from a term $\tm' \refines \tm$.
+Actually, a finer relationship can be established between the
+derivation spaces $\ulbDerivLam{\tm}$ and $\ulbDerivDist{\tm'}$.
+For this, we introduce the idea of \defn{simulation residual}.
+
+The input data of \rprop{simulation} consists of the term $\tm$,
+the step $\tm \tobeta \tmtwo$, and the refinement $\tm' \refines \tm$.
+Similarly as for the usual notion of residual,
+we define notation to denote the output data of \rprop{simulation},
+namely the multistep $\tm' \tomdist \tmtwo'$, and the refinement $\tmtwo' \refines \tmtwo$.
+
+\begin{definition}[Simulation residuals]
+\ldef{simulation_residuals_def}
+Let $\tm' \refines \tm$ and let $\redex : \tm \tobeta \tmtwo$ be a step.
+The constructive proof of Simulation~(\rprop{simulation})
+associates the $\tobeta$-step $\redex$ to a possibly empty set of $\todist$-steps
+$\{\redex_1,\hdots,\redex_n\}$ all of which start from $\tm'$.
+We write $\redex/\tm' \eqdef \set{\redex_1,\hdots,\redex_n}$,
+and we call $\redex_1,\hdots,\redex_n$ the \defn{simulation residuals of $\redex$ after $\tm'$}.
+All the complete developments of $\redex/\tm'$ have a common target,
+which we denote by $\tm'/\redex$,
+called the {\em simulation residual of $\tm'$ after $\redex$}.
+\end{definition}
+
+\begin{remark}
+If $\tm' \refines \tm$ and $\redex : \tm \to_\beta \tmtwo$,
+then $\tm' / \redex \in \termsdist$
+  and $\src(\redex_i) = \tm'$ for all $\redex_i \in \redex / \tm'$.
+\end{remark}
+
+Recall that, by abuse of notation, $\redex/\tm'$ stands
+for some complete development of the set $\redex/\tm'$.
+By Simulation~(\rprop{simulation}),
+the following diagram always holds given $\tm' \refines \tm \tobeta \tmtwo$:
+\[
+  \xymatrix@R=.5cm@C=2cm{
+    \tm
+      \ar[r]^{\beta}_{\redex}
+      \ar@{}[d]|*=0[@]{\rtimes}
+  &
+    \tmtwo
+      \ar@{}[d]|*=0[@]{\rtimes}
+  \\
+    \tm'
+      \ar@{->>}[r]^{\dist}_{\redex/\tm'}
+  &
+    \tm'/\redex
+  }
+\]
+
+\begin{example}[Examples of simulation residuals]
+Let $\redex : \var\,((\lam{\var}{\var})\vartwo) \tobeta \var\,\vartwo$.
+\begin{enumerate}
+\setcounter{enumi}{-1}
+\item If $\tm' = \var^{[] \tolab{1} \alpha^2}\,[\,]$, then $\redex/\tm' = \emptyset$.
+\item If $\tm' = \var^{[\alpha^1] \tolab{2} \beta^3}\,[(\lamp{4}{\var}{\var^{\alpha^1}})[\vartwo^{\alpha^1}]]$, then $\redex/\tm' = \set{\redex'}$,
+      where
+      $\redex' : \tm' \todist \var^{[\alpha^1] \tolab{2} \beta^3}\,[\vartwo^{\alpha^1}]$.
+\item If $\tm' = (\var^{[\alpha^1,\beta^2] \tolab{3} \gamma^4}\,[
+                    (\lamp{5}{\var}{\var^{\alpha^1}})[\vartwo^{\alpha^1}],
+                    (\lamp{6}{\var}{\var^{\beta^2}})[\vartwo^{\beta^2}]
+                  ])$,
+      then
+      $\redex/\tm' = \set{\redex_1,\redex_2}$
+      where
+      $\redex_1 : \tm' \todist \tm'_1$
+      and
+      $\redex_2 : \tm' \todist \tm'_2$,
+      where $
+      \tm'_1 = \var^{[\alpha^1,\beta^2] \tolab{3} \gamma^4}\,[
+                 \vartwo^{\alpha^1},
+                 (\lamp{6}{\var}{\var^{\beta^2}})[\vartwo^{\beta^2}]
+               ]
+      $ and $
+      \tm'_2 = \var^{[\alpha^1,\beta^2] \tolab{3} \gamma^4}\,[
+                 (\lamp{5}{\var}{\var^{\alpha^1}})[\vartwo^{\alpha^1}],
+                 \vartwo^{\beta^2}
+               ]
+      $.
+      Moreover $\tm'/\redex = \tm'_3$,
+      where $
+        \tm'_3 = \var^{[\alpha^1,\beta^2] \tolab{3} \gamma^4}\,[
+                   \vartwo^{\alpha^1},
+                   \vartwo^{\beta^2}
+                 ]
+      $.
+\end{enumerate}
+\end{example}
+
+\bigskip
+
+Simulation residuals $\tm'/\redex$ and $\redex/\tm'$ are defined when $\redex$ is a single step.
+Mimicking the standard extension of residuals for derivations,
+we extend simulation residuals for derivations,
+\ie $\tm'/\redseq$ and $\redseq/\tm'$ as follows.
+
+\begin{definition}[Simulation residuals extended to derivations]
+If $\redseq : \tm \rtobeta \tmtwo$ is a derivation and $\tm' \in \termsdist$ is
+a correct term such that $\tm' \refines \tm$
+then the \defn{simulation residual of $\tm'$ after $\redseq$} is defined
+by induction on $\redseq$ as a term $\tm'/\redseq \in \termsdist$ such that $\tm'/\redseq \refines \tmtwo$:
+\begin{itemize}
+\item $\tm'/\emptyDerivation \eqdef \tm'$
+\item $\tm'/(\redex\redseqtwo) \eqdef (\tm'/\redex)/\redseqtwo$
+\end{itemize}
+The \defn{simulation residual of $\redseq$ after $\tm'$} is defined
+by induction on $\redseq$ as a derivation $\redseq/\tm'$ such that $\redseq/\tm' : \tm' \rtodist \tm'/\redseq$:
+\begin{itemize}
+\item $\emptyDerivation/\tm' \eqdef \emptyDerivation$
+\item $(\redex\redseqtwo)/\tm' \eqdef (\redex/\tm')(\redseqtwo/(\tm'/\redex))$ \\
+      where, in the right-hand side,
+      the expression $\redex/\tm'$ is an abuse of notation,
+      and it technically stands for
+      a (canonical) complete development of the multistep $\redex/\tm'$.
+\end{itemize}
+The diagram for the inductive case is:
+\[
+\xymatrix@C=1cm{
+ \tm \ar@{}[d]|*=0[@]{\rtimes} \ar[rr]^{\redex} && \ar@{}[d]|*=0[@]{\rtimes} \ar[rr]^{\redseqtwo} && \tmtwo \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tm' \ar@{.>>}[rr]^{\redex/\tm'} && \tm'/\redex \ar@{.>>}[rr]^{\sigma/(\tm'/\redex)} && \tm'/\redex\redseqtwo \ar@{=}[r] & (\tm'/\redex)/\redseqtwo \\
+}
+\]
+\end{definition}
+
+This extension of the definition works as expected for compositions.
+
+\begin{lemma}[Simulation residuals and composition]
+\llem{simulation_residuals_composition}
+Let $\redseq,\redseqtwo$ be composable derivations and let $\tm' \refines \src(\redseq)$.
+Then:
+\begin{enumerate}
+\item $\tm'/\redseq\redseqtwo = (\tm'/\redseq)/\redseqtwo$
+\item $\redseq\redseqtwo/\tm' = (\redseq/\tm')(\redseqtwo/(\tm'/\redseq))$
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Item 1. is by induction on $\redseq$.
+The interesting case is when $\redseq$ is non-empty, \ie $\redseq = \redex\redseqthree$.
+Then:
+  \[
+          \tm'/\redex\redseqthree\redseqtwo
+    =     (\tm'/\redex)/\redseqthree\redseqtwo
+    \eqih ((\tm'/\redex)/\redseqthree)/\redseqtwo
+    =     (\tm'/\redex\redseqthree)/\redseqtwo
+  \]
+as required.
+
+Item 2. is by induction on $\redseq$.
+The interesting case is when $\redseq$ is non-empty, \ie $\redseq = \redex\redseqthree$.
+Then:
+  \[
+          \redex\redseqthree\redseqtwo/\tm'
+    =     (\redex/\tm')(\redseqthree\redseqtwo/(\tm'/\redex))
+    \eqih (\redex/\tm')(\redseqthree/(\tm'/\redex))(\redseqtwo/((\tm'/\redex)/\redseqthree))
+    =     (\redex\redseqthree/\tm')(\redseqtwo/(\tm'/\redex\redseqthree))
+  \]
+as required.
+\end{proof}
+
+The result can be summarized by the following diagram.
+
+\[
+\xymatrix@C=2cm{
+ \tm \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\redseq}
+  & \tmtwo \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\redseqtwo}
+  & \tmthree \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tm' \ar@{.>>}[r]^{\redseq/\tm'}
+  & \tm'/\redseq \ar@{.>>}[r]^{\sigma/(\tm'/\redseq)}
+  & (\tm'/\redseq) / \redseqtwo
+ \\
+}
+\]
+
+\subsection*{Cube lemma}
+
+The following result resembles the usual Cube Lemma\footnote{
+  Recall that the usual Cube Lemma states
+  that $(\redseq/\redseqtwo)/(\redseqthree/\redseqtwo) \permeq (\redseq/\redseqthree)/(\redseqtwo/\redseqthree)$;
+  see \eg~\cite[Lemma~12.2.6]{Barendregt:1984}.
+}.
+It is basically a coherence result that relates different notions of residuals
+and checks they work together as expected.
+
+We first enunciate a basic cube lemma that deals with single steps,
+which we later on will generalize to arbitrary derivations.
+
+\begin{lemma}[Basic cube lemma for simulation residuals]
+\llem{cube_lemma_for_simulation_residuals}
+Let $\redex : \tm \to \tmtwo$ and $\redextwo : \tm \to \tmthree$ be coinitial steps,
+and let $\tm' \in \termsdist$ be a correct term such that $\tm' \refines \tm$.
+Then the following equality between sets of coinitial steps holds:
+\[
+  (\redex/\tm')/(\redextwo/\tm') = (\redex/\redextwo)/(\tm'/\redextwo)
+\]
+Observe that there are four notions of residual involved here:
+\[
+  (\redex\ /^{(1)}\ \tm')\ /^{(2)}\ (\redextwo\ /^{(1)}\ \tm') = (\redex\ /^{(3)}\ \redextwo)\ /^{(1)}\ (\tm'\ /^{(4)}\ \redextwo)
+\]
+\begin{enumerate}
+\item Set of simulation residuals of a $\beta$-step relative to a correct term.
+\item Set of residuals of a $\dist$-step after a $\dist$-step.
+\item Set of residuals of a $\beta$-step after a $\beta$-step.
+\item Simulation residual of a correct term after a $\beta$-step.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+If $\redex = \redextwo$ then it is easy to see that the proposition holds, so we can assume that $\redex \neq \redextwo$.
+  Also, note that it is enough to see that $\names((\redex/\tm')/(\redextwo/\tm')) = \names(((\redex/\redextwo)/(\tm'/\redextwo))$, as we will do that in some cases.
+We proceed by induction on $\tm$.
+\SeeAppendixRef{cube_lemma_for_simulation_residuals_proof}
+\end{proof}
+
+The following result relates complete developments from both worlds. It will be
+useful to prove the generalized version of the cube lemma, and other intermediate results.
+
+\begin{lemma}[Simulation residual of a development]
+\llem{simulation_residual_of_a_development}
+Let $\redexset$ be a set of coinitial steps,
+let $\redseq$ be a complete development of $\redexset$,
+and let $\tm' \in \termsdist$ be a correct term such that $\tm' \refines \src(\redseq)$.
+Then $\redseq/\tm'$ is a complete development of $\redexset/\tm'$.
+\end{lemma}
+\begin{proof}
+By induction on depth of $\redexset$, \ie the maximum length of any development of $\redexset$.
+\begin{enumerate}
+  \item \Case{$n = 0$} Necessarily, $\redseq = \emptyDerivation$ and $\redexset = \emptyset$.
+    Then $\redseq / \tm' = \emptyDerivation$, which is a (complete) development of an empty set of steps,
+    like $\redexset / \tm'$.
+  \item \Case{Inductive case} In this case, the longest development of $\redexset$ is non-trivial, so
+    $\redexset$ must be non-empty, let it be $\set{\redex_1, \hdots, \redex_{n+1}}$
+    and let $\redseq$ be a complete development of it.
+    Without loss of generality, we may assume that $\redex_{n+1}$ is the first step executed by $\redseq$,
+    followed by a complete development of
+    $\redseq' = \set{\redex_1 / \redex_{n+1}, \hdots, \redex_n / \redex_{n+1}}$, which we will call $\redseq'$.
+    Note that the longest development of $\redexset'$ (let's call it $\redseqtwo$) is strictly shorter
+    than the longest development of $\redexset$ because $\redex_{n+1} \redseqtwo$
+    is a complete development of $\redexset$.
+
+    By \ih, $\redseq' / (\tm' / \redex_{n+1})$ is a complete development of
+    $\bigcup_{i=1}^n \frac{\redex_i / \redex_{n+1}}{\tm' / \redex_{n+1}}$,
+    which by \rlem{cube_lemma_for_simulation_residuals} is equal to
+    $\bigcup_{i=1}^n \frac{\redex_i / \tm'}{\redex_{n+1} / \tm'}$.
+    Then, $(\redex_{n+1} / \tm') (\redseq' / (\tm' / \redex_{n+1}))$ is a complete development of
+    $\redexset / \tm'$ (because by definition it is $\set{\redex_1 / \tm', \hdots, \redex_{n+1} / \tm'}$).
+
+    But note that
+    $\redseq / \tm' =
+        \frac{\redex_{n+1}\redseq'}{\tm'} =
+        \frac{\redex_{n+1}}{\tm'} \frac{\redseq'}{\tm' / \redex_{n+1}}$ so we are done.
+\end{enumerate}
+\end{proof}
+\bigskip
+
+The last lemma helps us prove that the operation of projecting derivations from the pure
+$\lambda$-calculus to the $\lambdadist$-calculus is compatible with
+permutation equivalence.
+
+\begin{proposition}[Compatibility of simulation residuals and permutation equivalence]
+\lprop{compatibility_of_simulation_residuals_and_permutation_equivalence}
+Let $\redseq \permeq \redseqtwo$ be permutation equivalent derivations in the $\lambda$-calculus,
+and let $\tm' \in \termsdist$ be a correct term such that $\tm' \refines \src(\redseq)$.
+Then:
+\begin{enumerate}
+\item $\tm'/\redseq = \tm'/\redseqtwo$
+\item $\redseq/\tm' \permeq \redseqtwo/\tm'$
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+\SeeAppendixRef{compatibility_of_simulation_residuals_and_permutation_equivalence_proof}
+We proceed by induction on the proof that $\redseq \permeq \redseqtwo$.
+\end{proof}
+
+\begin{corollary}[Simulation residuals and prefixes]
+\lcoro{simulation_residuals_and_prefixes}
+If $\redseq \permle \redseqtwo$
+then $\redseq/\tm' \permle \redseqtwo/\tm'$.
+\end{corollary}
+\begin{proof}
+Since $\redseq \permle \redseqtwo$ we have that $\redseq\redseqthree \permeq \redseqtwo$
+for some derivation $\redseqthree$.
+Then by item 2 of \rprop{compatibility_of_simulation_residuals_and_permutation_equivalence},
+$\redseq\redseqthree/\tm' \permeq \redseqtwo/\tm'$,
+so $(\redseq/\tm')(\redseqthree/(\tm'/\redseq)) \permeq \redseqtwo/\tm'$.
+This implies that $\redseq/\tm' \permle \redseqtwo/\tm'$ as required.
+\end{proof}
+
+The cube lemma may be generalized for the case in which $\redex$ and $\redextwo$ are arbitrary derivations:
+
+\begin{lemma}[Generalized cube lemma for simulation residuals]
+\llem{generalized_cube_lemma}
+Let $\redseq : \tm \rtobeta \tmtwo$ and $\redseqtwo : \tm \rtobeta \tmthree$ be coinitial derivations,
+and let $\tm' \in \termsdist$ be a correct term such that $\tm' \refines \tm$.
+Then the following equality between derivations holds:
+\[
+  (\redseq/\tm')/(\redseqtwo/\tm') \permeq (\redseq/\redseqtwo)/(\tm'/\redseqtwo)
+\]
+\end{lemma}
+\begin{proof}
+By induction on $\redseq$ using \rlem{cube_lemma_for_simulation_residuals}.
+%\begin{pabloenv}
+%The interesting case is when $\redseq$ is non-empty, \ie $\redseq = \redex\redseqthree$. 
+%\end{pabloenv}
+We will prove this result in two steps. The first step will be to prove it in the case where $\redseq$ is just one step, \ie, $(\redex / \tm') / (\redseqtwo / \tm') \permeq (\redex / \redseqtwo) / (\tm' / \redseqtwo)$.
+We proceed by induction on $\redseqtwo$.
+\begin{enumerate}
+  \item {\bf $\redseqtwo = \emptyDerivation$.}
+    In this case $\redex / \emptyDerivation = \set{\redex}$, $\tm' / \emptyDerivation = \tm'$, and $\emptyDerivation / \tm' = \emptyDerivation$,
+    so we end up with the equality we wanted, $\redex / \tm' = \redex / \tm'$.
+  \item {\bf $\redseqtwo = \redextwo \redseqtwo'$.}
+    First, $\redex / (\redextwo \redseqtwo') = (\redex / \redextwo) / \redseqtwo'
+            = \set{\redexthree / \redseqtwo' : \redexthree \in \redex / \redextwo}$.
+    Also, $\tm' / \redseqtwo = (\tm' / \redextwo) / \redseqtwo'$.
+    Then, the right hand side of the equation is
+    $((\redex / \redextwo) / \redseqtwo') / ((\tm' / \redextwo) / \redseqtwo')$,
+    which in reality is the set
+    $\set{(\redexthree / \redseqtwo') / ((\tm' / \redextwo) / \redseqtwo') : \redexthree \in \redex / \redextwo}$,
+    which by inductive hypothesis equals (modulo permutation equivalence) the set
+    $\set{(\redexthree / (\tm' / \redextwo)) / (\redseqtwo' / (\tm' / \redextwo)) : \redexthree \in \redex / \redextwo}$,
+    \ie the set, $((\redex / \redextwo) / (\tm' / \redextwo)) / (\redseqtwo' / (\tm' / \redextwo))$.
+
+    In turn, this set, by \rlem{cube_lemma_for_simulation_residuals}, equals the set
+    $((\redex / \tm') / (\redextwo / \tm')) / (\redseqtwo' / (\tm' / \redextwo))$.
+
+    On the other hand, the left side of the equation is $(\redex / \tm') / ((\redextwo \redseqtwo') / \tm')$,
+    which by definition of simulation residual equals
+    $(\redex / \tm') / ((\redextwo / \tm') (\redseqtwo' / (\tm' / \redextwo)))$.
+    That last derivation equals the a canonical development of the
+    right hand side of the equation because of the general
+    rule $\alpha / (\beta \gamma) \permeq (\alpha / \beta) / \gamma$.
+\end{enumerate}
+
+Now we proceed to prove the full proposition, and we will proceed by inducion on $\redseq$.
+\begin{enumerate}
+  \item {\bf $\redseq = \emptyDerivation$.} In this case both sides of the equation are the empty derivation.
+  \item {\bf $\redseq = \redex \redseq'$.} This case can be proven with a series of equalities,
+    in which we will abuse notation when necessary, writing $\redex / \redseqtwo$ to mean a complete canonical development of the actual residual set.
+    \[
+      \begin{array}{rcll}
+      ((\redex \redseq')/\redseqtwo)/(\tm'/\redseqtwo)
+        & = & \frac{(\redex \redseq')/\redseqtwo}{\tm'/\redseqtwo} \\
+        & = & \frac{(\redex / \redseqtwo) (\redseq' / (\redseqtwo / \redex))}{\tm'/\redseqtwo} & \text{ by definition of residual} \\
+        & = & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\redseqtwo / \redex)}{(\tm' / \redseqtwo) / (\redex / \redseqtwo)} & \text{ by definition of simulation residual} \\
+        & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\redseqtwo / \redex)}{(\tm' / \redex) / (\redseqtwo / \redex)} & \text{ by the previous partial result} \\
+        & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by inductive hypothesis} \\
+        & \permeq & \frac{\redex / \tm'}{\redseqtwo / \tm'} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by the previous partial result} \\
+        & = & \frac{(\redex / \tm') (\redseq' / (\tm' / \redex))}{\redseqtwo / \tm'} & \text{ by definition of residual}\\
+        & = & \frac{(\redex \redseq') / \tm'}{\redseqtwo / \tm'} & \text{ by definition of simulation residual}\\
+      \end{array}
+    \]
+\end{enumerate}
+\end{proof}
+
+
+\begin{corollary}[Algebraic Simulation]
+\lcoro{algebraic_simulation}
+\lcoro{simulation_residuals_and_prefixes}
+Let $\tm' \refines \tm$.
+Then the mapping $\ulbDerivLam{\tm} \to \ulbDerivDist{\tm'}$
+given by $\cls{\redseq} \mapsto \cls{\redseq/\tm'}$ is a morphism of upper
+semilattices.
+\end{corollary}
+
+\begin{example}
+\lexample{algebraic_simulation_example}
+Let $I = \lam{\var}{\var}$
+and $\Delta = (\lamp{5}{\var}{\var^{\alpha^2}})[\varthree^{\alpha^2}]$
+and let us write $\hat{\vartwo}$ for $\vartwo^{[\alpha^2] \tolab{3} [\,] \tolab{4} \beta^5}$.
+The refinement $\tm' := (\lamp{1}{\var}{\hat{\vartwo}[\var^{\alpha^2}][\,]})[\Delta] \refines (\lam{\var}{\vartwo\var\var})(I\varthree)$
+induces a morphism between the upper semilattices represented by the following reduction graphs:
+\[
+  \xymatrix@R=.3cm@C=.3cm{
+  &
+    (\lam{\var}{\vartwo\var\var})(I\varthree)
+    \ar@/_.25cm/[dl]_-{\redex_1}
+    \ar@/^.25cm/[dr]^-{\redextwo}
+  &
+  &
+  \\
+    \vartwo(II)(II)
+    \ar[d]_-{\redextwo_{11}}
+    \ar[r]^-{\redextwo_{21}}
+  &
+    \vartwo(I\varthree)\varthree
+    \ar[d]^{\redextwo_{12}}
+  &
+    (\lam{\var}{\vartwo\var\var})\varthree
+    \ar@/^.25cm/[dl]^-{\redex_2}
+  \\
+    \vartwo \varthree (I\varthree)
+    \ar[r]_-{\redextwo_{22}}
+  &
+    \vartwo \varthree \varthree
+  }
+  \xymatrix@R=.3cm@C=.3cm{
+  &
+    (\lamp{1}{\var}{\hat{\vartwo}[\var^{\alpha^2}][\,]})[\Delta]
+    \ar@/_.25cm/[dl]_-{\redex'_1}
+    \ar@/^.25cm/[dr]^-{\redextwo'}
+  \\
+    \hat{\vartwo}[\Delta][\,]
+    \ar@/_.25cm/[dr]_-{\redextwo'_1}
+  &
+  &
+    \hspace{-1cm}(\lamp{1}{\var}{\hat{\vartwo}[\var^{\alpha^2}][\,]})[\varthree^{\alpha^2}]
+    \ar@/^.25cm/[dl]^-{\redex'_2}
+  \\
+  &
+    \hat{\vartwo}[\varthree^{\alpha^2}][\,]
+  }
+\]
+For example
+$(\redex_1 \sqcup \redextwo)/\tm' = (\redex_1\redextwo_{11}\redextwo_{22})/\tm' = \redex'_1\redextwo'_1 = \redex'_1 \sqcup \redextwo' = \redex_1/\tm' \sqcup \redextwo/\tm'$.
+Note that the step $\redextwo_{22}$ is erased by the simulation: $\redextwo_{22}/(\hat{\vartwo}[\varthree^{\alpha^2}][\,]) = \emptyset$.
+Intuitively, $\redextwo_{22}$ is ``garbage'' with respect to the refinement $\hat{\vartwo}[\varthree^{\alpha^2}][\,]$,
+because it lies inside an {\em untyped} argument.
+\end{example}

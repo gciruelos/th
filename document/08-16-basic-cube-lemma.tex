@@ -1,0 +1,290 @@
+We are to prove that if
+ $\redex : \tm \to \tmtwo$ and $\redextwo : \tm \to \tmthree$ are coinitial steps,
+and $\tm' \in \termsdist$ is a correct term such that $\tm' \refines \tm$.
+Then the following equality between sets of coinitial steps holds:
+\[
+  (\redex/\tm')/(\redextwo/\tm') = (\redex/\redextwo)/(\tm'/\redextwo)
+\]
+Recall that there are four notions of residual involved:
+\[
+  (\redex\ /^{(1)}\ \tm')\ /^{(2)}\ (\redextwo\ /^{(1)}\ \tm') = (\redex\ /^{(3)}\ \redextwo)\ /^{(1)}\ (\tm'\ /^{(4)}\ \redextwo)
+\]
+\begin{enumerate}
+\item Set of simulation residuals of a $\beta$-step relative to a correct term.
+\item Set of residuals of a $\dist$-step after a $\dist$-step.
+\item Set of residuals of a $\beta$-step after a $\beta$-step.
+\item Simulation residual of a correct term after a $\beta$-step.
+\end{enumerate}
+An auxiliary lemma is proven afterwards.
+
+
+\begin{proof}
+If $\redex = \redextwo$ then it is easy to see that the proposition holds, so we can assume that $\redex \neq \redextwo$.
+  Also, note that it is enough to see that $\names((\redex/\tm')/(\redextwo/\tm')) = \names(((\redex/\redextwo)/(\tm'/\redextwo))$, as we will do that in some cases.
+We proceed by induction on $\tm$.
+\begin{gonzaenv}
+\begin{enumerate}
+  \item {\bf Variable $\tm = \var$.} This case is trivial (there are no steps with a variable as a source).
+  \item {\bf Abstraction, $\tm = \lam{\var}{\tmthree}$.}
+    In this case we have $\redex : \lam{\var}{\tmthree} \to \lam{\var}{\tmthree_1}$ and
+    $\redextwo : \lam{\var}{\tmthree} \to \lam{\var}{\tmthree_2}$.
+    It also must be the case that:
+      \begin{itemize}
+        \item $\tm' = \lamp{\lab}{\var}{\tmthree'}$,
+        \item $\redex / \tm' : \lamp{\lab}{\var}{\tmthree'} \to \lamp{\lab}{\var}{\tmthree_1'}$, and
+        \item $\redextwo / \tm' : \lamp{\lab}{\var}{\tmthree'} \to \lamp{\lab}{\var}{\tmthree_2'}$.
+      \end{itemize}
+    Where $\tmthree' \refines \tmthree$, $\tmthree_1' \refines \tmthree_1$, and $\tmthree_2' \refines \tmthree_2$.
+    Note that using all that we can apply the inductive hypothesis on $\tmthree$
+    (taking $\redex$ and $\redextwo$ to be the same steps but restricted to $\tmthree$).
+    The inductive hypothesis yields that
+    $(\redex/\tmthree')/(\redextwo/\tmthree') = (\redex/\redextwo)/(\tmthree'/\redextwo)$,
+    which we can trivially extend to
+    $(\redex/\tm')/(\redextwo/\tm') = (\redex/\redextwo)/(\tm'/\redextwo)$,
+    because there aren't any other subterms in $\tm'$ that may contain redexes other than $\tmthree'$.
+  \item {\bf Application, $\tm = \tmfive \tmsix$.} We will look at several cases, depending on where
+    $\redex$ and $\redextwo$ are located.
+    \begin{enumerate}
+      \item {\bf $\redex$ is at the root.} So we have that $\tm = (\lam{\var}{\tmfour}) \tmsix$, and
+        $\redex : (\lam{\var}{\tmfour}) \tmsix \to \subs{\tmfour}{\var}{\tmsix}$.
+        \begin{enumerate}
+          \item {\bf $\redextwo$ is in $\tmfour$.} In this case $\tmfour = \conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}$.
+            \[
+            \xymatrix@C=0.4cm{
+              (\lam{\var}{\conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}}) \tmsix
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
+                  & \con^{\circ}\of{(\lam{\vartwo}{\tmthree^{\circ}}) \tmthreevariant^{\circ}} \\
+                & (\lam{\var}{\conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}}}) \tmsix \\
+              (\lamp{\lab}{\var}{\contwoof{(\lamp{\lab_1}{\vartwo}{\tmthree_1}) \tmthreevariant_1, \hdots, (\lamp{\lab_n}{\vartwo}{\tmthree_n}) \tmthreevariant_n}}) \ls{\tmsix}
+                \ar@{->}[r]^{\redex / \tm'} \ar@{->>}[rd]^{\redextwo / \tm'}
+                & \con'^{\circ}\of{(\lamp{\lab_1}{\vartwo}{\tmthree^{\circ}_1}) \tmthreevariant^{\circ}_1, \hdots, (\lamp{\lab_n}{\vartwo}{\tmthree^{\circ}_n}) \tmthreevariant^{\circ}_n}) \\
+              & (\lamp{\lab}{\var}{\contwoof{\subs{\tmthree_1}{\vartwo}{\tmthreevariant_1}, \hdots, \subs{\tmthree_1}{\vartwo}{\tmthreevariant_1}}}) \ls{\tmsix} \\
+            }
+            \]
+            Note that $(\redex / \tm') / (\redextwo / \tm')$ is a set comprised of only one element,
+            and that element is the step that reduces the lambda labeled with $\lab$.
+            Note that $\redex / \redextwo$ also happens to have only one element,
+            $(\lam{\var}{\conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}}}) \tmsix \to
+              \con^{\circ}\of{\subs{\tmthree^{\circ}}{\vartwo}{\tmthreevariant^{\circ}}}$, and is easy to see
+            that the simulation of that step onto $(\lamp{\lab}{\var}{\contwoof{\subs{\tmthree_1}{\vartwo}{\tmthreevariant_1}, \hdots, \subs{\tmthree_1}{\vartwo}{\tmthreevariant_1}}}) \ls{\tmsix}$
+            yields the step that reduces the $\lab$-lambda, \ie, the desired step.
+          \item {\bf $\redextwo$ is in $\tmsix$.}
+            In this case $\tmsix = \conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}$,
+            so $\tm = (\lam{\var}{\tmfour}) \conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}$.
+            Also, by \rlem{refinement_context}, $\tm'$ must be of the form
+            $(\lamp{\lab}{\var}{\tmfour'})
+              [\con_i\of{
+                (\lamp{\lab_{i,1}}{\vartwo}{\tmthree_{i,1}}) \tmthreevariant_{i,1},
+                \hdots,
+                (\lamp{\lab_{i,m_i}}{\vartwo}{\tmthree_{i,m_i}}) \tmthreevariant_{i,m_i},
+              }]_{i=1}^n$.
+            \[
+            \xymatrix@C=1cm{
+              (\lam{\var}{\tmfour}) \conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo}
+                  & \subs{\tmfour}{\var}{\conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}} \\
+                & (\lam{\var}{\tmfour}) \conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}} \\
+            }
+            \]
+            Note that $(\redex / \tm') / (\redextwo / \tm')$, as before, is a set comprised of only one element
+            and that element is the step that reduces the lambda labeled with $\lab$, and has source
+            $\tm' / \redextwo = (\lamp{\lab}{\var}{\tmfour'})[
+              \con_i\of{\subs{\tmthree_{i,1}}{\vartwo}{\tmthreevariant_{i,1}}, \hdots, \subs{\tmthree_{i,m_i}}{\vartwo}{\tmthreevariant_{i,m_i}}}]_{i=1}^n$.
+            Note that $\redex / \redextwo$ also happens to have only one element,
+            ($(\lam{\var}{\tmfour}) \conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}} \to
+              \subs{\tmfour}{\var}{\conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}}}$)
+            and is easy to see that the simulation of that step onto
+            $\tm' / \redextwo$
+            yields the step that reduces the $\lab$-lambda, \ie, the desired step.
+        \end{enumerate}
+      \item {\bf $\redex$ is in $\tmfive$.} We separate in cases depending on where $\redextwo$ is located.
+        \begin{enumerate}
+          \item {\bf $\redextwo$ is at the root.}
+            Here we have that $\tmfive = \lam{x}{\conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}}$, hence
+            the following diagram.
+            \[
+            {\tiny
+            \xymatrix@C=1cm{
+              (\lam{\var}{\conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}}) \tmsix
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
+                  & (\lam{\var}{\conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}}}) \tmsix & \\
+                & \con^{\circ}\of{(\lam{\vartwo}{\tmthree^{\circ}}) \tmthreevariant^{\circ}}
+                  \ar@{->}[r]^{\redex / \redextwo}
+                  & \con^{\circ}\of{\subs{\tmthree^{\circ}}{\vartwo}{\tmthreevariant^{\circ}}} \\
+              (\lamp{\lab}{\var}{\con'\of{(\lamp{\lab_1}{\vartwo}{\tmthree_1}) \tmthreevariant_1, \hdots, (\lamp{\lab_n}{\vartwo}{\tmthree_n}) \tmthreevariant_n}}) \ls{\tmsix}
+                \ar@{->>}[r]^{\redex / \tm'} \ar@{->}[rd]^{\redextwo / \tm'}
+                  & (\lamp{\lab}{\var}{\con'\of{\subs{\tmthree_1}{\vartwo}{\tmthreevariant_1}, \hdots, \subs{\tmthree_n}{\vartwo}{\tmthreevariant_n}}}) \ls{\tmsix} & \\
+                & \con'^{\circ}\of{(\lamp{\lab_1}{\vartwo}{\tmthree^{\circ}_1}) \tmthreevariant^{\circ}_1, \hdots, (\lamp{\lab_n}{\vartwo}{\tmthree^{\circ}_n}) \tmthreevariant^{\circ}_n}
+                  \ar@{->>}[r]^{(\redex / \tm') / (\redextwo / \tm')}
+                  & \con'^{\circ}\of{\subs{\tmthree^{\circ}_1}{\vartwo}{\tmthreevariant^{\circ}_1}, \hdots, \subs{\tmthree^{\circ}_n}{\vartwo}{\tmthreevariant^{\circ}_n}} \\
+              }
+            }
+            \]
+            As seen in the diagram, $\names((\redex / \tm') / (\redextwo / \tm')) = \set{\lab_1, \hdots, \lab_n}$.
+            But the lambda reduced by $\redex / \redextwo$ is refined by each $\lamp{\lab_i}{\vartwo}{\tmthree_i}$,
+            then $\names((\redex / \redextwo) / (\tm' / \redextwo)) = \set{\lab_1, \hdots, \lab_n}$,
+            proving that the two sets are the same.
+
+          \item {\bf $\redextwo$ is in $\tmfive$.} This case is summarized by the following diagram.
+            \[
+            \xymatrix@C=2cm{
+              \tmfive \tmsix
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
+                  & \tmfour \tmsix \\
+                & \tmtwo \tmsix \\
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo}
+              \tmfive' \ls{\tmsix}
+                  & \tmfour' \ls{\tmsix} \\
+                & \tmtwo' \ls{\tmsix} \\
+              }
+            \]
+            By inductive hypothesis, restricting $\redex$ and $\redextwo$ to $\tmfive$, we obtain
+            $(\redex / \tmfive') / (\redextwo / \tmfive') = (\redex / \redextwo) / (\tmfive' / \redextwo)$,
+            which we can extend to $\tm'$, yielding the desired result.
+          \item {\bf $\redextwo$ is in $\tmsix$.} Again, we can summarize this case with a diagram.
+            \[
+            {\tiny
+            \xymatrix@C=1.4cm{
+              \conof{(\lam{\var}{\tmthree}) \tmthreevariant} \tmsix
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
+                  & \conof{\subs{\tmthree}{\var}{\tmthreevariant}} \tmsix  & \\
+                & \conof{(\lam{\var}{\tmthree}) \tmthreevariant} \tmtwo \ar@{->}[r]^{\redex / \redextwo}
+                    & \conof{\subs{\tmthree}{\var}{\tmthreevariant}} \tmtwo \\
+                \ar@{->>}[r]^{\redex / \tm'} \ar@{->>}[rd]^{\redextwo / \tm'}
+              \contwoof{(\lamp{\lab_1}{\var}{\tmthree_1}) \tmthreevariant_1, \hdots, (\lamp{\lab_n}{\var}{\tmthree_n}) \tmthreevariant_n} \ls{\tmsix}
+                  & \contwoof{\subs{\tmthree_1}{\var}{\tmthreevariant_1}, \hdots, \subs{\tmthree_1}{\var}{\tmthreevariant_1}} \ls{\tmsix} & \\
+                & \contwoof{(\lamp{\lab_1}{\var}{\tmthree_1}) \tmthreevariant_1, \hdots, (\lamp{\lab_n}{\var}{\tmthree_n}) \tmthreevariant_n} \ls{\tmtwo} \ar@{->>}[r]^{(\redex / \tm') / (\redextwo / \tm')}
+                  & \contwoof{\subs{\tmthree_1}{\var}{\tmthreevariant_1}, \hdots, \subs{\tmthree_1}{\var}{\tmthreevariant_1}} \ls{\tmtwo} \\
+              }
+            }
+            \]
+            We know that $\frac{(\lamp{\lab_i}{\var}{\tmthree_i}) \tmthreevariant_i}{\redex / \redextwo}
+             = \subs{\tmthree_i}{\var}{\tmthreevariant_i}$.
+            Then by \rlem{simulation_of_context},
+            $\contwoof{(\lamp{\lab_1}{\var}{\tmthree_1}) \tmthreevariant_1, \hdots, (\lamp{\lab_n}{\var}{\tmthree_n}) \tmthreevariant_n} / (\redex / \redextwo)$ equals
+            $\contwoof{\subs{\tmthree_1}{\var}{\tmthreevariant_1}, \hdots, \subs{\tmthree_1}{\var}{\tmthreevariant_1}}$.
+
+            In other words, $\tgt((\redex / \redextwo) / (\tm' / \redextwo)) =
+                             \tgt((\redex / \tm') / (\redextwo / \tm'))$, which is enough because their sources
+                             are the same by hypothesis.
+        \end{enumerate}
+      \item {\bf $\redex$ is in $\tmsix$.} As before, we separate in cases depending on where $\redextwo$ is located.
+        \begin{enumerate}
+          \item {\bf $\redextwo$ is at the root.} Then $\tmfive = \lam{\var}{\tmtwo}$
+            and $\tm = (\lam{\var}{\tmtwo}) \conof{(\lam{\var}{\tmthree}) \tmthreevariant}$.
+            \[
+            {\footnotesize
+            \xymatrix@C=1cm{
+              (\lam{\var}{\tmtwo}) \conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
+                  & (\lam{\var}{\tmtwo}) \conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}} & \\
+                & \subs{\tmtwo}{\var}{\conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}}
+                  \ar@{->>}[r]^{\redex / \redextwo}
+                    & \subs{\tmtwo}{\var}{\conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}}} \\
+                \ar@{->>}[r]^{\redex / \tm'} \ar@{->}[rd]^{\redextwo / \tm'}
+              (\lamp{\lab}{\var}{\tmtwo'}) [\con_i\of{(\lamp{\lab_{i,j}}{\vartwo}{\tmthree_{i,j}} \tmthreevariant_{i,j})}_{j=1}^{m_i}]_{i=1}^n
+                  & (\lamp{\lab}{\var}{\tmtwo'}) [\con_i\of{\subs{\tmthree_{i,j}}{\vartwo}{\tmthreevariant_{i,j}}}_{j=1}^{m_i}]_{i=1}^n & \\
+                & \subs{\tmtwo'}{\var}{[\con_i\of{(\lamp{\lab_{i,j}}{\vartwo}{\tmthree_{i,j}} \tmthreevariant_{i,j})}_{j=1}^{m_i}]_{i=1}^n} \ar@{->}[r]^{(\redex / \tm') / (\redextwo / \tm')}
+                  & \subs{\tmtwo'}{\var}{[\con_i\of{\subs{\tmthree_{i,j}}{\vartwo}{\tmthreevariant_{i,j}}}_{j=1}^{m_i}]_{i=1}^n}
+              }
+            }
+            \]
+            First, note that $\redex / \redextwo$ has as many elements as $\var$s in $\tmtwo$, in other words,
+            $\redextwo$ may erase or multiply $\redex$.
+            Some of those $\var$s are refined in $\tm'$ (the number is exactly $n$,
+            \ie, the cardinality of the argument of the application).
+
+            Also, for each step in $\redex / \redextwo$, using \rlem{simulation_of_context}, we know that
+            its projection onto $\tm' / \redextwo$ yields the steps with name $\set{e_{i,1}, \hdots, e_{i, m_i}}$.
+            Hence,
+              \[\names((\redex / \redextwo) / (\tm' / \redextwo)) = \cup_{i=1}^n \set{e_{i,1}, \hdots, e_{i, m_i}} = \names((\redex / \tm') / (\redextwo / \tm'))\]
+          \item {\bf $\redextwo$ is in $\tmfive$.} This case can be summarized using a diagram.
+            \[
+            \xymatrix@C=2cm{
+              \tmfive \tmsix
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
+                  & \tmfive \tmfour & \\
+                & \tmtwo \tmsix
+                  \ar@{->}[r]^{\redextwo / \redex}
+                  & \tmtwo \tmfour \\
+              \tmfive' [\tmsix_1, \hdots, \tmsix_n]
+                \ar@{->>}[r]^{\redex / \tm'} \ar@{->>}[rd]^{\redextwo / \tm'}
+                  & \tmfive' [\tmfour_1, \hdots, \tmfour_n] & \\
+                  & \tmtwo' [\tmsix_1, \hdots, \tmsix_n]
+                    \ar@{->>}[r]^{(\redextwo / \tm') / (\redex / \tm')}
+                    & \tmtwo' [\tmfour_1, \hdots, \tmfour_n] \\
+              }
+            \]
+            And can be solved in a similar manner to 3.2.3., using the same reasoning for each element
+            of the argument of the application.
+          \item {\bf $\redextwo$ is in $\tmsix$.} The situation is as follows.
+            \[
+            \xymatrix@C=2cm{
+              \tmfive \tmsix
+                \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
+                  & \tmfive \tmfour \\
+                & \tmfive \tmtwo \\
+              \tmfive' [\tmsix_1, \hdots, \tmsix_n]
+                \ar@{->>}[r]^{\redex / \tm'} \ar@{->>}[rd]^{\redextwo / \tm'}
+                  & \tmfive' [\tmfour_1, \hdots, \tmfour_n] \\
+                  & \tmfive' [\tmtwo_1, \hdots, \tmtwo_n] \\
+              }
+            \]
+            By inductive hypothesis, we know that for each $i \in \set{1, \hdots, n}$,
+            $(\redex / \redextwo) / (\tmsix_i / \redextwo) = (\redex / \tmsix_i) / (\redextwo / \tmsix_i)$.
+
+            The diagram also shows that
+            $\names((\redex / \tm') / (\redextwo / \tm')) = \bigcup_{i=1}^n \names((\redex / \tmsix_i) / (\redextwo / \tmsix_i))$, because we have to execute those steps and the calculus has no erasure or duplication.
+
+            Finally, by \rlem{simulation_of_context},
+            $\names((\redex / \redextwo) / (\tm' / \redextwo)) = \bigcup_{i=1}^n \names((\redex / \redextwo) / (\tmsix_i / \redextwo))$,
+            so we can join all previous equalities, and obtain
+            $\names((\redex / \redextwo) / (\tm' / \redextwo)) = \names((\redex / \tm') / (\redextwo / \tm'))$.
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+\end{gonzaenv}
+\end{proof}
+
+
+
+\begin{gonzaenv}
+\begin{lemma}[Simulation of contexts]
+\llem{simulation_of_context}
+Let $\contwo$ be an $n$-hole context in $\termsdist$
+and $\con$ be a context in $\terms$.
+Also let $\tm_1, \hdots, \tm_n \in \termsdist$ and $\tm \in \terms$
+such that $\tm_i \refines \tm$ for each $i \in \set{1, \hdots, n}$, $\contwo \refines \con$,
+and $\contwoof{\tm_1, \hdots, \tm_n} \refines \conof{\tm}$.
+Also, let $\redex : \conof{\tm} \to \conof{\tmtwo}$.
+
+Then, $\contwoof{\tm_1, \hdots, \tm_n} / \redex = \contwoof{\tm_1 / \redex, \hdots, \tm_n / \redex}$,
+and $\names(\redex / \contwoof{\tm_1, \hdots, \tm_n}) = \bigcup_{i=1}^n \names(\redex / \tm_i)$.
+\end{lemma}
+\begin{proof}
+By induction on $\con$.
+\begin{enumerate}
+  \item {\bf $\con = \conbase$.} There is nothing to check here, as the result is trivially true:
+    $\tm_1 / \redex = \tm_1 / \redex$ and $\names(\redex / \tm_1) = \bigcup_{i=1}^1 \names(\redex / \tm_i)$.
+  \item {\bf $\con = \lam{\var}{\con''}$.} This case is straighforward using the inductive hypothesis.
+  \item {\bf $\con = \tmfour \con''$.} Using \rlem{refinement_context} this case reduces to the following diagram.
+    \[
+    \xymatrix@C=1cm{
+      \tmfour \con''\of{\tm} \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\redex} & \tmfour \con''\of{\tmtwo} \\
+     \tmfour [\con_1\of{\tm_{1,1}, \hdots, \tm_{1, m_1}}, \hdots, \con_n\of{\tm_{n,1}, \hdots, \tm_{n, m_n}}] & \\
+    }
+    \]
+    By inductive hypothesis,
+    $\con_i\of{\tm_{i,1}, \hdots, \tm_{i, m_i}} / \redex = \con_i\of{\tm_{i,1} / \redex, \hdots, \tm_{i, m_i} / \redex}$ and
+    $\names(\redex / \con_i\of{\tm_{i, 1}, \hdots, \tm_{i, m_i}}) = \bigcup_{i=1}^n \names(\redex / \tm_i)$.
+
+    Finally, by the construction of the simulation,
+    \[\tmfour [\con_1\of{\tm_{1,1}, \hdots, \tm_{1, m_1}}, \hdots, \con_n\of{\tm_{n,1}, \hdots, \tm_{n, m_n}}] / \redex =
+     \tmfour [\con_1\of{\tm_{1,1}, \hdots, \tm_{1, m_1}} / \redex, \hdots, \con_n\of{\tm_{n,1}, \hdots, \tm_{n, m_n}} / \redex]\]
+     and
+     \[\names(\redex / (\tmfour [\con_1\of{\tm_{1,1}, \hdots, \tm_{1, m_1}}, \hdots, \con_n\of{\tm_{n,1}, \hdots, \tm_{n, m_n}}])) = \bigcup_{i=1}^n \names(\redex / \con_1\of{\tm_{i,1}, \hdots, \tm_{i, m_i}})\]
+    which finishes our proof.
+  \item {\bf $\con = \con'' \tmfour$.} This case is straightforward using the inductive hypothesis.
+\end{enumerate}
+\end{proof}
+\end{gonzaenv}
