@@ -145,35 +145,31 @@ some of the upcoming propositions. Consider the following term:
 What follows is its derivation space, \ie,
 all possible derivations that have the previous term as a source.
 
-{\footnotesize
 \xymatrix{
-  &
   (\lamp{\lab_1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
     [\lamp{\lab_2}{\vartwo}{\vartwo^\alpha},
     (\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha]]
-    \ar@[->][rd]^{\lab_3}_{\redextwo}
-    \ar@[->][ld]_{\lab_1}^{\redex}
-  & \\
-  (\lamp{\lab_2}{\vartwo}{\vartwo^\alpha})
-   ((\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha])
-   \ar@[->][rd]_{\lab_3}^{\redextwo'}
-   \ar@[->][dd]_{\lab_2}^{\redexthree}
-   &
-   &
+    \ar@[->][r]_-{\lab_3}^-{\redextwo}
+    \ar@[->][d]_{\lab_1}^{\redex}
+  &
   (\lamp{\lab_1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
     [\lamp{\lab_2}{\vartwo}{\vartwo^\alpha},
     w^\alpha]
-   \ar@[->][ld]^{\lab_1}_{\redex'} \\
-  &
+   \ar@[->][d]^{\lab_1}_{\redex'}
+  \\
+  (\lamp{\lab_2}{\vartwo}{\vartwo^\alpha})
+   ((\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha])
+   \ar@[->][r]_{\lab_3}^{\redextwo'}
+   \ar@[->][d]_{\lab_2}^{\redexthree}
+   &
   (\lamp{\lab_2}{\vartwo}{\vartwo^\alpha})  [w^\alpha]
   \ar@[->][d]_{\lab_2}^{\redexthree'}
-  & \\
+   \\
   (\lamp{\lab_3}{\varthree}{\varthree^\alpha})  [w^\alpha]
   \ar@[->][r]_{\lab_3}^{\redextwo''}
   &
   w^\alpha
-  & \\}
-}
+  }
 \end{example}
 
 Some facts about these derivations:

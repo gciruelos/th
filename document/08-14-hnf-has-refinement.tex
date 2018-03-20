@@ -1,0 +1,118 @@
+
+\TODO{Arreglar o cambiar esta demo.}
+
+We had a term $\tm \in \terms$ that is in head normal form,
+\ie $\tm = \lam{\var_1}{\hdots\lam{\var_n}{\vartwo\,\tm_1\,\hdots\,\tm_m}}$.
+
+We wanted to prove that:
+  \begin{itemize}
+    \item that there exists $\tm' \in \termsdist$ such that $\tm' \refines \tm$,
+    \item that for every application in $\tm'$ the argument list is empty, and
+    \item that if $\var_i = \vartwo$ for any $i$, $\tctx$ will be empty,
+      otherwise it will be a singleton of the form $\set{\vartwo : [\typ]}$.
+  \end{itemize}
+
+\begin{proof}
+We proceed by induction on the pair $(n, m)$, that is, by induction on
+  $\mathbb{N}^2$ with lexicographic order.
+\begin{enumerate}
+  \item {\bf Base $(0, 0)$.} In this case $\tm = \vartwo$,
+    so we can simply choose $\tm'$ to be $\vartwo^\typ$.
+  \item {\bf Inductive step.} We want to see that the property holds for
+    $(n, m) > (0,0)$ given that it holds for all $(n', m') < (n, m)$.
+    Here there are two cases, either $n = 0$ or $n > 0$.
+    \begin{enumerate}
+      \item {\bf $n = 0$.} We have that $\tm = \vartwo\,\tm_1\,\hdots\,\tm_m$, $m \geq 1$.
+        Let $\tmtwo = \vartwo\,\tm_1\,\hdots\,\tm_{m-1}$.
+        By inductive hypothesis, there exists a correct term $\tmtwo'$ that
+          refines $\tmtwo$.
+
+        We can suppose, without loss of generality, that
+          $\tmtwo' = \vartwo^\typ\,\ls{\tm}_1\,\hdots\,\ls{\tm}_{m-1}$,
+        where each element of $\ls{\tm}_i$ refines $\tm_i$.
+        If $\tmtwo'$ wasn't like that, it simply would not refine $\tmtwo$.
+        If $m = 1$, then $\tmtwo' = \vartwo$ and the type of $\vartwo$ is $\typ_1$.
+
+        If $m > 1$, the inductive hypothesis tells us that all $\ls{\tm}_i$ are empty, so
+          $\tmtwo' = \vartwo \emptylset_1 \hdots \emptylset_{m-1}$
+          (we number them to make it more clear which is which).
+        Because of Unique typing, the type of $\vartwo$ has to be
+          $\emptylset_1 \to \hdots \to \emptylset_{m-1} \to \typ_1$,
+        where $\typ_1$ is the type of $\tmtwo'$.
+        Diagramatically,
+        \[
+          \indrule{\toE}{
+            \set{\vartwo : \emptylset_1 \to \hdots \to \emptylset_{m-1} \to \typ_1}
+              \vdash
+              \vartwo^{\emptylset_1 \to \hdots \to \emptylset_{m-1} \to \typ_1}
+                \,\emptylset_1\,\hdots\,\emptylset_{m-2}
+              : \emptylset_{m-1} \to \typ_1
+          }{
+            \set{\vartwo : \emptylset_1 \to \hdots \to \emptylset_{m-1} \to \typ_1}
+              \vdash \vartwo^{\emptylset_1 \to \hdots \to \emptylset_{m-1} \to \typ_1}
+                \,\emptylset_1\,\hdots\,\emptylset_{m-1}
+              : \typ_1
+          }
+        \]
+        Now, we can give a typing derivation for the following term,
+          if we consider a derivation very similar to the last one but
+          where $\typ_1$ has been replaced by $\emptylset \to \typ_2$.
+        \[
+          \indrule{\toE}{
+            \set{\vartwo : \emptylset_1 \to \hdots \to \emptylset_{m-1} \to \emptylset \to \typ_2}
+              \vdash \vartwo^{\emptylset_1 \to \hdots \to \emptylset_{m-1} \to \emptylset \to \typ_2}
+                \,\emptylset_1\,\hdots\,\emptylset_{m-1}
+              : \emptylset \to \typ_2
+          }{
+            \set{\vartwo : \emptylset_1 \to \hdots \to \emptylset_{m-1} \to \emptylset \to \typ_2} \vdash \vartwo^{\emptylset_1 \to \hdots \to \emptylset_{m-1} \to \emptylset \to \typ_2}\,\emptylset_1\,\hdots\,\emptylset_{m-1}\,\emptylset : \typ_2
+          }
+        \]
+        Let $\tm' = \vartwo^{\emptylset_1 \to \hdots \to \emptylset_{m-1} \to \emptylset \to \typ_2}\,\emptylset_1\,\hdots\,\emptylset_{m-1}\,\emptylset$.
+
+        Note that the derivation fo $\tm'$ can be completed very easily in the
+          same way that $\tmtwo'$ was done, and it's easy to check that $\tm'$
+          is correct (contexts are sequential, there are no lambdas, and types
+          are sequential, because the derivation is essentially the same that
+          the one of $\tmtwo'$).
+        Moreover, $\tm'$ refines $\tm$, so we are done.
+      \item {\bf $n > 0$.} We have that $\tm = \lam{\var_1}{\hdots\lam{\var_n}{\vartwo\,\tm_1\,\hdots\,\tm_m}}$.
+        Let $\tmtwo = \lam{\var_2}{\hdots\lam{\var_n}{\vartwo\,\tm_1\,\hdots\,\tm_m}}$.
+        By inductive hypothesis, there is a term $\tctx \vdash \tmtwo' : \typ$ that refines $\tmtwo$.
+        The same way as before, we know that
+          $\tmtwo' = \lamp{\lab_2}{\var_2}{\hdots\lamp{\lab_n}{\var_n}{\vartwo\,\emptylset\,\hdots\,\emptylset}}$.
+
+        Let $\tm' = \lamp{\lab}{\var_1}{\tmtwo'}$, where $\lab$ is fresh.
+        \TODO{gonza: If $\var_1 = \vartwo$ and $\var_1 \neq \var_i$ for all $1 < i \leq n$,
+          then $\lab$ is the external label of $\vartwo$, and in any other case it is a fresh label.}
+        Here to make the proof tidier we will divide in two new cases,
+          depending on whether $\var_1 = \vartwo$ and $\var_1 \neq \var_i$ for all $1 < i \leq n$, or not.
+        \begin{enumerate}
+          \item {\bf $\var_1 = \vartwo$ and $\var_1 \neq \var_i$ for all $1 < i \leq n$.}
+            In this case, by inductive hypothesis $\tctx$ must be a singleton $\set{y : \typ_1}$.
+            \[
+              \indrule{\toI}{
+                \set{\vartwo : \typ_1} \vdash \tmtwo' : \typ
+              }{
+                \emptyset \vdash \lamp{\lab}{\var_1}{\tmtwo'} : [\typ_1] \tolab{\lab} \typ
+              }
+            \]
+            We have that $\tm' \refines \tm$, and that the derivation of $\tm'$ has sequential types and contexts,
+              because by inductive hypothesis $\tmtwo'$ does.
+            Finally, $\tm'$ has pairwise distinct labels in all lambdas because $\tmtwo'$ does and $\lab$
+              was chosen to be a fresh label.
+            \item {\bf $\var_1 \neq \vartwo$ or $x_1 = x_i$ for some $1 < i \leq n$.}
+            \[
+              \indrule{\toI}{
+                \set{\vartwo : \typ_1} \vdash \tmtwo' : \typ
+              }{
+                \set{\vartwo : \typ_1} \vdash \lamp{\lab}{\var_1}{\tmtwo'} : \emptylset \tolab{\lab} \typ
+              }
+            \]
+            Like in the previous case, we have that $\tm' \refines \tm$, and that the derivation of
+              $\tm'$ has sequential types and contexts, because by inductive hypothesis
+              $\tmtwo'$ does, and that $\tm'$ has pairwise distinct labels in all lambdas
+              because $\tmtwo'$ does and $\lab$ was chosen to be a fresh label.
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+\end{proof}

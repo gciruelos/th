@@ -69,14 +69,14 @@
 \newcommand{\rremark}[1]{Remark~\ref{remark:#1}}
 \newcommand{\lcoro}[1]{\label{coro:#1}}
 \newcommand{\rcoro}[1]{Corollary~\ref{coro:#1}}
-\newcommand{\lsec}[1]{\label{section:#1}}
-\newcommand{\rsec}[1]{Section~\ref{section:#1}}
+\newcommand{\lsec}[1]{\expandafter\uppercase\expandafter{\label{section:#1}}}
+\newcommand{\rsec}[1]{Section~\expandafter\uppercase\expandafter{\ref{section:#1}}}
 \newcommand{\lcha}[1]{\label{ch:#1}}
 \newcommand{\rcha}[1]{Chapter~\ref{ch:#1}}
 \newcommand{\lconvention}[1]{\label{convention:#1}}
 \newcommand{\rconvention}[1]{Convention~\ref{convention:#1}}
 \newcommand{\lexample}[1]{\label{example:#1}}
-\newcommand{\rexample}[1]{Ex.~\ref{example:#1}}
+\newcommand{\rexample}[1]{Example~\ref{example:#1}}
 \newcommand{\leqn}[1]{\label{eqn:#1}}
 \newcommand{\reqn}[1]{(\ref{eqn:#1})}
 \newcommand{\lfig}[1]{\label{fig:#1}}
