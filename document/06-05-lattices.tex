@@ -1,0 +1,776 @@
+
+
+We introduce the following definition mostly to fix nomenclature/notation:
+
+\begin{definition}[Upper semilattices]
+An \defn{upper semilattice} is a triple $(X,\leq,\lor)$
+where $X$ is a set, $\leq$ is a partial order on $X$,
+and there are binary joins $x \lor y$ for all $x, y \in X$.
+An \defn{upper semillatice with bottom} is an upper semilattice
+with a bottom element $\bot \in X$.
+As customary, by abuse of notation, we write $X$ for both the structure
+and the underlying set, when clear from the context.
+We may write $\bot_X$ to emphasize that $\bot$ is the bottom element of $X$.
+
+A \defn{morphism of upper semilattices} $f : X \to Y$
+is a monotonic function $f : X \to Y$
+(\ie $x \leq y$ implies $f(x) \leq f(y)$)
+preserving joins,
+that is $f(x \lor y) = f(x) \lor f(y)$.
+A \defn{morphism of upper semilattices with bottom}
+moreover preserves the bottom element, \ie $f(\bot) = \bot$.
+
+Upper semmilattices provided with morphisms form a category $\USL$.
+Upper semmilattices with bottom provided with morphisms form a category $\USLB$.
+Any upper semilattice may be regarded as a category
+whose objects are the elements of $X$, and such that there is a (unique) morphism
+$x \to y$ if and only if $x \leq y$.
+We write $\pt{y}{x}$ for such morphism.
+
+As usual, if $X$ and $Y$ are posets, the set of functions $f : X \to Y$
+is also a poset with $f \leq g$ defined as $f(x) \leq g(x)$ for all $x \in X$.
+Thus $\USL$ forms a $2$-category
+in which $0$-cells are upper semilattices,
+$1$-cells are morphisms of upper semilattices $f : X \to Y$, 
+and there is a $2$-cell $f \totwo g$ if and only if $f \leq g$.
+\end{definition}
+
+\begin{definition}[Lax 2-functor]
+Let $\Cat$ be a category and $\CatTwo$ a $2$-category.
+A lax 2-functor $F : \Cat \to \CatTwo$
+is a pair $(F_1,F_2)$ where $F_1 : \Ob(\Cat) \to \Ob(\CatTwo)$
+is a function, and for every morphism $f : X \to Y$ in $\Cat$,
+\[
+  F_2(f) : F_1(X) \to F_1(Y) \HS\text{ is a 1-cell in $\CatTwo$}
+\]
+such that functor laws hold up to $2$-cells.
+We will be interested in the following notion of lax $2$-functor:
+\begin{enumerate}
+\item $F_2(\id_X) = \id_{F_1(X)}$ for all $X \in \Ob(\Cat)$.
+\item $F_2(f \circ g) \leq F_2(f) \circ F_2(g)$ is a $2$-cell
+      for any two morphisms $g : X \to Y$, $f : Y \to Z$ in $\Cat$.
+\end{enumerate}
+As usual with functors, we may write $F$ to stand for either $F_1$ or $F_2$,
+when clear from the context.
+\end{definition}
+
+\begin{definition}[Grothendieck construction for $\USL$s]
+Let $A$ be an upper semilattice, and let $B : A \to \USL$ be a lax 2-functor.
+The Grothendieck construction $\grothy{A}{B}$
+is defined as the upper semilattice given by the
+set:
+\[
+  \set{(a,b) \ST a \in A,\ b \in B(a)}
+\]
+and the following structure:
+\[
+\begin{array}{rcl}
+(a, b) \leq (a', b')    & \iffdef & a \leq a' \text{ and } B(\pt{a'}{a})(b) \leq b' \\
+(a,b) \lor (a',b')       & \eqdef & (a \lor a', B(\pt{(a \lor a')}{a})(b) \lor B(\pt{(a \lor a')}{a'})(b')) \\
+\end{array}
+\]
+Let us check that this forms indeed an upper semilattice:
+\begin{enumerate}
+\item {\bf Partial order.}
+  Let us show that $\leq$ is a partial order.
+  \begin{enumerate}
+  \item {\bf Reflexivity.}
+    Note that $a \leq a$. Moreover the morphism $\pt{a}{a} \in \Hom_A(a,a)$ is the identity because $A$ is a poset.
+    So $b = B(\id_a)(b) = B(\pt{a}{a})(b) \leq b$.
+  \item {\bf Antisymmetry.}
+    Let $(a,b) \leq (a',b') \leq (a,b)$.
+    First note that $a \leq a' \leq a$, so $a = a'$.
+    Then since $A$ is a poset,
+    we have that $\pt{a'}{a} \in \Hom_A(a,a')$ and $\pt{a}{a'} \in \Hom_A(a',a)$ are both the identity morphism.
+    Moreover, we know that $b = B(\pt{a'}{a})(b) \leq b'$
+    and symmetrically $b' = B(\pt{a}{a'})(b') \leq b$, so $b = b'$.
+  \item {\bf Transitivity.}
+    Let $(a,b) \leq (a',b') \leq (a'',b'')$.
+    First note that $a \leq a' \leq a''$ so $a \leq a''$.
+    Note that $\pt{a''}{a} \in \Hom_A(a,a'')$ and $(\pt{a''}{a'}) \circ (\pt{a'}{a}) \in \Hom_A(a,a'')$
+    both witness the inequality $a \leq a''$.
+    Since $A$ is a poset, necessarily $\pt{a''}{a} = (\pt{a''}{a'}) \circ (\pt{a'}{a})$.
+    Moreover, note that we know that $B(\pt{a'}{a})(b) \leq b'$ and that $B(\pt{a''}{a'})(b') \leq b''$.
+    Hence:
+    \[
+    \begin{array}{rcll}
+      B(\pt{a''}{a})(b)
+                  & =    & B((\pt{a''}{a'}) \circ (\pt{a'}{a}))(b) & \text{since $\pt{a''}{a} = (\pt{a''}{a'}) \circ (\pt{a'}{a})$} \\
+                  & \leq & B(\pt{a''}{a'})(B(\pt{a'}{a})(b))       & \text{since $B((\pt{a''}{a'}) \circ (\pt{a'}{a})) \leq B(\pt{a''}{a'}) \circ B(\pt{a'}{a})$} \\
+                                                     &&& \text{ as $B$ is a lax 2-functor} \\
+                  & \leq & B(\pt{a''}{a'})(b')       & \text{since $B(\pt{a''}{a'})$ is a morphism of $\USL$s,} \\
+                                                     &&& \text{ hence monotonic} \\
+                  & \leq & b''
+    \end{array}
+    \]
+  \end{enumerate}
+\item {\bf Join.}
+  Let us show that $(a, b) \lor (a',b') = (a \lor a', B(\pt{(a \lor a')}{a})(b) \lor B(\pt{(a \lor a')}{a'})(b'))$.
+  is the supremum of $\set{(a, b), (a',b')}$.
+  \begin{enumerate}
+  \item {\bf Upper bound.}
+    Let us show that $(a, b) \leq (a, b) \lor (a',b')$.
+    Checking that $(a', b') \leq (a, b) \lor (a',b')$ is symmetrical.
+
+    First, $a \leq a \lor a'$.
+    Moreover, $B(\pt{(a \lor a')}{a})(b) \leq B(\pt{(a \lor a')}{a})(b) \lor B(\pt{(a \lor a')}{a'})(b')$.
+  \item {\bf Least upper bound.}
+    Let $(a'',b'')$ be another upper bound, \ie an element such that $(a, b) \leq (a'', b'')$ and $(a', b') \leq (a'', b'')$.
+    Let us show that $(a, b) \lor (a',b') \leq (a'', b'')$.
+
+    First, $a \leq a''$ and $a' \leq a''$, so $a \lor a' \leq a''$.
+    Moreover, we know that
+    $B(\pt{a''}{a})(b) \leq b''$ and $B(\pt{a''}{a'})(b') \leq b''$.
+    \TODO{
+    FALLA
+    Pero vale en nuestro caso particular.\\
+    %%%
+    Let $(\cls{\redseq''},\cls{\redseqtwo''})$
+    such that $(\cls{\redseq},\cls{\redseqtwo}) \leq (\cls{\redseq''},\cls{\redseqtwo''})$
+    and $(\cls{\redseq'},\cls{\redseqtwo'}) \leq (\cls{\redseq''},\cls{\redseqtwo''})$,
+    and let us show that
+    $(\cls{\redseq},\cls{\redseqtwo}) \lor (\cls{\redseq'},\cls{\redseqtwo'}) \leq (\cls{\redseq''},\cls{\redseqtwo''})$.
+    First note that $\cls{\redseq} \leqF \cls{\redseq''}$ and $\cls{\redseq'} \leqF \cls{\redseq''}$
+    so $\cls{\redseq} \lorF \cls{\redseq'} \leqF \cls{\redseq''}$.\\
+    Moreover, we know that:
+    \[
+      \cls{\redseq\redseqtwo/\redseq''} = \ulbG(\pt{\cls{\redseq''}}{\cls{\redseq}})(\cls{\redseqtwo}) \permle \cls{\redseqtwo''}
+      \HS\text{ and }\HS
+      \cls{\redseq'\redseqtwo'/\redseq''} = \ulbG(\pt{\cls{\redseq''}}{\cls{\redseq'}})(\cls{\redseqtwo'}) \permle \cls{\redseqtwo''}
+    \]
+    Let $\alpha := (\redseq \sqcup \redseq') \sieve \tm'$.
+    First we claim that $\alpha \permle \redseq\redseqtwo \sqcup \redseq'\redseqtwo'$.
+    Indeed, $\alpha = (\redseq \sqcup \redseq') \sieve \tm' \permle \redseq \sqcup \redseq'$
+    by \rlem{sieve_is_prefix}, and it is easy to check that
+    $\redseq \sqcup \redseq' \permle \redseq\redseqtwo \sqcup \redseq'\redseqtwo'$.
+    \\
+    What we have to check is the following inequality:
+    \[
+      \ulbG(\pt{\cls{\redseq''}}{\cls{\alpha}})(
+        \ulbG(\pt{\cls{\alpha}}{\cls{\redseq}})(\cls{\redseqtwo})
+        \sqcup
+        \ulbG(\pt{\cls{\alpha}}{\cls{\redseq'}})(\cls{\redseqtwo'})
+      )
+      \permle
+      \cls{\redseqtwo''}
+    \]
+    \
+    Indeed:
+    \[
+      \begin{array}{rcll}
+      &&
+      \ulbG(\pt{\cls{\redseq''}}{\cls{\alpha}})(
+        \ulbG(\pt{\cls{\alpha}}{\cls{\redseq}})(\cls{\redseqtwo})
+        \sqcup
+        \ulbG(\pt{\cls{\alpha}}{\cls{\redseq'}})(\cls{\redseqtwo'})
+      ) \\
+      & = &
+      \cls{\alpha((\redseq\redseqtwo/\alpha) \sqcup (\redseq'\redseqtwo'/\alpha))/\redseq''}
+      \\
+      & = &
+      \cls{\alpha((\redseq\redseqtwo \sqcup \redseq'\redseqtwo')/\alpha)/\redseq''}
+      & \text{since $A/C \sqcup B/C \permeq (A \sqcup B)/C$}
+      \\
+      & = &
+      \cls{(\redseq\redseqtwo \sqcup \redseq'\redseqtwo')(\alpha/(\redseq\redseqtwo \sqcup \redseq'\redseqtwo'))/\redseq''}
+      & \text{since $A(B/A) \permeq B(A/B)$}
+      \\
+      & = &
+      \cls{(\redseq\redseqtwo \sqcup \redseq'\redseqtwo')/\redseq''}
+      & \text{since $\alpha \permle \redseq\redseqtwo \sqcup \redseq'\redseqtwo'$}
+      \\
+      & = &
+      \cls{\redseq\redseqtwo/\redseq'' \sqcup \redseq'\redseqtwo'/\redseq''}
+      & \text{since $A/C \sqcup B/C \permeq (A \sqcup B)/C$}
+      \\
+      & \permle &
+      \cls{\redseqtwo''}
+      & \text{since $\cls{\redseq\redseqtwo/\redseq''} \permle \cls{\redseqtwo''}$} \\
+      &&& \text{ and $\cls{\redseq'\redseqtwo'/\redseq''} \permle \cls{\redseqtwo''}$}
+      \end{array}
+    \]
+    %%%
+    }
+  \end{enumerate}
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Derivations form an $\USLB$]
+\lprop{derivations_form_an_ulb}
+Let $\cls{\redseq}$ denote the permutation equivalence class of a derivation $\redseq$.
+Let $\tm$ be a $\lambda$-term.
+Then derivations starting on $\tm$, modulo permutation equivalence,
+form an upper semilattice with bottom $\ulbDeriv{\tm}$:
+\[
+  \ulbDeriv{\tm} \eqdef \set{\cls{\redseq} \ST \src(\redseq) = \tm}
+\]
+where $\permle$ is the usual prefix order on derivations ($\cls{\redseq} \permle \cls{\redseqtwo}$ if $\redseq \permle \redseqtwo$),
+$\bot$ is the empty derivation starting on $\tm$,
+and $\sqcup$ is the usual join of derivations ($\cls{\redseq} \sqcup \cls{\redseqtwo} = \cls{\redseq \sqcup \redseqtwo}$).
+\end{proposition}
+\begin{proof}
+Straightforward, using well-known results, see for example~\cite[Chapter~12]{Barendregt:1984}.
+\end{proof}
+
+\begin{proposition}[Garbage derivations form an $\USLB$]
+\lprop{garbage_derivations_form_an_ulb}
+Let $\tm' \refines \tm$.
+Then garbage derivations starting on $\tm$, modulo permutation equivalence,
+form an upper semilattice with bottom $\ulbGarbage{\tm'}{\tm}$:
+\[
+  \ulbGarbage{\tm'}{\tm} \eqdef \set{\cls{\redseq} \ST \src(\redseq) = \tm \text{ and } \redseq \text{ is $\tm'$-garbage}}
+\]
+The lattice structure is given as for $\ulbDeriv{\tm}$ in \rprop{derivations_form_an_ulb}.
+\end{proposition}
+\begin{proof}
+Note that the notion of being garbage is well-defined modulo permutation equivalence
+by \rprop{compatibility_of_simulation_residuals_and_permutation_equivalence},
+so the representative of $\cls{\redseq}$ may be chosen liberally.
+Checking that $\permle$ is a partial order and that $\bot$ is the bottom element is
+a consequence of \rprop{derivations_form_an_ulb}.
+Checking that $\cls{\redseq} \lor \cls{\redseqtwo}$ is the supremum of $\set{\cls{\redseq},\cls{\redseqtwo}}$
+is also a consequence of \rprop{derivations_form_an_ulb},
+provided that the set $\ulbGarbage{\tm'}{\tm}$ is closed under joins ($\sqcup$).
+
+So we are left to check that $\cls{\redseq} \sqcup \cls{\redseqtwo} \in \ulbGarbage{\tm'}{\tm}$
+for all $\cls{\redseq},\cls{\redseqtwo} \in \ulbGarbage{\tm'}{\tm}$.
+That is,
+we must check that if $\redseq$ and $\redseqtwo$ are garbage
+then $\redseq \sqcup \redseqtwo$ is garbage.
+We have already seen this in~\rlem{join_of_garbage_is_garbage}.
+\end{proof}
+
+We aim to show that garbage-free derivations form an $\USLB$.
+This is not as easy as for garbage derivations.
+In particular, the join of garbage-free derivations is not necessarily a
+garbage-free derivation.
+For instance, in the diagram of \rexample{naive_notion_of_non_garbage_fails},
+the derivations $\redex$ and $\redextwo$ are both garbage-free,
+but their join $\redex\redex_1\redextwo'_2$ is not.
+
+\begin{proposition}[Garbage-free derivations form an $\USLB$]
+\lprop{garbage_free_derivations_form_an_ulb}
+Let $\tm' \refines \tm$.
+Then garbage-free derivations starting on $\tm$, modulo permutation equivalence,
+form an upper semilattice with bottom $\ulbFree{\tm'}{\tm}$:
+\[
+  \ulbFree{\tm'}{\tm} \eqdef \set{\cls{\redseq} \ST \src(\redseq) = \tm \text{ and } \redseq \text{ is $\tm'$-garbage-free}}
+\]
+The lattice structure is given by:
+\[
+  \begin{array}{rcl}
+    \cls{\redseq} \leqF \cls{\redseqtwo} & \iffdef & \redseq/\redseqtwo \text{ is $(\tm'/\redseqtwo)$-garbage} \\
+    \bot_{(\ulbFree{\tm'}{\tm})}         & \eqdef  & \cls{\emptyDerivation} \\
+    \cls{\redseq} \lorF \cls{\redseqtwo}  & \eqdef  & \cls{(\redseq \sqcup \redseqtwo) \sieve \tm'} \\
+  \end{array}
+\]
+\end{proposition}
+\begin{proof}
+Let us show that this forms an upper semilattice with bottom.
+\begin{enumerate}
+\item {\bf Partial order.}
+  First let us show that $\leqF$ is a partial order.
+  \begin{enumerate}
+  \item {\bf Reflexivity.}
+    It is immediate that $\cls{\redseq} \leqF \cls{\redseq}$ holds since $\redseq/\redseq = \emptyDerivation$ is garbage.
+  \item {\bf Antisymmetry.}
+    Let $\cls{\redseq} \leqF \cls{\redseqtwo} \leqF \cls{\redseq}$.
+    This means that $\redseq/\redseqtwo$ and $\redseqtwo/\redseq$ are garbage.
+    Then:
+    \[
+      \begin{array}{rcll}
+      \redseq
+      & \permeq & \redseq \sieve \tm' & \text{ since $\redseq$ is garbage-free, by \rprop{characterization_of_garbage_free_derivations}} \\
+      & \permeq & \redseq(\redseqtwo/\redseq) \sieve \tm' & \text{ since $\redseqtwo/\redseq$ is garbage, by \rlem{sieving_trailing_garbage}} \\
+      & \permeq & \redseqtwo(\redseq/\redseqtwo) \sieve \tm' & \text{ since $A(B/A) \permeq B(A/B)$ in general, using \rlem{sieving_is_compatible_with_permutation_equivalence}} \\
+      & \permeq & \redseqtwo \sieve \tm' & \text{ since $\redseq/\redseqtwo$ is garbage, by \rlem{sieving_trailing_garbage}} \\
+      & \permeq & \redseqtwo & \text{ since $\redseqtwo$ is garbage-free, by \rprop{characterization_of_garbage_free_derivations}} \\
+      \end{array}
+    \]
+    Since $\redseq \permeq \redseqtwo$ we conclude that $\cls{\redseq} = \cls{\redseqtwo}$,
+    as required.
+  \item {\bf Transitivity.}
+    Let $\cls{\redseq} \leqF \cls{\redseqtwo} \leqF \cls{\redseqthree}$
+    and let us show that $\cls{\redseq} \leqF \cls{\redseqthree}$.
+    Note that $\redseq/\redseqtwo$ and $\redseqtwo/\redseqthree$ are garbage.
+    By the fact that the projection of garbage is garbage (\rlem{projection_of_garbage_is_garbage})
+    the derivation $(\redseq/\redseqtwo)/(\redseqtwo/\redseqthree)$ is garbage.
+    Moreover, by the fact that the composition of garbage is garbage (\rlem{composition_of_garbage_is_garbage}),
+    we have that $(\redseqtwo/\redseqthree)((\redseq/\redseqtwo)/(\redseqtwo/\redseqthree))$ is also garbage.
+    In general the following holds:
+    \[
+      \begin{array}{rcll}
+      \redseq/\redseqthree
+      & \permle & (\redseq/\redseqthree)((\redseqtwo/\redseqthree)/(\redseq/\redseqthree))    & \text{ since $A \permle AB$ in general} \\
+      & \permeq & (\redseqtwo/\redseqthree)((\redseq/\redseqthree)/(\redseqtwo/\redseqthree)) & \text{ since $A(B/A) \permeq B(A/B)$ in general} \\
+      & \permeq & (\redseqtwo/\redseqthree)((\redseq/\redseqtwo)/(\redseqthree/\redseqtwo))   & \text{ since $A(B/A) \permeq B(A/B)$ in general} \\
+      \end{array}
+    \]
+    So since any prefix of a garbage derivation is garbage (\rlem{prefix_of_garbage})
+    we conclude that $\redseq/\redseqthree$ is garbage.
+    This means that $[\redseq] \leqF [\redseqthree]$, as required.
+  \end{enumerate}
+\item {\bf Bottom element.}
+  First, observe that $\bot_{(\ulbFree{\tm'}{\tm})}$ is well-defined,
+  since $\bot_{(\ulbFree{\tm'}{\tm})} = [\emptyDerivation]$
+  and $\emptyDerivation$ is $\tm'$-garbage-free.
+
+  Moreover, let us show that $\bot_{(\ulbFree{\tm'}{\tm})}$ is the least element.
+  Let $[\redseq]$ be an arbitrary element of $\ulbFree{\tm'}{\tm}$
+  and let us check that $\bot_{(\ulbFree{\tm'}{\tm})} \leqF [\redseq]$.
+  This is immediate since,
+  by definition, $\bot_{(\ulbFree{\tm'}{\tm})} \leqF [\redseq]$
+  if and only if $\emptyDerivation/\redseq$ is garbage.
+  But $\emptyDerivation/\redseq = \emptyDerivation$ is trivially garbage.
+\item {\bf Join.}
+  Let $[\redseq],[\redseqtwo]$ be arbitrary elements of $\ulbFree{\tm'}{\tm}$,
+  and let us check that $[\redseq] \lorF [\redseqtwo]$ is the join.
+  First observe that $[\redseq] \lorF [\redseqtwo]$ is well-defined
+  \ie that $(\redseq \sqcup \redseqtwo) \sieve \tm'$ is $\tm'$-garbage-free,
+  which is an immediate consequence of \rprop{characterization_of_garbage_free_derivations}.
+  Moreover, it is indeed the supremum of $\set{[\redseq],[\redseqtwo]}$:
+  \begin{enumerate}
+  \item {\bf Upper bound.}
+    Let us show that $[\redseq] \leqF [\redseq] \lorF [\redseqtwo]$; the proof for $[\redseqtwo]$ is symmetrical.
+    We must show that $\redseq/((\redseq \sqcup \redseqtwo) \sieve \tm')$ is garbage.
+    Note that $\redseq \permle \redseq \sqcup \redseqtwo$,
+    so in particular $\redseq/((\redseq \sqcup \redseqtwo) \sieve \tm') \permle (\redseq \sqcup \redseqtwo)/((\redseq \sqcup \redseqtwo) \sieve \tm')$.
+    Given that any prefix of a garbage derivation is garbage (\rlem{prefix_of_garbage}),
+    it suffices to show that $(\redseq \sqcup \redseqtwo)/((\redseq \sqcup \redseqtwo) \sieve \tm')$ is garbage.
+    This is a straightforward consequence of the fact that projecting after a sieve is garbage (\rlem{projection_after_sieving_is_garbage}).
+  \item {\bf Least upper bound.}
+    Let $[\redseq], [\redseqtwo] \leqF [\redseqthree]$,
+    and let us show that $[\redseq] \lorF [\redseqtwo] \leqF [\redseqthree]$.
+    We know that $\redseq/\redseqthree$ and $\redseqtwo/\redseqthree$ are garbage,
+    and we are to show that $((\redseq \sqcup \redseqtwo) \sieve \tm')/\redseqthree$
+    is garbage.
+    Note that $(\redseq \sqcup \redseqtwo) \sieve \tm' \permle \redseq \sqcup \redseqtwo$
+    as a consequence of the fact that the sieve is a prefix (\rlem{sieve_is_prefix}).
+    So in particular $((\redseq \sqcup \redseqtwo) \sieve \tm')/\redseqthree \permle (\redseq \sqcup \redseqtwo)/\redseqthree$.
+    Given that any prefix of a garbage derivation is garbage (\rlem{prefix_of_garbage}),
+    it suffices to show that $(\redseq \sqcup \redseqtwo)/\redseqthree$ is garbage.
+    But $(\redseq \sqcup \redseqtwo)/\redseqthree \permeq \redseq/\redseqthree \sqcup \redseqtwo/\redseqthree$
+    so we conclude by the fact that the join of garbage is garbage (\rlem{join_of_garbage_is_garbage}).
+  \end{enumerate}
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}
+\llem{lorf_ignores_garbage}
+Let $\redseq,\redseqtwo$ be coinitial derivations and $\tm' \refines \src(\redseq)$.
+Then $\cls{(\redseq \sqcup \redseqtwo) \sieve \tm'} = \cls{\redseq \sieve \tm'} \lorF \cls{\redseqtwo \sieve \tm'}$.
+\end{lemma}
+\begin{proof}
+Let:
+\[
+  \begin{array}{rcl}
+    \alpha & := & \redseq/(\redseq \sieve \tm') \\
+    \beta  & := & \redseqtwo/(\redseqtwo \sieve \tm') \\
+    \gamma & := & (\alpha/((\redseqtwo \sieve \tm')/(\redseq \sieve \tm'))) \sqcup (\beta/((\redseq \sieve \tm')/(\redseqtwo \sieve \tm'))) \\
+  \end{array}
+\]
+Note that $\alpha$ and $\beta$ are garbage by \rlem{projection_after_sieving_is_garbage}
+and hence $\gamma$ is also garbage, as a consequence of
+the facts that the join of garbage is garbage~(\rlem{join_of_garbage_is_garbage})
+and that the projection of garbage is garbage~(\rlem{projection_of_garbage_is_garbage}).
+Remark that, in general, $AB \sqcup CD \permeq (A \sqcup C)(B/(C/A) \sqcup D/(A/C))$.
+Then the statement of this lemma is a consequence of the following chain of equalities:
+\[
+  \begin{array}{rcll}
+  \cls{(\redseq \sqcup \redseqtwo) \sieve \tm'}
+  & = &
+  \cls{((\redseq \sieve \tm')\alpha \sqcup (\redseqtwo \sieve \tm')\beta) \sieve \tm'}
+  & \text{by \rthm{factorization_of_garbage}}
+  \\
+  & = &
+  \cls{((\redseq \sieve \tm') \sqcup (\redseqtwo \sieve \tm'))\gamma \sieve \tm'}
+  & \text{by the previous remark}
+  \\
+  & = &
+  \cls{((\redseq \sieve \tm') \sqcup (\redseqtwo \sieve \tm')) \sieve \tm'}
+  & \text{since sieving ignores trailing garbage~\rlem{sieving_trailing_garbage}}
+  \\
+  & = & \cls{\redseq \sieve \tm'} \lorF \cls{\redseqtwo \sieve \tm'}
+  & \text{by definition of $\lorF$}
+  \end{array}
+\]
+\end{proof}
+
+\begin{theorem}[Factorization of the $\USLB$ of derivations]
+\lthm{factorization_ulb_derivations}
+Let $\tm' \refines \tm$. Then the following is an isomorphism of $\USLB$s:
+\begin{equation}
+  \leqn{factorization_ulb_derivations:isomorphism}
+  \ulbDeriv{\tm} \simeq \grothy{ \ulbF }{ \ulbG }
+\end{equation}
+where $\ulbF = \ulbFree{\tm'}{\tm}$
+is the upper semilattice of garbage-free derivations,
+and $\ulbG$ is defined as the following lax 2-functor:
+\[
+ \begin{array}{rrrcll}
+   \ulbG & : & \ulbF & \to & \USL \\
+               &   & \cls{\redseq}                  & \mapsto & \ulbGarbage{\tm'/\redseq}{\tgt(\redseq)} & \text{ for $\cls{\redseq} \in \ulbF$,} \\
+               &   & \ptF{\cls{\redseqtwo}}{\cls{\redseq}} & \mapsto &
+                     \left(\begin{array}{rrrcl}
+                       \ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}}) & : & \ulbG(\cls{\redseq}) & \to & \ulbG(\cls{\redseqtwo}) \\
+                                                                   &   & [\alpha] & \mapsto & [\redseq\alpha/\redseqtwo] \\
+                     \end{array}\right)
+                     & \text{ for all $\cls{\redseq} \leqF \cls{\redseqtwo}$.} \\
+ \end{array}
+\]
+Note that the isomorphism \reqn{factorization_ulb_derivations:isomorphism}
+is of upper semilattices with bottom---in particular $\grothy{\ulbF}{\ulbG}$ is shown to have a bottom element.
+\end{theorem}
+\begin{proof}
+Firstly, let us show that the expression on the right-hand side is well-defined.
+This amounts to checking that $\ulbG$ is indeed a lax 2-functor:
+\begin{enumerate}
+\item {\bf Well-defined.}
+  To show that $\ulbG$ is well-defined,
+  note first that $\ulbG$ when applied on an object $\cls{\redseq} \in \ulbF$ yields the
+  upper semilattice $\ulbGarbage{\tm'/\redseq}{\tgt(\redseq)}$.
+  This is indeed an $\USL$ as has been shown in \rprop{garbage_derivations_form_an_ulb}.
+  Moreover, the choice of representative does not matter,
+  since if $\redseq$ and $\redseqtwo$ are permutation equivalent derivations,
+  then $\tm'/\redseq = \tm'/\redseqtwo$ (by \rprop{compatibility_of_simulation_residuals_and_permutation_equivalence})
+  and $\tgt(\redseq) = \tgt(\redseqtwo)$.
+
+  On the other hand, let us check that given $\cls{\redseq},\cls{\redseqtwo} \in \ulbF$
+  such that $\cls{\redseq} \leqF \cls{\redseqtwo}$
+  then
+  \[
+    \ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}}) : \ulbG(\cls{\redseq}) \to \ulbG(\cls{\redseqtwo})
+  \]
+  is a morphism of $\USL$s.
+
+  First, we can see that it is well-defined,
+  since if $\cls{\alpha} \in \ulbG([\redseq])$
+  then the image $\ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq})(\cls{\alpha}}) = \cls{\redseq\alpha/\redseqtwo}$
+  is an element of $\ulbG([\redseqtwo])$,
+  since:
+  \[
+    \begin{array}{rcll}
+      \redseq\alpha/\redseqtwo & = & (\redseq/\redseqtwo)(\alpha/(\redseqtwo/\redseq)) \\
+    \end{array}
+  \]
+  is garbage, as it is the composition of garbage derivations~(\rlem{composition_of_garbage_is_garbage}):
+  the derivation $\redseq/\redseqtwo$ is garbage since $\cls{\redseq} \leqF \cls{\redseqtwo}$ (by definition),
+  and the derivation $\alpha/(\redseqtwo/\redseq)$ is garbage since $\alpha$ is garbage~(\rlem{projection_of_garbage_is_garbage}).
+  Moreover, the choice of representative does not matter,
+  since if $\redseq_1 \permeq \redseq_2$ and $\redseqtwo_1 \permeq \redseqtwo_2$ and $\alpha_1 \permeq \alpha_2$
+  then $\redseq_1\alpha_1/\redseqtwo_1 \permeq \redseq_2\alpha_2/\redseqtwo_2$.
+
+  Furthermore, let us verify that it respects the conditions for morphisms of $\USL$s:
+  \begin{enumerate}
+  \item {\bf Monotonic.}
+    Let $\cls{\alpha}, \cls{\beta} \in \ulbG([\redseq])$
+    such that $\cls{\alpha} \permle \cls{\beta}$, and let us show that
+    $\ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}})(\cls{\alpha}) \permle \ulbG(\ptF{[\redseqtwo]}{[\redseq]})(\cls{\beta})$.
+    Indeed, $\alpha \permle \beta$, so:
+    \[
+      \redseq\alpha/\redseqtwo
+      = (\redseq/\redseqtwo)(\alpha/(\redseqtwo/\redseq))
+      \permle (\redseq/\redseqtwo)(\beta/(\redseqtwo/\redseq))
+      = \redseq\beta/\redseqtwo
+    \]
+  \item {\bf Preserves joins.}
+    Let $\cls{\alpha}, \cls{\beta} \in \ulbG(\cls{\redseq})$,
+    and let us show that
+    $\ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}})(\cls{\alpha} \sqcup \cls{\beta}) =
+     \ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}})(\cls{\alpha}) \sqcup
+     \ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}})(\cls{\beta})$.
+    Indeed:
+    \[
+      \redseq(\alpha \sqcup \beta)/\redseqtwo
+      \permeq
+      (\redseq\alpha \sqcup \redseq\beta)/\redseqtwo
+      \permeq
+      \redseq\alpha/\redseqtwo \sqcup \redseq\beta/\redseqtwo
+    \]
+  \end{enumerate}
+\item {\bf Identity.}
+  Let $\cls{\redseq} \in \ulbF$.
+  Let us check that $\ulbG(\ptF{\cls{\redseq}}{\cls{\redseq}}) = \identity_{\ulbG(\cls{\redseq})}$
+  is the identity morphism.
+  Indeed, if $\cls{\alpha} \in \ulbG(\cls{\redseq})$,
+  then $\ulbG(\ptF{\cls{\redseq}}{\cls{\redseq}})(\cls{\alpha}) = \cls{\redseq\alpha/\redseq} = \cls{\alpha}$.
+\item {\bf Composition.}
+  Let $\cls{\redseq}, \cls{\redseqtwo}, \cls{\redseqthree} \in \ulbF$
+  such that $\cls{\redseq} \leqF \cls{\redseqtwo} \leqF \cls{\redseqthree}$.
+  Let us check that
+  $\ulbG((\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}}) \circ (\ptF{\cls{\redseqtwo}}{\cls{\redseq}})) \permle
+   \ulbG(\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}}) \circ \ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}})$.
+  Note that
+  $(\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}}) \circ (\ptF{\cls{\redseqtwo}}{\cls{\redseq}}) : \cls{\redseq} \leqF \cls{\redseqthree}$
+  is a morphism in the upper semilattice $\ulbF$ seen as a category.
+  Moreover, since it is a semilattice, there a unique morphism $\cls{\redseq} \leqF \cls{\redseqthree}$,
+  namely $\ptF{\cls{\redseqthree}}{\cls{\redseq}}$, so we have that:
+  \[
+    (\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}}) \circ (\ptF{\cls{\redseqtwo}}{\cls{\redseq}}) = \ptF{\cls{\redseqthree}}{\cls{\redseq}}
+  \]
+  Now if $\cls{\alpha} \in \ulbG{\cls{\redseq}}$, then:
+  \[
+    \begin{array}{rcll}
+    \ulbG((\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}}) \circ (\ptF{\cls{\redseqtwo}}{\cls{\redseq}}))(\cls{\alpha})
+    & = & \ulbG(\ptF{\cls{\redseqthree}}{\cls{\redseq}})(\cls{\alpha}) \\
+    & = & \redseq\alpha/\redseqthree \\
+    & \permle & (\redseq\alpha/\redseqthree)((\redseqtwo/\redseq\alpha)/(\redseqthree/\redseq\alpha)) \\
+    & = & \redseq\alpha(\redseqtwo/\redseq\alpha)/\redseqthree \\
+    & \permeq & \redseqtwo(\redseq\alpha/\redseqtwo)/\redseqthree & \text{ since $A(B/A) \permeq B(A/B)$} \\
+    & = & \ulbG(\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}})(\redseq\alpha/\redseqtwo) \\
+    & = & (\ulbG(\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}}) \circ \ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}}))(\cls{\alpha})
+    \end{array}
+  \]
+\end{enumerate}
+so
+$\ulbG((\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}}) \circ (\ptF{\cls{\redseqtwo}}{\cls{\redseq}}))
+\permle
+\ulbG(\ptF{\cls{\redseqthree}}{\cls{\redseqtwo}}) \circ \ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq}})$
+as required.
+
+Secondly, let us show that $\grothy{\ulbF}{\ulbG}$ has a bottom element.
+Indeed, we argue that $(\bot_{\ulbF},\bot_{\ulbG(\bot_\ulbF)})$ is the bottom
+element. Let $(\cls{\redseq},\cls{\redseqtwo}) \in \grothy{\ulbF}{\ulbG}$.
+Then clearly $\bot_{\ulbF} \leqF \cls{\redseq}$. Moreover:
+\[
+ \ulbG(\ptF{[\redseq]}{[\bot_{\ulbF}]})(\bot_\ulbG) =
+ [\emptyDerivation/\redseq] = [\emptyDerivation] \permle \cls{\redseqtwo}
+\]
+
+Finally, let us show that $\ulbDeriv{\tm} \simeq \grothy{\ulbF}{\ulbG}$,
+for which we construct an explicit isomorphism.
+Let:
+\[
+\begin{array}{rclcl}
+  \varphi & : & \ulbDeriv{\tm}        & \to     & \grothy{\ulbF}{\ulbG} \\
+             &&    \cls{\redseq} & \mapsto & (\cls{\redseq \sieve \tm'}, \cls{\redseq/(\redseq \sieve \tm')}) \\
+\\
+  \psi    & : & \grothy{\ulbF}{\ulbG} & \to & \ulbDeriv{\tm} \\
+             &&  (\cls{\redseq},\cls{\redseqtwo}) & \mapsto & [\redseq\redseqtwo] \\
+\end{array}
+\]
+Note that $\varphi$ and $\psi$ are well-defined mappings, since their value does not
+depend on the choice of representative, due, in particular, to the fact that sieving
+is compatible with permutation equivalence~(\rlem{sieving_is_compatible_with_permutation_equivalence}).
+Let us check that $\varphi$ and $\psi$ are morphisms of $\USLB$s, and that they are mutual inverses:
+\begin{enumerate}
+\item {\bf $\varphi$ is a morphism of $\USLB$s.}
+  Let us check the three conditions:
+  \begin{enumerate}
+  \item {\bf Monotonic.}
+    Let $\cls{\redseq} \permle \cls{\redseqtwo}$ in $\ulbDeriv{\tm}$,
+    and let us show that the following inequality holds:
+    \[
+      \varphi(\cls{\redseq}) =
+      (\cls{\redseq \sieve \tm'}, \cls{\redseq/(\redseq \sieve \tm')})
+      \leq
+      (\cls{\redseqtwo \sieve \tm'}, \cls{\redseqtwo/(\redseqtwo \sieve \tm')})
+      = \varphi(\cls{\redseqtwo})
+    \]
+    We check the two conditions (by definition of $\grothy{\ulbF}{\ulbG}$):
+    \begin{enumerate}
+    \item On the first hand,
+          $\cls{\redseq \sieve \tm'} \leqF \cls{\redseqtwo \sieve \tm'}$
+          since
+          \[
+            \begin{array}{rcll}
+            (\redseq \sieve \tm')/(\redseqtwo \sieve \tm')
+            & \permle &
+            \redseq/(\redseqtwo \sieve \tm') & \text{since $\redseq \sieve \tm' \permle \redseq$ by \rlem{sieve_is_prefix}} \\
+            & \permle & \redseqtwo/(\redseqtwo \sieve \tm') & \text{since $\redseq \permle \redseqtwo$ by hypothesis} \\
+            \end{array}
+          \]
+          Note that this is garbage by \rlem{projection_after_sieving_is_garbage}.
+          So by \rlem{prefix_of_garbage}, $(\redseq \sieve \tm')/(\redseqtwo \sieve \tm')$ is also garbage,
+          as required.
+    \item On the other hand, let us show that
+          $\ulbG(\ptF{\cls{\redseqtwo \sieve \tm'}}{\cls{\redseq \sieve \tm'}})(\cls{\redseq/(\redseq \sieve \tm')})
+          \permle
+          \redseqtwo/(\redseqtwo \sieve \tm')$.
+          In fact:
+          \[
+            \begin{array}{rcll}
+              \ulbG(\ptF{\cls{\redseqtwo \sieve \tm'}}{\cls{\redseq \sieve \tm'}})(\cls{\redseq/(\redseq \sieve \tm')})
+            & = &
+              \cls{ (\redseq \sieve \tm')(\redseq/(\redseq \sieve \tm')) / (\redseqtwo \sieve \tm') } & \text{ by definition} \\
+            & = &
+              \cls{ \redseq / (\redseqtwo \sieve \tm') } & \text{ by \rthm{factorization_of_garbage}} \\
+            & \permle &
+              \cls{ \redseqtwo / (\redseqtwo \sieve \tm') } & \text{ since $\redseq \permle \redseqtwo$} \\
+            \end{array}
+          \]
+           
+    \end{enumerate}
+  \item {\bf Preserves bottom.}
+    By definition:
+    $\varphi(\bot_{\ulbDeriv{\tm}})
+     = (\cls{\emptyDerivation \sieve \tm'}, \cls{\emptyDerivation/(\emptyDerivation \sieve \tm')})
+     = (\cls{\emptyDerivation},\cls{\emptyDerivation})
+     = (\bot_{\ulbF},\bot_{\ulbG(\bot_\ulbF)})$.
+  \item {\bf Preserves joins.}
+    Let $\cls{\redseq},\cls{\redseqtwo} \in \ulbDeriv{\tm}$, and let us show that
+    $\varphi(\cls{\redseq} \sqcup \cls{\redseqtwo}) = \varphi(\cls{\redseqtwo}) \lor \varphi(\cls{\redseqtwo})$.
+    Indeed, note that:
+    \[
+      \varphi(\cls{\redseq} \sqcup \cls{\redseqtwo}) = (\alpha,\beta)
+    \]
+    where
+    \[
+      \begin{array}{rcl}
+      \alpha & = & \cls{(\redseq \sqcup \redseqtwo) \sieve \tm'} \\
+      \beta  & = & \cls{(\redseq \sqcup \redseqtwo) / ((\redseq \sqcup \redseqtwo) \sieve \tm')} \\
+      \end{array}
+    \]
+    and
+    \[
+      \varphi(\cls{\redseq}) \lor \varphi(\cls{\redseqtwo})
+      = (\cls{\redseq \sieve \tm'}, \cls{\redseq / (\redseq \sieve \tm')}) \lor
+        (\cls{\redseqtwo \sieve \tm'}, \cls{\redseqtwo / (\redseqtwo \sieve \tm')}) \\
+      = (\alpha', \beta') \\
+    \]
+    where
+    \[
+      \begin{array}{rcl}
+      \alpha' & = & \cls{\redseq \sieve \tm'} \lorF \cls{\redseqtwo \sieve \tm'} \\
+      \beta'  & = &
+             \ulbG(\ptF{\alpha}{\cls{\redseq \sieve \tm'}})(\cls{\redseq / (\redseq \sieve \tm')}) \sqcup \ulbG(\ptF{\alpha}{\cls{\redseqtwo \sieve \tm'}})(\cls{\redseqtwo / (\redseqtwo \sieve \tm')})
+      \end{array}
+    \]
+    It suffices to show that $\alpha = \alpha'$ and $\beta = \beta'$.
+    Let us show each separately:
+    \begin{enumerate}
+    \item {\bf Proof of $\alpha = \alpha'$.}
+      The equality
+      $
+        \alpha
+        = \cls{(\redseq \sqcup \redseqtwo) \sieve \tm'}
+        = \cls{\redseq \sieve \tm'} \lorF \cls{\redseqtwo \sieve \tm'}
+        = \alpha'
+      $
+      is an immediate consequence of \rlem{lorf_ignores_garbage}.
+    \item {\bf Proof of $\beta = \beta'$.}
+      Note that:
+      \[
+        \begin{array}{rcll}
+        \beta'
+              & = & \ulbG(\ptF{\alpha'}{\cls{\redseq \sieve \tm'}})(\cls{\redseq / (\redseq \sieve \tm')}) \sqcup
+                    \ulbG(\ptF{\alpha'}{\cls{\redseqtwo \sieve \tm'}})(\cls{\redseqtwo / (\redseqtwo \sieve \tm')}) \\
+              & = &
+                   \cls{
+                     (\redseq \sieve \tm')(\redseq / (\redseq \sieve \tm'))/\alpha'
+                     \sqcup
+                     (\redseqtwo \sieve \tm')(\redseqtwo / (\redseqtwo \sieve \tm'))/\alpha'
+                   } \\
+              & = &
+                   \cls{\redseq/\alpha' \sqcup \redseqtwo/\alpha'}
+                   &\hspace{-5cm}\text{by \rthm{factorization_of_garbage}} \\
+              & = &
+                   \cls{(\redseq \sqcup \redseqtwo)/\alpha'}
+                   &\hspace{-5cm}\text{since $A/C \sqcup B/C \permeq (A \sqcup B)/C$} \\
+              & = &
+                   \cls{(\redseq \sqcup \redseqtwo)/((\redseq \sqcup \redseqtwo) \sieve \tm')}
+                   &\hspace{-5cm}\text{since $\alpha' = \alpha = (\redseq \sqcup \redseqtwo) \sieve \tm'$} \\
+              & = & \beta \\
+        \end{array}
+      \]
+      as required. 
+    \end{enumerate}
+  \end{enumerate}
+\item {\bf $\psi$ is a morphism of $\USLB$s.}
+  Let us check the three conditions:
+  \begin{enumerate}
+  \item {\bf Monotonic.}
+    Let $(\cls{\redseq_1},\cls{\redseqtwo_1}) \leq (\cls{\redseq_2},\cls{\redseqtwo_2})$ in $\grothy{\ulbF}{\ulbG}$
+    and let us show that
+    $\psi(\cls{\redseq_1},\cls{\redseqtwo_1}) \permle \psi(\cls{\redseq_2},\cls{\redseqtwo_2})$
+    in $\ulbDeriv{\tm}$.
+    Indeed, we know that $\ulbG(\ptF{\cls{\redseq_2}}{\cls{\redseq_1}})(\cls{\redseqtwo_1}) \permle \cls{\redseqtwo_2}$,
+    that is to say $\redseq_1\redseqtwo_1/\redseq_2 \permle \redseqtwo_2$.
+    Then:
+    \[
+      \redseq_1\redseqtwo_1/\redseq_2\redseqtwo_2
+      = (\redseq_1\redseqtwo_1/\redseq_2)/\redseqtwo_2
+      = \emptyDerivation
+    \]
+    which means that $\redseq_1\redseqtwo_1 \permle \redseq_2\redseqtwo_2$.
+    This immediately implies that
+    $\psi(\cls{\redseq_1},\cls{\redseqtwo_1}) \permle \psi(\cls{\redseq_2},\cls{\redseqtwo_2})$.
+  \item {\bf Preserves bottom.}
+    Recall that the bottom element $\bot_{(\grothy{\ulbF}{\ulbG})}$
+    is defined as $(\bot_\ulbF, \bot_{\ulbG(\bot_\ulbF)})$, that is
+    $(\cls{\emptyDerivation}, \cls{\emptyDerivation})$.
+    Therefore $\psi(\bot_{(\grothy{\ulbF}{\ulbG})}) = \cls{\emptyDerivation} = \bot_{\ulbDeriv{\tm}}$.
+  \item {\bf Preserves joins.}
+    Let $(\cls{\redseq_1},\cls{\redseqtwo_1})$ and $(\cls{\redseq_2},\cls{\redseqtwo_2})$
+    be elements of $\grothy{\ulbF}{\ulbG}$, and let us show that
+    $\psi((\cls{\redseq_1},\cls{\redseqtwo_1}) \lor (\cls{\redseq_2},\cls{\redseqtwo_2})) =
+     \psi(\cls{\redseq_1},\cls{\redseqtwo_1}) \sqcup \psi(\cls{\redseq_2},\cls{\redseqtwo_2}))$.
+
+    Let:
+    \[
+    \begin{array}{rcl}
+      \alpha & := & (\redseq_1 \sqcup \redseq_2) \sieve \tm'
+    \end{array}
+    \]
+
+    First we claim that $\alpha \permle \redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2$.
+    This is because by \rlem{sieve_is_prefix}
+    we know that $\alpha = (\redseq_1 \sqcup \redseq_2) \sieve \tm' \permle \redseq_1 \sqcup \redseq_2$.
+    Moreover, it is easy to check that
+    $\redseq_1 \sqcup \redseq_2 \permle \redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2$.
+    Using this fact we have:
+    \[
+    \begin{array}{rcll}
+      \psi((\cls{\redseq_1},\cls{\redseqtwo_1}) \lor (\cls{\redseq_2},\cls{\redseqtwo_2}))
+    & = &
+      \psi(\cls{\alpha},\ulbG(\ptF{\cls{\alpha}}{\cls{\redseq_1}})(\cls{\redseqtwo_1}) \sqcup \ulbG(\ptF{\cls{\alpha}}{\cls{\redseq_2}})(\cls{\redseqtwo_2}))
+    \\
+    & = &
+      \psi(\cls{\alpha}, \cls{(\redseq_1\redseqtwo_1/\alpha) \sqcup (\redseq_2\redseqtwo_2/\alpha)})
+    \\
+    & = &
+      \psi(\cls{\alpha}, \cls{(\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2)/\alpha})
+    \\&&\text{ since $A/C \sqcup B/C \permle (A \sqcup B)/C$} \\
+    & = &
+      \cls{\alpha((\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2)/\alpha)} \\
+    & = &
+      \cls{(\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2)(\alpha/(\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2))} \\
+    & = &
+      \cls{\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2}
+      \\&&\text{ since
+                   $\alpha \permle \redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2$,
+                 so $\alpha/(\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2) = \emptyDerivation$} \\
+    & = &
+      \psi(\cls{\redseq_1},\cls{\redseqtwo_1}) \sqcup \psi(\cls{\redseq_2},\cls{\redseqtwo_2}))
+    \end{array}
+    \]
+    as required.
+  \end{enumerate}
+\item {\bf Left inverse: $\psi \circ \varphi = \id$.}
+  Let $\cls{\redseq} \in \ulbDeriv{\tm}$.
+  Then by \rthm{factorization_of_garbage}:
+  \[
+    \psi(\varphi(\cls{\redseq}))
+    = \psi(\cls{\redseq \sieve \tm'}, \cls{\redseq/(\redseq \sieve \tm')})
+    = \cls{(\redseq \sieve \tm')(\redseq/(\redseq \sieve \tm'))}
+    = \cls{\redseq}
+  \]
+\item {\bf Right inverse: $\varphi \circ \psi = \id$.}
+  Let $(\cls{\redseq},\cls{\redseqtwo}) \in \grothy{\ulbF}{\ulbG}$.
+  Note that
+  $\redseq$ is $\tm'$-garbage-free
+  and $\redseqtwo$ is $\tm'$-garbage,
+  so by~\rlem{sieving_trailing_garbage}
+  and \rprop{characterization_of_garbage_free_derivations}
+  we know that $\redseq\redseqtwo \sieve \tm' = \redseq \sieve \tm' \permeq \redseq$.
+  Hence:
+  \[
+    \varphi(\psi(\cls{\redseq},\cls{\redseqtwo}))
+    = \varphi(\cls{\redseq\redseqtwo})
+    = (\cls{\redseq\redseqtwo \sieve \tm'}, \cls{\redseq\redseqtwo/(\redseq\redseqtwo \sieve \tm')})
+    = (\cls{\redseq}, \cls{\redseq\redseqtwo/\redseq})
+    = (\cls{\redseq}, \cls{\redseqtwo})
+  \]
+\end{enumerate}
+\end{proof}
+

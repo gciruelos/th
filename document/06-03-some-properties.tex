@@ -1,0 +1,780 @@
+
+\begin{lemma}[Different redexes have disjoint simulation residuals]
+\llem{different_redexes_have_disjoint_images}
+If $\redex \neq \redextwo$, then $\names(\redex/\tm')$ and $\names(\redextwo/\tm')$ are disjoint.
+\end{lemma}
+\begin{proof}
+\begin{gonzaenv}
+Let $\redex : \conof{(\lam{\var}{\tmfour})\tmtwo} \to \conof{\subs{\tmfour}{\var}{\tmtwo}}$.
+We proceed by induction on $\con$.
+\begin{enumerate}
+  \item {\bf $\con = \conbase$.}
+    We have that $\redex : (\lam{\var}{\tmfour})\tmtwo \to \subs{\tmfour}{\var}{\tmtwo}$.
+    Furthermore,
+    $\tm' = (\lamp{\lab}{\var}{\tmfour'}) \ls{\tmtwo}$
+    and $\tm' / \redex = \subs{\tmfour'}{\var}{\ls{\tmtwo}}$, hence $\names(\redex / \tm') = \set{\lab}$.
+    Now there are two cases depending on where $\redextwo$ is located.
+    \begin{enumerate}
+      \item {\bf $\redextwo$ is in $\tmfour$.}
+        So $\tmfour = \con_{\tmfour}\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}$.
+        Now, $\redextwo : (\lam{\var}{\con_{\tmfour}\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}}) \tmtwo
+             \to (\lam{\var}{\con_{\tmfour}\of{\subs{\tmthree}{\vartwo}{\tmthreevariant}}}) \tmtwo$.
+        That implies that
+          $\tm' = (\lamp{\lab}{\var}{\con'_{\tmfour}\of{
+            (\lamp{\lab_1}{\vartwo}{\tmthree_1}) \tmthreevariant_1, \hdots,
+            (\lamp{\lab_n}{\vartwo}{\tmthree_n}) \tmthreevariant_n}}) \ls{\tmtwo}$,
+        and, in turn, the simulated step yields
+          $\tm' / \redextwo = (\lamp{\lab}{\var}{\con'_{\tmfour}\of{
+            \subs{\tmthree_1}{\vartwo}{\tmthreevariant_1}, \hdots,
+            \subs{\tmthree_n}{\vartwo}{\tmthreevariant_n}}}) \ls{\tmtwo}$,
+        so $\names(\redextwo / \tm') = \set{\lab_1, \hdots, \lab_n}$, which does not contain $\lab$ because
+        labels are pairwise distinct.
+      \item {\bf $\redextwo$ is in $\tmtwo$.}
+        So $\tmtwo = \con_{\tmtwo}\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant)}$.
+        Like before,
+          $\redextwo : (\lam{\var}{\tmfour}) \con_{\tmtwo}\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}
+             \to (\lam{\var}{\tmfour}) \con_{\tmtwo}\of{\subs{\tmthree}{\vartwo}{\tmthreevariant}}$.
+        By \rlem{refinement_context} we have that $\tm' = (\lamp{\lab}{\var}{\tmfour'}) [\con'_{\tmtwo}\of{
+          (\lamp{\lab_{i,1}}{\vartwo}{\tmthree_{i,1}}) \tmthreevariant_{i,1}, \hdots,
+          (\lamp{\lab_{i,m_i}}{\vartwo}{\tmthree_{i,m_i}}) \tmthreevariant_{i,m_i}}]_{i=1}^n$, then
+        $\names(\redextwo / \tm') = \bigcup_{i=1}^n \set{\lab_{i,1}, \hdots, \lab_{i, m_i}}$, which
+        does not contain $\lab$ because labels are pairwise distinct.
+    \end{enumerate}
+  \item {\bf $\con = \lam{\varthree}{\con_1}$.} This case is straightforward by inductive hypothesis.
+  \item {\bf $\con = \tmfive \ \con_1$.}
+    Now we have that
+    $\redex : \tmfive \ \con_1\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}
+      \to \tmfive \ \con_1\of{\subs{\tmthree}{\vartwo}{\tmthreevariant}}$.
+    And we can again separate in cases depending on where $\redextwo$ is.
+    \begin{enumerate}
+      \item {\bf $\redextwo$ is in $\tmfive$.} What that means is that
+        $\redextwo : \tmfive \ \con_1\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}
+          \to \tmsix \ \con_1\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}$.
+        Using the same reasoning as before, we know that
+        $\tm' = \tmfive' [\con'_{1,i}\of{
+          (\lamp{\lab_{i,1}}{\vartwo}{\tmthree_{i,1}}) \tmthreevariant_{i,1}, \hdots,
+          (\lamp{\lab_{i,m_i}}{\vartwo}{\tmthree_{i,m_i}}) \tmthreevariant_{i,m_i}}
+          ]_{i=1}^n$.
+        As $\redextwo / \tm'$ only reduces lambdas in $\tmfive'$, and $\redextwo / \tm'$ only reduces lambdas
+        on the argument list of the application, the set of names are disjoint.
+      \item {\bf $\redextwo$ is in $\con_1\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}$.}
+        This case is straightforward by inductive hypothesis.
+    \end{enumerate}
+  \item {\bf $\con = \con_1 \ \tmfive$.}
+    In this case
+    $\redex : \con_1\of{\lam{\vartwo}{\tmthree}) \tmthreevariant} \ \tmfive \to
+              \con_1\of{\subs{\tmthree}{\vartwo}{\tmthreevariant}} \ \tmfive$,
+    and we will, once again, divide in two cases, depending on where the redex $\redextwo$ is located.
+    \begin{enumerate}
+      \item {\bf $\redextwo$ is in $\con_1\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}$.}
+        This case is straightforward by inductive hypothesis.
+      \item {\bf $\redextwo$ is in $\tmfive$.}
+        More precisely, what we have is that
+        $\redextwo : \con_1\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant} \ \tmfive
+          \to \con_1\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant} \ \tmsix$.
+        Moreover,
+        $\tm' = \con_1\of{
+          (\lamp{\lab_1}{\vartwo}{\tmthree_1}) \tmthreevariant_1, \hdots,
+          (\lamp{\lab_m}{\vartwo}{\tmthree_m}) \tmthreevariant_m
+        } [\tmfive_1, \hdots, \tmfive_n]$.
+        Hence, $\names(\redex / \tm') = \set{\lab_1, \hdots, \lab_m}$. Also, $\redextwo / \tm'$
+        only reduces lambdas in the terms $\tmfive_1$, ..., $\tmfive_n$, which must be different
+        than the ones reduced by $\redex / \tm'$ because lambda labels are pairwise distinct.
+    \end{enumerate}
+\end{enumerate}
+\end{gonzaenv}
+\end{proof}
+
+\begin{lemma}[A set of steps and a disjoint derivation have disjoint simulation residuals]
+\llem{disjoint_redex_derivation_have_disjoint_images}
+Let $\redexset$ be a set of coinitial steps such that no residuals of any step in $\redexset$
+are contracted along a derivation $\redseqtwo$.
+Then $\names(\redexset/\tm')$ and $\names(\redseqtwo/\tm')$ are disjoint.
+\end{lemma}
+\begin{proof}
+We proceed by induction on $\redseqtwo$. If $\redseqtwo$ is empty, it is immediate,
+so suppose that $\redseqtwo = \redexthree\redseqthree$.
+Note that $\redexthree \not\in \redexset$,
+since residuals of redexes in $\redexset$ are never contracted in the derivation $\redexthree\redseqthree$.
+This implies that $\names(\redexset/\tm') \cap \names(\redexthree/\tm') = \emptyset$
+by \rlem{disjoint_redex_derivation_have_disjoint_images}.
+Moreover, this means that:
+\[
+  \begin{array}{rcll}
+  \names(\redexset/\tm')
+  & = & \names(\redexset/\tm') \setminus \names(\redexthree/\tm') & \text{since they are disjoint sets} \\
+  & = & \names((\redexset/\tm')/(\redexthree/\tm')) & \text{by \rlem{names_after_projection_along_a_step}} \\
+  & = & \names((\redexset/\redexthree)/(\tm'/\redexthree)) & \text{by \rcoro{permutation_equivalence_in_terms_of_names} and \rlem{generalized_cube_lemma}} \\
+  \end{array}
+\]
+Then:
+\[
+  \begin{array}{rcll}
+  \names(\redexset/\tm') \cap \names(\redseqtwo/\tm')
+  & = & \names(\redexset/\tm') \cap \names(\redexthree\redseqthree/\tm') \\
+  & = & \names(\redexset/\tm') \cap \names((\redexthree/\tm')(\redseqthree/(\tm'/\redexthree))) \\
+  & = & (\names(\redexset/\tm') \cap \names(\redexthree/\tm')) \cup \\
+    && (\names(\redexset/\tm') \cap \names(\redseqthree/(\tm'/\redexthree))) \\
+  & = & \names(\redexset/\tm') \cap \names(\redseqthree/(\tm'/\redexthree)) \\
+  && \text{ since $\names(\redexset/\tm') \cap \names(\redexthree/\tm')$ is empty} \\
+  & = & \names((\redexset/\redexthree)/(\tm'/\redexthree)) \cap \names(\redseqthree/(\tm'/\redexthree)) \\
+  & = & \emptyset \HS\text{ by \ih} \\
+  \end{array}
+\]
+To justify the last step, observe that residuals of redexes in the set $\redexset/\redexthree$
+may not be contracted along the derivation $\redseqthree$,
+since this would imply that a residual of a redex in the set $\redexset$
+is contracted along the derivation $\redexthree\redseqthree$,
+contradicting the hypothesis.
+\end{proof}
+
+\begin{lemma}[The leftmost coarse step has at most one residual]
+\llem{leftmost_coarse_step_has_at_most_one_residual}
+Let $\redex_0$ be the leftmost coarse step for $(\redseq,\tm')$,
+and let $\redseqtwo \permle \redseq$.
+Then $\#(\redex_0/\redseqtwo) \leq 1$.
+%:%Moreover, if $\redex_0 \permle \redseqtwo$ then $\redex_0 \in \redseqtwo$.
+%:%Recall that $\redex \in \redseq$ means that $\redseq$ can be written as $\redseq_1\redextwo\redseqtwo_2$
+%:%such that $\redextwo$ is a residual of $\redex$, \ie $\redextwo \in \redex/\redseq_1$.
+\end{lemma}
+\begin{proof}
+By induction on the length of $\redseqtwo$. The base case is immediate.
+For the inductive step, let $\redseqtwo = \redextwo \redseqthree \permle \redseq$.
+Then in particular $\redextwo \permle \redseq$.
+We consider two cases, depending on whether $\redex_0 = \redextwo$.
+\begin{enumerate}
+\item {\bf Equal, $\redex_0 = \redextwo$.}
+  Then $\redex_0/\redseqtwo = \redex_0/\redex_0\redseqthree = \emptyset$ and we are done.
+  %:%Moreover, $\redex_0 \in \redex_0\redseqthree$.
+\item {\bf Non-equal, $\redex_0 \neq \redextwo$.}
+  First we argue that $\redex_0/\redextwo$ has exactly one residual $\redex_1 \in \redex_0/\redextwo$.
+  To see this, we consider two further cases, depending on whether
+  $\redextwo$ is $\tm'$-garbage or not:
+  \begin{enumerate}
+  \item {\bf If $\redextwo$ is not $\tm'$-garbage.}
+    Then $\redextwo \permle \redseq$ and $\redextwo/\tm' = \emptyset$, so $\redextwo$ is coarse for $(\redseq,\tm')$.
+    Since $\redex_0$ is the leftmost coarse step, this means that $\redex$ is to the left of $\redextwo$.
+    So $\redex_0$ has exactly one residual $\redex_1 \in \redex_0/\redextwo$.
+  \item {\bf If $\redextwo$ is $\tm'$-garbage.}
+    Let us write the term $\tm$ as $\tm = \conof{(\lam{\var}{\tmtwo})\tmthree}$, where
+    $(\lam{\var}{\tmtwo})\tmthree$ is the pattern of the redex $\redextwo$.
+    By \rlem{refinement_context}
+    the term $\tm'$ is of the form $\tm' = \con'[\Delta_1,\hdots,\Delta_n]$,
+    where $\con'$ is a many-hole context such that $\con' \refines \con$
+    and $\Delta_i \refines (\lam{\var}{\tmtwo})\tmthree$ for all $1 \leq i \leq n$.
+    We know that $\redextwo$ is garbage, so $n = 0$ and $\tm' = \con'$ is actually
+    a $0$-hole context (\ie a term).
+
+    On the other hand, $\redex_0$ is coarse for $(\redseq,\tm')$, so in particular
+    it is not $\tm'$-garbage.
+    This means that the pattern of the redex $\redex_0$ cannot occur inside the argument $\tmthree$
+    of the redex $\redextwo$.
+    So $\redextwo$ does not erase or duplicate $\redex$,
+    \ie $\redex_0$ has exactly one residual $\redex_1 \in \redex_0/\redextwo$.
+  \end{enumerate}
+  Now we have that $\redex_0/\redextwo\redseqthree = \redex_1/\redseqthree$.
+  We are left to show that $\#(\redex_0/\redextwo\redseqthree) \leq 1$.
+  %:%and, moreover, if $\redex_0 \permle \redextwo\redseqthree$ then $\redex_0 \in \redextwo\redseqthree$.
+  Let us show that we may apply the \ih on $\redex_1$.
+  More precisely, observe that $\redseqthree \permle \redseq/\redextwo$ since $\redextwo\redseqthree \permle \redseq$.
+  To apply the \ih it suffices to show that $\redex_1$ is coarse for $(\redseq/\redextwo,\tm'/\redextwo)$.
+  Indeed, we may check the two conditions
+  for the definition that $\redex_1$ is coarse for $(\redseq/\redextwo,\tm'/\redextwo)$.
+  \begin{enumerate}
+  \item Firstly, $\redex_1 = \redex_0/\redextwo \permle \redseq/\redextwo$ holds, as a consequence of the fact that $\redex_0 \permle \redseq$.
+  \item Secondly, we may check that $\redex_1$ is not $(\tm'/\redextwo)$-garbage.
+        To see this, \ie that $\redex_1/(\tm'/\redextwo)$ is non-empty,
+        we check that $\names(\redex_1/(\tm'/\redextwo))$ is non-empty.
+        \[
+          \begin{array}{rcll}
+          \names(\redex_1/(\tm'/\redextwo))
+          & = & \names((\redex_0/\redextwo)/(\tm'/\redextwo)) & \text{ by definition of $\redex_1$} \\
+          & = & \names((\redex_0/\tm')/(\redextwo/\tm')) & \text{ by \rlem{generalized_cube_lemma}} \\
+          & = & \names(\redex_0/\tm') \setminus \names(\redextwo/\tm') & \text{ by \rlem{names_after_projection_along_a_step}} \\
+          & = & \names(\redex_0/\tm')
+          \end{array}
+        \]
+        For the last step, note that $\names(\redex_0/\tm')$ and $\names(\redextwo/\tm')$ are disjoint,
+        since $\redex_0 \neq \redextwo$, as a consequence of \rlem{different_redexes_have_disjoint_images}.
+  \end{enumerate}
+  Applying the \ih, we obtain that $\#(\redex_0/\redextwo\redseqthree) = \#(\redex_1/\redseqthree) \leq 1$.  
+  %:%Moreover, suppose that $\redex_0 \permle \redseqtwo = \redextwo\redseqthree$.
+  %:%Then $\redex_1 = \redex_0/\redextwo \permle \redseqthree$.
+  %:%By \ih, $\redex_1 \in \redseqthree$, so $\redex_0 \in \redseqthree$, which concludes the proof.
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[Prefix of garbage]
+\llem{prefix_of_garbage}
+If $\redseq \permle \redseqtwo$ and $\redseqtwo$ is garbage, then $\redseq$ is garbage.
+More precisely, let $\redseq \permle \redseqtwo$ and $\tm' \refines \src(\redseq)$
+such that $\redseqtwo$ is $\tm'$-garbage.
+Then $\redseq$ is $\tm'$-garbage.
+\end{lemma}
+\begin{proof}
+Since $\redseq \permle \redseqtwo$
+then by \rcoro{simulation_residuals_and_prefixes}.
+we have $\redseq/\tm' \permle \redseqtwo/\tm' = \emptyDerivation$,
+so $\redseq/\tm'$ is garbage, as required.
+\end{proof}
+
+\begin{lemma}[Composition of garbage]
+\llem{composition_of_garbage_is_garbage}
+The composition $\redseq\redseqtwo$ is garbage if and only if $\redseq$ and $\redseqtwo$ are garbage.
+More precisely, if $\redseq$ and $\redseqtwo$ are composable derivations and $\tm' \refines \src(\redseq)$,
+then
+$\redseq\redseqtwo$ is $\tm'$-garbage
+if and only if
+$\redseq$ is $\tm'$-garbage and $\redseqtwo$ is $(\tm'/\redseq)$-garbage.
+\end{lemma}
+\begin{proof}
+Straightforward:
+\[
+  \begin{array}{rcl}
+  \redseq\redseqtwo \text{ is garbage }
+  & \text{ if and only if }
+  & \redseq\redseqtwo/\tm' = \emptyDerivation \\
+  & \text{ if and only if }
+  & (\redseq/\tm')(\redseqtwo/(\tm'/\redseq)) = \emptyDerivation \\
+  & \text{ if and only if }
+  & \redseq/\tm' = \emptyDerivation \text{ and } \redseqtwo/(\tm'/\redseq) = \emptyDerivation \\
+  & \text{ if and only if }
+  & \redseq \text{ and } \redseqtwo \text{ are garbage}
+  \end{array}
+\]
+\end{proof}
+
+\begin{lemma}[Projection of garbage]
+\llem{projection_of_garbage_is_garbage}
+If $\redseq$ is garbage then $\redseq/\redseqtwo$ is garbage.
+More precisely, let $\redseq$ and $\redseqtwo$ are coinitial derivations and $\tm' \refines \src(\redseq)$.
+If $\redseq$ is $\tm'$-garbage,
+then $\redseq/\redseqtwo$ is $(\tm'/\redseqtwo)$-garbage.
+\end{lemma}
+\begin{proof}
+Suppose that $\redseq$ is garbage. Then:
+\[
+  \begin{array}{rrll}
+    \redseq/\redseqtwo \text{ is garbage}
+  & \text{ if and only if }
+  & (\redseq/\redseqtwo)/(\tm'/\redseqtwo) = \emptyDerivation \\
+  & \text{ if and only if }
+  & (\redseq/\tm')/(\redseqtwo/\tm') = \emptyDerivation & \text{ by \rlem{generalized_cube_lemma}} \\
+  & \text{ if }
+  & \redseq/\tm' = \emptyDerivation \\
+  & \text{ if and only if }
+  & \redseq \text{ is garbage}
+  \end{array}
+\]
+\end{proof}
+
+\begin{lemma}[Join of garbage]
+\llem{join_of_garbage_is_garbage}
+If $\redseq$ and $\redseqtwo$ are garbage then $\redseq \sqcup \redseqtwo$ is garbage.
+\end{lemma}
+\begin{proof}
+Recall that $\redseq \sqcup \redseqtwo = \redseq(\redseqtwo/\redseq)$
+so this is a consequence of the facts
+that the composition of garbage is garbage~(\rlem{composition_of_garbage_is_garbage}),
+and that the projection of garbage is garbage~(\rlem{projection_of_garbage_is_garbage}).
+\end{proof}
+
+\begin{lemma}[Garbage only creates garbage]
+\llem{garbage_only_creates_garbage}
+Let $\redex$ and $\redextwo$ be composable steps in the $\lambda$-calculus,
+and let $\tm' \refines \src(\redex)$.
+If $\redex$ creates $\redextwo$ and $\redex$ is $\tm'$-garbage,
+then $\redextwo$ is $(\tm'/\redex)$-garbage.
+\end{lemma}
+\begin{proof} According to L\'evy~\cite{Tesis:Levy:1978},
+there are three creation cases in the $\lambda$-calculus.
+We consider the three possibilities for $\redex$ creating $\redextwo$:
+\begin{enumerate}
+\item
+  {\bf Case I,
+    $
+       \conof{(\lam{\var}{\var})(\lam{\vartwo}{\tmtwo})\tmthree}
+     \toabeta{\redex}
+       \conof{(\lam{\vartwo}{\tmtwo})\tmthree}
+     \toabeta{\redextwo}
+       \conof{\subs{\tmtwo}{\vartwo}{\tmthree}}
+    $.}
+  Then by \rlem{refinement_context},
+  the term $\tm'$ is of the form
+  $\con'\of{\Delta_1,\hdots,\Delta_n}$
+  where $\con'$ is an $n$-hole context such that $\con' \refines \conof{\conbase\,\tmthree}$
+  and $\Delta_i \refines (\lam{\var}{\var})(\lam{\vartwo}{\tmtwo})$ for all $1 \leq i \leq n$.
+  Since $\redex$ is garbage, we know that actually $n = 0$.
+  So $\tm' \refines \conof{\conbase\,\tmthree}$ and $\redex/\tm' : \tm' \rtodist \tm' = \tm'/\redex$ in zero steps.
+  Hence $\tm' \refines \conof{(\lam{\vartwo}{\tmtwo})\tmthree}$,
+  so by \rlem{refinement_context},
+  the term $\tm'$ can be written in a unique way as
+  $\con''\of{\Sigma_1,\hdots,\Sigma_m}$, where $\con''$ is an $m$-hole context
+  such that $\con'' \refines \conof{\conbase\,\tmthree}$ and $\Sigma_i \refines \lam{\vartwo}{\tmtwo}$ for all $1 \leq i \leq m$.
+  Since the decomposition is unique and $\tm' \refines \conof{\conbase\,\tmthree}$,
+  we conclude that $m = 0$.
+  Hence $\redextwo$ is $(\tm'/\redex)$-garbage.
+\item
+  {\bf Case II,
+    $
+       \conof{(\lam{\var}{\lam{\vartwo}{\tmtwo}})\,\tmthree\,\tmfour}
+     \toabeta{\redex}
+       \conof{(\lam{\vartwo}{\subs{\tmtwo}{\var}{\tmthree}})\,\tmfour}
+     \toabeta{\redextwo}
+       \conof{\subs{\subs{\tmtwo}{\var}{\tmthree}}{\vartwo}{\tmfour}}
+    $.}
+  Then by \rlem{refinement_context},
+  the term $\tm'$ is of the form
+  $\con'\of{\Delta_1,\hdots,\Delta_n}$
+  where $\con'$ is an $n$-hole context such that $\con' \refines \conof{\conbase\,\tmfour}$
+  and $\Delta_i \refines (\lam{\var}{\lam{\vartwo}{\tmtwo}})\,\tmthree$ for all $1 \leq i \leq n$.
+  Since $\redex$ is garbage, we know that actually $n = 0$.
+  So $\tm' \refines \conof{\conbase\,\tmfour}$ and $\redex/\tm' : \tm' \rtodist \tm' = \tm'/\redex$
+  in zero steps. Hence $\tm' \refines \conof{(\lam{\vartwo}{\subs{\tmtwo}{\var}{\tmthree}})\,\tmfour}$,
+  so by \rlem{refinement_context}, the term $\tm'$ can be written in a unique way as
+  $\con''\of{\Sigma_1,\hdots,\Sigma_n}$, where $\con''$ is an $m$-hole context such that
+  $\con'' \refines \conof{\conbase\,\tmfour}$ and $\Sigma_i \refines \lam{\vartwo}{\subs{\tmtwo}{\var}{\tmthree}}$
+  for all $1 \leq i \leq m$.
+  Since the decomposition is unique and $\tm' \refines \conof{\conbase\,\tmfour}$,
+  we conclude that $m = 0$.
+  Hence $\redextwo$ is $(\tm'/\redex)$-garbage.
+\item {\bf Case III, $
+       \con_1\of{(\lam{\var}{\con_2\of{\var\,\tmtwo}})\,(\lam{\vartwo}{\tmthree})}
+     \toabeta{\redex}
+       \con_1\of{\hat{\con}_2\of{(\lam{\vartwo}{\tmthree})\,\hat{\tmtwo}}}
+     \toabeta{\redextwo}
+       \con_1\of{\hat{\con}_2\of{\subs{\tmthree}{\vartwo}{\hat{\tmtwo}}}}
+    $,
+    where
+      $\hat{\con}_2 = \subs{\con_2}{\var}{\lam{\vartwo}{\tmthree}}$
+    and
+      $\hat{\tm} = \subs{\tm}{\var}{\lam{\vartwo}{\tmthree}}$.}
+  Then by \rlem{refinement_context},
+  the term $\tm'$ is of the form $\con'\of{\Delta_1,\hdots,\Delta_n}$
+  where $\con'$ is an $n$-hole context such that $\con' \refines \con_1$
+  and $\Delta_i \refines (\lam{\var}{\con_2\of{\var\,\tmtwo}})\,(\lam{\vartwo}{\tmthree})$ for all $1 \leq i \leq n$.
+  Since $\redex$ is garbage, we know that actually $n = 0$.
+  So $\tm' \refines \con_1$ and $\redex/\tm' : \tm' \rtodist \tm' = \tm'/\redex$ in zero steps.
+  Hence $\tm' \refines \con_1\of{\hat{\con}_2\of{(\lam{\vartwo}{\tmthree})\,\hat{\tmtwo}}}$,
+  so by \rlem{refinement_context}, the term $\tm'$ can be written in a unique way as
+  $\con''\of{\Sigma_1,\hdots,\Sigma_m}$, where $\con'' \refines \con_1$ and
+  $\Sigma_i \refines \hat{\con}_2\of{(\lam{\vartwo}{\tmthree})\,\hat{\tmtwo}}$ for all $1 \leq i \leq m$.
+  Since the decomposition is unique and $\tm' \refines \con_1$, we conclude that $m = 0$.
+  Hence $\redextwo$ is $(\tm'/\redex)$-garbage.
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[Garbage only duplicates garbage]
+\llem{garbage_only_duplicates_garbage}
+Let $\redex$ and $\redextwo$ be coinitial steps in the $\lambda$-calculus
+and let $\tm' \refines \src(\redex)$.
+If $\redex$ duplicates $\redextwo$, \ie $\#(\redextwo/\redex) > 1$,
+and $\redex$ is $\tm'$-garbage,
+then $\redextwo$ is $(\tm'/\redex)$-garbage.
+\end{lemma}
+\begin{proof}
+Since $\redex$ duplicates $\redextwo$,
+the redex contracted by $\redextwo$ 
+lies inside the argument of $\redex$, that is,
+the source term is of the form $\con_1\of{(\lam{\var}{\tm})\con_2\of{(\lam{\vartwo}{\tmtwo})\tmthree}}$
+where the pattern of $\redex$ is $(\lam{\var}{\tm})\con_2\of{(\lam{\vartwo}{\tmtwo})\tmthree}$,
+and the pattern of $\redextwo$ is $(\lam{\vartwo}{\tmtwo})\tmthree$.
+By \rlem{refinement_context},
+the term $\tm'$ is of the form $\con'\of{\Delta_1,\hdots,\Delta_n}$
+where $\con'$ is an $n$-hole context
+such that $\con' \refines \con$ and $\Delta_i \refines (\lam{\var}{\tm})\con_2\of{(\lam{\vartwo}{\tmtwo})\tmthree}$ for all $1 \leq i \leq n$.
+Since $\redex$ is garbage, we know that $n = 0$.
+By \rlem{refinement_context},
+the term $\tm'$ can be written as $\con''\of{\Sigma_1,\hdots,\Sigma_m}$
+where $\con'' \refines \con_1\of{(\lam{\var}{\tm})\con_2}$
+and $\Sigma_i \refines (\lam{\vartwo}{\tmtwo})\tmthree$ for all $1 \leq i \leq m$.
+Note that $\tm' \refines \con_1$ so $\tm' \refines \con_1\of{(\lam{\var}{\tm})\con_2}$
+by \rlem{contexts_refined_by_terms_may_be_filled}.
+Since the decomposition is unique, this means that $m = 0$,
+and thus $\redextwo$ is garbage.
+\end{proof}
+
+\begin{proposition}[Characterization of garbage]
+\lprop{characterization_of_garbage}
+Let $\redseq : \tm \rtobeta \tmtwo$ and $\tm' \refines \tm$.
+Then the following are equivalent:
+\begin{enumerate}
+\item $\redseq \sieve \tm' = \emptyDerivation$.
+\item There are no coarse steps for $(\redseq,\tm')$.
+\item The derivation $\redseq$ is $\tm'$-garbage.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+It is immediate to check that items 1 and 2 are equivalent, by definition of sieving,
+so let us prove $2 \implies 3$ and $3 \implies 2$:
+\begin{itemize}
+\item $(2 \implies 3)$
+  We prove the contrapositive, namely that if $\redseq$ is not garbage,
+  there is a coarse step for $(\redseq,\tm')$.
+  Suppose that $\redseq$ is not garbage, \ie $\redseq/\tm' \neq \emptyDerivation$.
+  Then
+  by \rlem{composition_of_garbage_is_garbage}
+  we have that $\redseq$ can be written as $\redseq = \redseq_1 \redex \redseq_2$ where
+  all the steps in $\redseq_1$ are garbage and $\redex$ is not garbage.
+  By the fact that garbage only creates garbage~(\rlem{garbage_only_creates_garbage})
+  the step $\redex$ has an ancestor $\redex_0$, \ie $\redex \in \redex_0/\redseq_1$.
+  Moreover, since garbage only duplicates garbage~(\rlem{garbage_only_duplicates_garbage})
+  we have that $\redex_0/\redseq_1 = \redex$.
+  Given that $\redex$ is not garbage, we have that:
+  \[
+    \begin{array}{rcll}
+          (\redex_0/\tm')/(\redseq_1/\tm')
+    & = & (\redex_0/\redseq_1)/(\tm'/\redseq_1) & \text{ by \rlem{generalized_cube_lemma}} \\
+    & = & \redex/(\tm'/\redseq_1) \\
+    & \neq & \emptyset \\
+    \end{array}
+  \]
+  Since $(\redex_0/\tm')/(\redseq_1/\tm') \neq \emptyset$, in particular,
+  $\redex_0/\tm' \neq \emptyset$, which means that $\redex_0$ is not garbage.
+  Moreover, $\redex_0 \permle \redseq_1\redex\redseq_2 = \redseq$.
+  So $\redex_0$ is coarse for $(\redseq,\tm')$.
+\item $(3 \implies 2)$
+  Let $\redseq$ be garbage, suppose that there is a coarse step $\redex$ for $(\redseq,\tm')$,
+  and let us derive a contradiction.
+  Since $\redex$ is coarse for $(\redseq,\tm')$,
+  we have that $\redex \permle \redseq$,
+  so $\redex/\tm' \permle \redseq/\tm'$ by \rcoro{simulation_residuals_and_prefixes}.
+  But $\redseq/\tm'$ is empty because $\redseq$ is $\tm'$-garbage,
+  that is, $\redex/\tm' \permle \redseqtwo/\tm' = \emptyDerivation$,
+  which means that $\redex$ is also $\tm'$-garbage.
+  This contradicts the fact that $\redex$ is coarse for $(\redseq,\tm')$.
+\end{itemize}
+\end{proof}
+
+\begin{lemma}
+\llem{stable_non_garbage}
+Let $\redex$ be a step, let $\redseq$ a coinitial derivation,
+and let $\tm' \refines \src(\redex)$.
+Suppose that $\redex$ is not $\tm'$-garbage,
+and that $\redex / \redseq_1$ is a singleton for every prefix $\redseq_1 \permle \redseq$.
+Then $\redex/\redseq$ is not $(\tm'/\redseq)$-garbage.
+\end{lemma}
+\begin{proof}
+By induction on $\redseq$.
+The base case, when $\redseq = \emptyDerivation$, is immediate
+since we know that $\redex$ is not garbage.
+For the inductive step, suppose that $\redseq = \redextwo\redseqtwo$.
+We know that $\redex/\redextwo$ is a singleton,
+so let $\redex_1 = \redex/\redextwo$.
+Note that:
+\[
+  \begin{array}{rcll}
+  \redex_1/(\tm'/\redextwo)
+  & = & (\redex/\redextwo)/(\tm'/\redextwo) \\
+  & = & (\redex/\tm')/(\redextwo/\tm') & \text{ by \rlem{generalized_cube_lemma}} \\
+  \end{array}
+\]
+We know that $\redex/\tm'$ is non-empty, because $\redex$ is not garbage.
+Moreover, $\names(\redex/\tm')$ and $\names(\redextwo/\tm')$ are disjoint
+since $\redex \neq \redextwo$, by \rlem{different_redexes_have_disjoint_images}.
+So $\#\names((\redex/\tm')/(\redextwo/\tm')) = \names(\redex/\tm')$ by \rlem{names_after_projection_along_a_step}.
+This means that the set $\redex_1/(\tm'/\redextwo)$ is non-empty,
+so $\redex_1$ is not $(\tm'/\redextwo)$-garbage .
+By \ih we obtain that $\redex_1/\redseqtwo$ is not $((\tm'/\redextwo)/\redseqtwo)$-garbage,
+which means that
+$(\redex/\redextwo\redseqtwo)/(\tm'/\redextwo\redseqtwo) \neq \emptyset$,
+\ie that $\redex/\redextwo\redseqtwo$ is not garbage, as required.
+
+To be able to apply the \ih, observe that if $\redseqtwo_1$ is a prefix of $\redseqtwo$,
+then $\redextwo\redseqtwo_1$ is a prefix of $\redseq$,
+so the fact that $\redex$ has a single residual after $\redextwo\redseqtwo_1$
+implies that the step $\redex_1 = \redex/\redextwo$ has a single residual after $\redseqtwo_1$.
+\end{proof}
+
+\begin{proposition}[Characterization of garbage-free derivations]
+\lprop{characterization_of_garbage_free_derivations}
+Let $\redseq : \tm \rtobeta \tmtwo$ and $\tm' \refines \tm$.
+Then the following are equivalent:
+\begin{enumerate}
+\item $\redseq$ is $\tm'$-garbage-free,
+\item $\redseq \permeq \redseq \sieve \tm'$,
+\item $\redseq \permeq \redseqtwo \sieve \tm'$ for some derivation $\redseqtwo$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+We prove each direction separately:
+\begin{itemize}
+\item $(1 \implies 2)$
+  Suppose that $\redseq$ is $\tm'$-garbage-free,
+  and let us show that $\redseq \permeq \redseq \sieve \tm'$
+  by induction on the length of $\redseq \sieve \tm'$.
+  There are two cases, depending on whether there exists a coarse step for $(\redseq,\tm')$:
+  \begin{enumerate}
+  \item {\bf If there are no coarse steps for $(\redseq,\tm')$.}
+
+    By \rprop{characterization_of_garbage}, any derivation with no coarse steps is garbage.
+    So $\redseq$ is $\tm'$-garbage.
+    Since $\redseq$ is garbage-free, this means that $\redseq = \emptyDerivation$.
+    Hence $\redseq = \emptyDerivation = \redseq \sieve \tm'$, as required.
+  \item {\bf If there exists a coarse step for $(\redseq,\tm')$.}
+    Let $\redex_0$ be the leftmost such step.
+    Firstly, note that $\redseq \permeq \redex_0(\redseq/\redex_0)$. Indeed:
+    \[
+      \begin{array}{rcll}
+      \redex_0(\redseq/\redex_0)
+      & \permeq & \redseq(\redex_0/\redseq)  & \text{since $A(B/A) \permeq B(A/B)$ in general} \\
+      & = & \redseq                          & \text{since $\redex_0 \permle \redseq$, because $\redex_0$ is coarse for $(\redseq,\tm')$} \\
+      \end{array}
+    \]
+    Secondly, we claim that $\redseq/\redex_0$ is $(\tm'/\redex_0)$-garbage-free.
+    Let $\redseqtwo \permle \redseq/\redex_0$ such that $(\redseq/\redex_0)/\redseqtwo$ is garbage
+    with respect to the term $(\tm'/\redex_0)/\redseqtwo = \tm'/\redex_0\redseqtwo$,
+    and let us show that $(\redseq/\redex_0)/\redseqtwo$ is empty.
+    Note that:
+    \[
+      \begin{array}{rcll}
+      \redex_0\redseqtwo
+      & \permle & \redex_0(\redseq/\redex_0) & \text{since $\redseqtwo \permle \redseq/\redex_0$} \\
+      & \permeq & \redseq                    & \text{as already noted} \\
+      \end{array}
+    \]
+    Moreover, we know that the derivation $\redseq/\redex_0\redseqtwo = (\redseq/\redex_0)/\redseqtwo$ is
+    $(\tm'/\redex_0\redseqtwo)$-garbage.
+    So, given that $\redseq$ is $\tm'$-garbage-free, we conclude that
+    $\redseq/\redex_0\redseqtwo = \emptyDerivation$, that is $(\redseq/\redex_0)/\redseqtwo = \emptyDerivation$,
+    which completes the proof of the claim that $\redseq/\redex_0$ is $(\tm'/\redex_0)$-garbage-free.
+
+    Now, we have:
+    \[
+      \begin{array}{rcll}
+        \redseq & \permeq & \redex_0(\redseq/\redex_0)                          & \text{as already noted} \\
+                & \permeq & \redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0)) & \text{by \ih since $\redseq/\redex_0$ is} \\
+                                                                              &&& \text{ $(\tm'/\redex_0)$-garbage-free} \\
+                & \permeq & \redseq \sieve \tm'                                 & \text{by definition of sieving} \\
+      \end{array}
+    \]
+    by which we conclude.
+  \end{enumerate}
+\item $(2 \implies 3)$ Obvious, taking $\redseqtwo := \redseq$.
+\item $(3 \implies 1)$
+  Let $\redseq \permeq \redseqtwo \sieve \tm'$.
+  Let us show that $\redseq$ is garbage-free by induction on the length of $\redseqtwo \sieve \tm'$.
+  There are two cases, depending on whether there exists a coarse step for $(\redseqtwo,\tm')$.
+  \begin{enumerate}
+  \item {\bf If there are no coarse steps for $(\redseqtwo,\tm')$.}
+    Then $\redseq \permeq \redseqtwo \sieve \tm' = \emptyDerivation$, which means that $\redseq = \emptyDerivation$.
+    The empty derivation is trivially garbage-free.
+  \item {\bf If there exists a coarse step for $(\redseqtwo,\tm')$.}
+    Let $\redex_0$ be the leftmost coarse step for $(\redseqtwo,\tm')$.
+    Then $\redseq \permeq \redseqtwo \sieve \tm' = \redex_0((\redseqtwo/\redex_0) \sieve (\tm'/\redex_0))$.
+    To see that $\redseq$ is $\tm'$-garbage-free,
+    let $\redseqthree \permle \redseq$ such that $\redseq/\redseqthree$ is garbage,
+    and let us show that $\redseq/\redseqthree$ is empty. 
+
+    We know that $\redseq/\redseqthree$ is of the following form (modulo permutation equivalence):
+    \[
+       \redseq/\redseqthree \permeq
+       \frac{\redex_0((\redseqtwo/\redex_0) \sieve (\tm'/\redex_0))}{\redseqthree}
+       =
+       \left(\frac{\redex_0}{\redseqthree}\right) \left(\frac{(\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)}{\redseqthree/\redex_0}\right)
+    \]
+    That is, we know that the following derivation is $(\tm'/\redseqthree)$-garbage,
+    and it suffices to show that it is empty:
+    \[
+      \left(\frac{\redex_0}{\redseqthree}\right) \left(\frac{(\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)}{\redseqthree/\redex_0}\right)
+    \]
+    Recall that, in general, $AB$ is garbage if and only if $A$ and $B$ are garbage (\rlem{composition_of_garbage_is_garbage}).
+    Similarly, $AB$ is empty if and only if $A$ and $B$ are empty.
+    So it suffices to prove the two following implications:
+    \[
+      \begin{array}{clll}
+      {\bf (A)} &
+      \text{ If } & \redex_0/\redseqthree \text{ is garbage,} & \text{ then it is empty.} \\
+      {\bf (B)} &
+      \text{ If } & ((\redseqtwo/\redex_0) \sieve (\tm'/\redex_0))/(\redseqthree/\redex_0) \text{ is garbage,} & \text{ then it is empty.}
+      \end{array}
+    \]
+    Let us check that each implication holds:
+    \begin{itemize}
+    \item {\bf (A)}
+      Suppose that $\redex_0/\redseqthree$ is $(\tm'/\redseqthree)$-garbage,
+      and let us show that $\redex_0/\redseqthree$ is empty.
+      Knowing that the derivation $\redex_0/\redseqthree$ is garbage means that
+      $(\redex_0/\redseqthree)/(\tm'/\redseqthree) = \emptyset$.
+      %By the generalized cube lemma for simulation residuals~\rlem{generalized_cube_lemma},
+      %this is equivalent to saying that $(\redex_0/\tm')/(\redseqthree/\tm') = \emptyset$.
+      %On the other hand, since $\redex_0$ is coarse for $(\redseqtwo,\tm')$, we know that $\redex_0/\tm' \neq \emptyset$.
+      Since $\redex_0$ is the leftmost step coarse for $(\redseqtwo,\tm')$,
+      by \rlem{leftmost_coarse_step_has_at_most_one_residual}
+      we have that $\#(\redex_0/\redseqthree) \leq 1$.
+      If $\redex_0/\redseqthree$ is empty we are done, since this is what we wanted to prove.
+
+      The remaining possibility is that $\redex_0/\redseqthree$ be a singleton.
+      We argue that this case is impossible.
+      Note that for every prefix $\redseqthree_1 \permle \redseqthree$,
+      the set $\redex_0/\redseqthree_1$ is also a singleton,
+      since otherwise it would be empty, as a consequence of \rlem{leftmost_coarse_step_has_at_most_one_residual}.
+      So we may apply \rlem{stable_non_garbage} and conclude that,
+      since $\redex_0$ is not $\tm'$-garbage
+      then $\redex_0/\redseqthree$ is not $(\tm'/\redseqthree)$-garbage.
+      This contradicts the hypothesis.
+    \item {\bf (B)}
+      Suppose that $((\redseqtwo/\redex_0) \sieve (\tm'/\redex_0))/(\redseqthree/\redex_0)$ is garbage
+      with respect to the term $(\tm'/\redex_0)/(\redseqthree/\redex_0)$, and let us show that it is empty.
+      Since $(\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)$
+      is a shorter derivation than $\redseqtwo \sieve \tm'$,
+      we may apply the \ih we obtain that
+      $(\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)$ is $(\tm'/\redex_0)$-garbage-free.
+      Moreover, the following holds:
+      \[\redseqthree/\redex_0 \permle \redseq/\redex_0 \permeq (\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)\]
+
+      So, by definition of $(\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)$
+      being garbage-free,
+      the fact that
+      the derivation
+      $((\redseqtwo/\redex_0) \sieve (\tm'/\redex_0))/(\redseqthree/\redex_0)$ is garbage
+      implies that it is empty, as required.
+    \end{itemize}
+  \end{enumerate}
+\end{itemize}
+\end{proof}
+
+\begin{lemma}[The projection after a sieve is garbage]
+\llem{projection_after_sieving_is_garbage}
+Let $\redseq : \tm \rtobeta \tmtwo$ and $\tm' \refines \tm$.
+Then $\redseq/(\redseq \sieve \tm')$ is $(\tm'/(\redseq \sieve \tm'))$-garbage.
+\end{lemma}
+\begin{proof}
+By induction on the length of $\redseq \sieve \tm'$.
+There are two cases, depending on whether there exists a coarse step for $(\redseq,\tm')$.
+\begin{enumerate}
+\item {\bf If there are no coarse steps for $(\redseq,\tm')$.}
+  Then $\redseq \sieve \tm' = \emptyDerivation$.
+  Moreover, by \rprop{characterization_of_garbage}, a derivation with no
+  coarse steps is garbage. So $\redseq/(\redseq \sieve \tm') = \redseq$
+  is garbage, as required.
+\item {\bf If there exists a coarse step for $(\redseq,\tm')$.}
+  Let $\redex_0$ be the leftmost such step.
+  Moreover, let $\redseqtwo = \redseq/\redex_0$ and $\tmtwo' = \tm'/\redex_0$
+  Then:
+  \[
+    \begin{array}{rcll}
+    \redseq/(\redseq \sieve \tm')
+    & = & \redseq/(\redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0)) & \text{ by definition} \\
+    & = & (\redseq/\redex_0)/((\redseq/\redex_0) \sieve (\tm'/\redex_0)) \\
+    & = & \redseqtwo/(\redseqtwo \sieve \tmtwo') \\
+    \end{array}
+  \]
+  By \ih, $\redseqtwo/(\redseqtwo \sieve \tmtwo')$ is $(\tmtwo'/(\redseqtwo \sieve \tmtwo'))$-garbage.
+  That is:
+  \[
+    \frac{
+      \redseqtwo/(\redseqtwo \sieve \tmtwo')
+    }{
+      \tmtwo'/(\redseqtwo \sieve \tmtwo')
+    } = \emptyDerivation
+  \]
+  Unfolding the definitions of $\redseqtwo$ and $\tmtwo'$:
+  \[
+    \frac{
+      (\redseq/\redex_0)/((\redseq/\redex_0) \sieve (\tm'/\redex_0))
+    }{
+      (\tm'/\redex_0)/((\redseq/\redex_0) \sieve (\tm'/\redex_0))
+    } = \emptyDerivation
+  \]
+  Equivalently:
+  \[
+    \frac{
+      \redseq/\redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0))
+    }{
+      \tm'/\redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0))
+    } = \emptyDerivation
+  \]
+  Finally, by definition of sieve:
+  \[
+    \frac{
+      \redseq/(\redseq \sieve \tm')
+    }{
+      \tm'/(\redseq \sieve \tm')
+    } = \emptyDerivation
+  \]
+  which means that $\redseq/(\redseq \sieve \tm')$ is $(\tm'/(\redseq \sieve \tm'))$-garbage,
+  as wanted.
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[Sieving trailing garbage]
+\llem{sieving_trailing_garbage}
+Let $\redseq$ and $\redseqtwo$ be composable derivations, and let $\tm' \refines \src(\redseq)$.
+If $\redseqtwo$ is $(\tm'/\redseq)$-garbage, then $\redseq\redseqtwo \sieve \tm' = \redseq \sieve \tm'$.
+\end{lemma}
+\begin{proof}
+By induction on the length of $\redseq \sieve \tm'$.
+There are two cases, depending on whether there exists a coarse step for $(\redseq,\tm')$.
+\begin{enumerate}
+\item {\bf If there are no coarse steps for $(\redseq,\tm')$.}
+  Then by \rprop{characterization_of_garbage},
+  the derivation $\redseq$ is $\tm'$-garbage.
+  Recall that the composition of garbage is again garbage (\rlem{composition_of_garbage_is_garbage}),
+  so $\redseq\redseqtwo$ is $\tm'$-garbage.
+  Resorting to \rprop{characterization_of_garbage}
+  we obtain that $\redseq\redseqtwo \sieve \tm' = \emptyDerivation = \redseq \sieve \tm'$,
+  as required.
+\item {\bf If there exists a coarse step for $(\redseq,\tm')$.}
+  Let $\redex_0$ be the leftmost coarse step for $(\redseq,\tm')$.
+  Then since $\redex_0 \permle \redseq$ also $\redex_0 \permle \redseq\redseqtwo$,
+  so $\redex_0$ is a coarse step for $(\redseq\redseqtwo,\tm')$.
+  In particular, since there exists at least one coarse step for $(\redseq\redseqtwo,\tm')$,
+  let $\redextwo_0$ be the leftmost such step.
+  We argue that $\redex_0 = \redextwo_0$.
+  We consider two cases, depending on whether $\redextwo_0$ is coarse for $(\redseq,\tm')$:
+  \begin{enumerate}
+  \item {\bf If $\redextwo_0$ is coarse for $(\redseq,\tm')$.}
+    Then $\redex_0$ and $\redextwo_0$ are both simultaneously
+    coarse for $(\redseq,\tm')$ and for $(\redseq\redseqtwo,\tm')$.
+    Note that $\redex_0$ cannot be to the left of $\redextwo_0$,
+    since then $\redextwo_0$ would not be the leftmost coarse step for $(\redseq\redseqtwo,\tm')$.
+    Symmetrically, $\redextwo_0$ cannot be to the left of $\redex_0$,
+    since then $\redex_0$ would not be the leftmost coarse step for $(\redseq,\tm')$.
+    Hence $\redex_0 = \redextwo_0$ as claimed.
+  \item {\bf If $\redextwo_0$ is not coarse for $(\redseq,\tm')$.}
+    We argue that this case is impossible.
+    Note that $\redextwo_0 \permle \redseq\redseqtwo$ but it is not the case that $\redextwo_0 \permle \redseq$,
+    so $\redextwo_0/\redseq$ is not empty.
+    Note also that $\redextwo_0/\redseq \permle \redseqtwo$,
+    so by \rcoro{simulation_residuals_and_prefixes}
+    we have that $(\redextwo_0/\redseq)/(\tm'/\redseq) \permle \redseqtwo/(\tm'/\redseq)$.
+    Moreover, $\redseqtwo/(\tm'/\redseq) = \emptyDerivation$ is empty because $\redseqtwo$ is $(\tm'/\redseq)$-garbage.
+    This means that $(\redextwo_0/\redseq)/(\tm'/\redseq) = \emptyDerivation$.
+    Then we have the following chain of equalities:
+    \[
+      \begin{array}{rcll}
+        \emptyset & = & \names((\redextwo_0/\redseq)/(\tm'/\redseq)) \\
+                  & = & \names((\redextwo_0/\tm')/(\redseq/\tm'))               & \text{by \rcoro{permutation_equivalence_in_terms_of_names} and \rlem{generalized_cube_lemma}} \\
+                  & = & \names(\redextwo_0/\tm') \setminus \names(\redseq/\tm') & \text{by \rlem{names_after_projection_along_a_step}} \\
+                  & = & \names(\redextwo_0/\tm')
+      \end{array}
+    \]
+    To justify the last step, start by noting that no residual of $\redextwo_0$ is contracted along the derivation $\redseq$.
+    Indeed, if $\redextwo_0$ had a residual, then $\redseq = \redseq_1\redextwo_1\redseq_2$ where $\redextwo_1 \in \redextwo_0/\redseq$.
+    But recall that $\redextwo_0$ is the leftmost coarse step for $(\redseq\redseqtwo,\tm')$ and
+    $\redseq_1 \permle \redseq\redseqtwo$, so it has at most one residual (\rlem{leftmost_coarse_step_has_at_most_one_residual}).
+    This means that $\redextwo_0/\redseq_1 = \redextwo_1$, so $\redextwo_0/\redseq = \emptyset$, which is a contradiction.
+    Given that no residuals of $\redextwo_0$ are contracted along the derivation $\redseq$,
+    we have that the sets $\names(\redextwo_0/\tm')$ and $\names(\redseq/\tm')$ are disjoint
+    which justifies the last step by resorting to \rlem{disjoint_redex_derivation_have_disjoint_images}.
+    
+    According to the chain of equalities above, we have that $\names(\redextwo_0/\tm') = \emptyset$.
+    This means that $\redextwo_0$ is $\tm'$-garbage.
+    This in turn contradicts the fact that $\redextwo_0$ is coarse for $(\redseq\redseqtwo,\tm')$,
+    confirming that this case is impossible.
+  \end{enumerate}
+  We have just claimed that $\redex_0 = \redextwo_0$.
+  Then:
+  \[
+    \begin{array}{rcll}
+    \redseq\redseqtwo \sieve \tm'
+    & = & \redex_0((\redseq\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)) & \text{by definition of sieving} \\
+    & = & \redex_0(((\redseq/\redex_0)(\redseqtwo/(\redex_0/\redseq))) \sieve (\tm'/\redex_0)) \\
+    & = & \redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0)) & \text{by \ih since $\redseqtwo/(\redex_0/\redseq)$ is garbage by \rlem{projection_of_garbage_is_garbage}} \\
+    & = & \redseq \sieve \tm' & \text{by definition of sieving}
+    \end{array}
+  \]
+  which concludes the proof.
+\end{enumerate}
+\end{proof}

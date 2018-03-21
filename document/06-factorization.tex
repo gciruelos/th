@@ -1,12 +1,27 @@
 \chapter{Factorization of derivations}
 \lcha{factorization}
 
+As we observed in the two examples at the end of last chapter,
+when we take a derivation from the lambda calculus and project it
+to the distributive lambda calculus, we may end up with the empty derivation.
+
+Remember that if we have a term $\tm' \in \termsdist$ that refines a $\tm \in \terms$,
+$\tm'$ represents in some way a head normal form of $\tm$.
+Intuitively, derivations in $\ulbDerivLam{\tm}$ that map to the empty derivation in
+$\ulbDerivDist{\tm'}$ will be derivations that don't do work towards carrying
+$\tm$ to the head normal form represented by $\tm'$.
+
 \section{Garbage}
+\input{06-01-garbage}
 
 \section{Sieving}
+\input{06-02-sieving}
 
 \section{Some properties}
+\input{06-03-some-properties}
 
 \section{Factorization of garbage}
+\input{06-04-factorization-of-garbage}
 
 \section{Lattices}
+\input{06-05-lattices}

@@ -1,0 +1,235 @@
+
+We shall call these derivations that map to the empty derivation \emph{garbage}.
+
+\begin{definition}[Garbage]
+\ldef{garbage}
+Let $\tm' \refines \tm$.
+A derivation $\redseq : \tm \rtobeta \tmtwo$ is said to be \defn{$\tm'$-garbage}
+if and only if $\redseq/\tm' = \emptyDerivation$.
+\end{definition}
+
+\begin{notation}
+If the correct term $\tm'$ is clear from the context,
+we will often say that $\redseq$ is \defn{garbage},
+without specifying with respect to which term.
+In particular, if $(\redseq \cdot \redseqtwo) : \tm \rtobeta \tmtwo$
+and $\tm' \refines \tm$:
+  \begin{itemize}
+  \item To say that $\redseq$ is garbage means that $\redseq$ is $\tm'$-garbage.
+  \item To say that $\redseqtwo$ is garbage means that $\redseqtwo$ is $(\tm'/\redseq)$-garbage.
+  \end{itemize}
+\end{notation}
+
+\begin{example}
+Let $(\lam{\varthree}{\lam{\var}{\var \varthree}}) (I I) \in \terms$.
+This term has the following derivation space.
+
+\[
+\xymatrix{
+  & (\lam{\varthree}{\lam{\var}{\var \varthree}}) (I I) \ar[dl]_{\redex} \ar[dr]^{\redextwo}
+  &
+  \\
+  \lam{\var}{\var (I I)} \ar[dr]_{\redextwo'}
+  &
+  & (\lam{\varthree}{\lam{\var}{\var \varthree}}) I \ar[dl]^{\redex'}
+  \\
+  & \lam{\var}{\var I}
+  &
+  \\
+}
+\]
+
+The term above may be refined by many terms. Two of those possible refinements are
+$(\lamp{1}{\varthree}{\lamp{2}{\var}{\var []}}) []$
+\footnote{
+The fully labeled term is
+$(\lamp{1}{\varthree}{\lamp{2}{\var}{\var^{[] \tolab{3} \alpha^4} []}}) []$.
+}
+and
+$(\lamp{1}{\varthree}{\lamp{2}{\var}{\var [\varthree]}}) [(\lamp{3}{\vartwo}{\vartwo}) [\lamp{4}{w}{w}]]$
+\footnote{
+The fully labeled term is
+$(\lamp{1}{\varthree}{
+   \lamp{2}{\var}{
+     \var^{[[\alpha^5] \tolab{4} \alpha^5] \tolab{2} \beta^6}
+     [\varthree^{[\alpha^5] \tolab{4} \alpha^5}]
+   }})
+  [(\lamp{3}{\vartwo}{\vartwo^{[\alpha^5] \tolab{4} \alpha^5}}) [\lamp{4}{w}{w^{\alpha^5}}]]$.
+}.
+Their derivation spaces are, respectively:
+
+{\small
+\[
+\xymatrix@C=.15cm{
+  (\lamp{1}{\varthree}{\lamp{2}{\var}{\var []}}) []
+  \ar[dd]
+  &
+  & (\lamp{1}{\varthree}{\lamp{2}{\var}{\var [\varthree]}}) [(\lamp{3}{\vartwo}{\vartwo}) [\lamp{4}{w}{w}]]
+  \ar[dl]
+  \ar[dr]
+  &
+  \\
+  & \lamp{2}{\var}{\var [(\lamp{3}{\vartwo}{\vartwo}) [\lamp{4}{w}{w}]]}
+  \ar[dr]
+  &
+  & (\lamp{1}{\varthree}{\lamp{2}{\var}{\var [\varthree]}}) [\lamp{4}{w}{w}]
+  \ar[dl]
+  \\
+  \lamp{2}{\var}{\var []}
+  &
+  & \lamp{2}{\var}{\var [\lamp{4}{w}{w}]}
+  &
+  \\
+}
+\]
+}
+Note that the step $\redextwo$ is garbage with respect to the first refinement,
+but not with respect to the second.
+\end{example}
+
+For each $\tm' \refines \tm$, the set of $\tm'$-garbage derivations forms an {\em ideal} of the upper semilattice $\ulbDerivLam{\tm}$.
+More precisely:
+\begin{proposition}[Properties of garbage]
+\lprop{properties_of_garbage}
+Let $\tm' \refines \tm$. Then:
+\begin{enumerate}
+\item If $\redseq$ is $\tm'$-garbage and $\redseqtwo \permle \redseq$, then $\redseqtwo$ is $\tm'$-garbage.
+  \label{properties_of_garbage__downwards_closed}
+\item The composition $\redseq\redseqtwo$ is $\tm'$-garbage if and only if $\redseq$ is $\tm'$-garbage and $\redseqtwo$ is $(\tm'/\redseq)$-garbage.
+\item If $\redseq$ is $\tm'$-garbage then $\redseq/\redseqtwo$ is $(\tm'/\redseqtwo)$-garbage.
+\item The join $\redseq \sqcup \redseqtwo$ is $\tm'$-garbage if and only if $\redseq$ and $\redseqtwo$ are $\tm'$-garbage.
+\end{enumerate}
+\end{proposition}
+\begin{proof} We prove each item separately.
+\begin{enumerate}
+\item Let $\redseqtwo \permle \redseq$.
+      Then $\redseqtwo\redseqthree \permeq \redseq$ for some $\redseqthree$,
+      so $\redseqtwo/\tm' \permle (\redseqtwo/\tm')(\redseqthree/(\tm'/\redseqtwo)) = \redseqtwo\redseqthree/\tm' \permeq \redseq/\tm'$
+      by Compatibility~(\rprop{compatibility_of_simulation_residuals_and_permutation_equivalence}).
+\item Note that $\redseq\redseqtwo/\tm' = (\redseq/\tm')(\redseqtwo/(\tm'/\redseq))$.
+      So $\redseq\redseqtwo/\tm'$ is empty if and only if
+      $\redseq/\tm'$ and $\redseqtwo/(\tm'/\redseq)$ are empty.
+\item Suppose that $\redseq/\tm' = \emptyDerivation$.
+      Then $(\redseq/\redseqtwo)/(\tm'/\redseqtwo) = (\redseq/\tm')/(\redseqtwo/\tm')$
+      by the Cube Lemma~(\rlem{generalized_cube_lemma}).
+\item By the Cube Lemma~(\rlem{generalized_cube_lemma}):
+      $(\redseq \sqcup \redseqtwo)/\tm' = \redseq(\redseqtwo/\redseq)/\tm' =
+      (\redseq/\tm')((\redseqtwo/\redseq)/(\tm'/\redseq) \permeq
+      (\redseq/\tm')((\redseqtwo/\tm')/(\redseq/\tm')) =
+      (\redseq/\tm') \sqcup (\redseqtwo/\tm')$.
+      So $(\redseq \sqcup \redseqtwo)/\tm'$ is empty if and only if
+      $\redseq/\tm'$ and $\redseqtwo/\tm'$ are empty.
+\end{enumerate}
+\end{proof}
+
+\bigskip
+
+Our aim is to show that
+given any derivation $\redseq : \tm \rtobeta \tmtwo$ in the $\lambda$-calculus
+and any $\tm' \refines \tm$,
+there is a unique way of factorizing $\redseq$ as $\redseq_1 \redseq_2$
+where $\redseq_2$ is garbage, and $\redseq_1$ ``has no garbage''.
+The notion of garbage of \rdef{garbage} is fine for our purposes.
+Note, in particular,
+that the notion of garbage is well-defined modulo permutation equivalence,
+\ie if $\redseq \permeq \redseqtwo$ then $\redseq$ is garbage if and only $\redseqtwo$ is garbage
+(this is a consequence of~\rprop{compatibility_of_simulation_residuals_and_permutation_equivalence}).
+
+However, the notion of ``having no garbage'' is not so easy to pin down,
+as seen in the following example.
+
+\begin{example}
+\lexample{naive_notion_of_non_garbage_fails}
+  Consider the reduction space for $(\lam{\var}{\vartwo\var\var})((\lam{\var}{\var})\varthree)$.
+  Dotted arrows will correspond to steps that are garbage:
+  \[
+    \xymatrix@C=.4cm{
+      &
+      &
+      (\lam{\var}{\vartwo\var\var})((\lam{\var}{\var})\varthree)
+      \ar_-{\redex}[dl] \ar^-{\redextwo}[dr]
+      &
+    \\
+      &
+      \vartwo((\lam{\var}{\var})\varthree)((\lam{\var}{\var})\varthree)
+      \ar_-{\redextwo_1}[dl]
+      \ar@{.>}^-{\redextwo_2}[dr]
+      &
+      &
+      (\lam{\var}{\vartwo\var\var})\varthree
+      \ar@/^1cm/^{\redex'}[ddll]
+    \\
+      \vartwo\varthree((\lam{\var}{\var})\varthree)
+      \ar@{.>}_-{\redextwo'_2}[dr]
+      &
+      &
+      \vartwo((\lam{\var}{\var})\varthree)\varthree
+      \ar^-{\redextwo'_1}[dl]
+      &
+    \\
+      &
+      \vartwo\varthree\varthree
+      &
+      &
+    }
+  \]
+  Consider moreover the following refinement (using numbers for labels, for readability):
+  \[
+    (\lamp{1}{\var}{\vartwo^{[\alpha^{2}] \tolab{3} [] \tolab{4} \beta^{5}}\,[\var^{\alpha^2}]\,[]})
+    [(\lamp{6}{\var}{\var^{\alpha^2}})[\varthree^{\alpha^2}]]
+    \refines
+    (\lam{\var}{\vartwo\var\var})((\lam{\var}{\var})\varthree)
+  \]
+  Then we can observe that:
+  \begin{itemize}
+  \item $\redex, \redex', \redextwo, \redextwo_1, \redextwo'_1$ are not garbage.
+  \item $\redextwo_2, \redextwo'_2$ are garbage.
+  \end{itemize}
+  In particular, the {\em na\"ive} notion of ``having garbage'' is not well-defined modulo permutation equivalence:
+  the derivations
+  $\redex\redextwo_1\redextwo'_2$
+  and
+  $\redextwo\redex'$
+  are permutation equivalent,
+  but the former contains a garbage step, while the latter does not.
+\end{example}
+
+The following notion of ``having no garbage'' will be proven to be well-defined
+modulo permutation equivalence.
+
+\begin{definition}[Garbage-free]
+Let $\tm' \refines \tm$.
+A derivation $\redseq : \tm \rtobeta \tmtwo$ is \defn{$\tm'$-garbage-free}
+if
+for every derivation $\redseqtwo$ such that $\redseqtwo \permle \redseq$:
+\[
+  \redseq/\redseqtwo \text{ is $(\tm'/\redseqtwo)$-garbage}
+  \HS\text{ implies }\HS
+  \redseq/\redseqtwo = \emptyDerivation.
+\]
+\end{definition}
+
+For example, in the situation of \rexample{naive_notion_of_non_garbage_fails}
+the derivation $\redextwo\redex'$ is {\bf not} garbage-free,
+since $\redex\redextwo_1 \permle \redextwo\redex'$
+and $\redextwo\redex'/\redex\redextwo_1 \permeq \redextwo'_2$
+which is garbage but non-empty.
+In contrast, $\redex\redextwo_1$ is garbage-free.
+
+
+\begin{lemma}[The notion of garbage-free is well-defined modulo permutation equivalence]
+Let $\redseq : \tm \rtobeta \tmtwo$ and $\redseq \permeq \redseqtwo$.
+Then $\redseq$ is $\tm'$-garbage-free
+if and only if $\redseqtwo$ is $\tm'$-garbage-free.
+\end{lemma}
+\begin{proof}
+$(\Rightarrow)$
+Suppose that $\redseq$ is garbage-free, and let us show that $\redseqtwo$ is garbage-free.
+Let $\redseqthree \permle \redseqtwo$ such that $\redseqtwo/\redseqthree$ is $(\tm'/\redseqthree)$-garbage.
+Then $\redseqthree \permle \redseq$ and $\redseq/\redseqthree$ is $(\tm'/\redseqthree)$-garbage. 
+Then, since $\redseq$ is garbage-free,
+we have that $\redseq/\redseqthree = \emptyDerivation$,
+which in turn implies that $\redseqtwo/\redseqthree = \emptyDerivation$.
+$(\Leftarrow)$ Symmetric.
+\end{proof}
+

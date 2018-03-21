@@ -1,0 +1,64 @@
+
+\begin{theorem}[Factorization of garbage]
+\lthm{factorization_of_garbage}
+Let $\redseq : \tm \rtobeta \tmtwo$ and $\tm' \refines \tm$.
+Then there exist $\redseq_1,\redseq_2$ such that:
+\begin{enumerate}
+\item $\redseq \permeq \redseq_1\redseq_2$
+\item $\redseq_1$ is $\tm'$-garbage-free,
+\item $\redseq_2$ is $\tm'$-garbage.
+\end{enumerate}
+Moreover, $\redseq_1$ and $\redseq_2$ are unique modulo permutation equivalence,
+and we have that
+$\redseq_1 \permeq \redseq \sieve \tm'$ and $\redseq_2 \permeq \redseq/(\redseq \sieve \tm')$.
+\end{theorem}
+\begin{proof}
+Let us prove that said factorization exists and that it is unique:
+\begin{itemize}
+\item {\bf Existence.}
+  Take $\redseq_1 := \redseq \sieve \tm'$ and $\redseq_2 := \redseq/(\redseq \sieve \tm')$.
+  Then we may check the three conditions in the statement:
+  \begin{enumerate}
+  \item
+    Recall that $\redseq \sieve \tm' \permle \redseq$ holds by \rlem{sieve_is_prefix}, so:
+    \[
+      \begin{array}{rcll}
+      \redseq_1\redseq_2
+      & = & (\redseq \sieve \tm')(\redseq/(\redseq \sieve \tm')) \\
+      & \permeq & \redseq((\redseq \sieve \tm')/\redseq) & \text{ since $A(B/A) \permeq B(A/B)$ holds in general} \\
+      & \permeq & \redseq                                & \text{ since $\redseq \sieve \tm' \permle \redseq$}
+      \end{array}
+    \]
+    as required.
+  \item
+    The derivation $\redseq_1 = \redseq \sieve \tm'$
+    is $\tm'$-garbage-free.
+    This is as an immediate consequence of \rprop{characterization_of_garbage_free_derivations},
+    namely the result of sieving is always garbage-free.
+  \item
+    The derivation $\redseq_2 = \redseq/(\redseq \sieve \tm')$ is garbage.
+    This is an immediate consequence of \rlem{projection_after_sieving_is_garbage},
+    namely projection after a sieve is always garbage.
+  \end{enumerate}
+\item {\bf Uniqueness, modulo permutation equivalence.}
+  Let $\redseq \permeq \redseqtwo_1,\redseqtwo_2$
+  where $\redseqtwo_1$ is $\tm'$-garbage-free,
+  and $\redseqtwo_2$ is $\tm'$-garbage.
+  Then we argue that $\redseqtwo_1 \permeq \redseq_1$ and $\redseqtwo_2 \permeq \redseq_2$.
+
+  Since $\redseq_1\redseq_2 \permeq \redseq \permeq \redseqtwo_1\redseqtwo_2$
+  and sieving is compatible with permutation equivalence (\rlem{sieving_is_compatible_with_permutation_equivalence})
+  we have that $\redseq_1\redseq_2 \sieve \tm' \permeq \redseqtwo_1\redseqtwo_2 \sieve \tm'$.
+  By \rlem{sieving_trailing_garbage}, we know that trailing garbage does not affect sieving,
+  hence $\redseq_1 \sieve \tm' \permeq \redseqtwo_1 \sieve \tm'$.
+  Moreover, $\redseq_1$ and $\redseqtwo_1$ are garbage-free, which
+  by \rprop{characterization_of_garbage_free_derivations} means
+  that $\redseq_1 \permeq \redseqtwo_1$.
+  This means that $\redseq_1$ is unique, modulo permutation equivalence.
+
+  Finally, since $\redseq_1\redseq_2 \permeq \redseqtwo_1\redseqtwo_2$ and $\redseq_1 \permeq \redseqtwo_1$,
+  we have that $\redseq_1\redseq_2/\redseq_1 \permeq \redseqtwo_1\redseqtwo_2/\redseqtwo_1$,
+  that is $\redseq_2 \permeq \redseqtwo_2$.
+  This means that $\redseq_2$ is unique, modulo permutation equivalence.
+\end{itemize}
+\end{proof}
