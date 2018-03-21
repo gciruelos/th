@@ -237,7 +237,7 @@ for all $\cls{\redseq},\cls{\redseqtwo} \in \ulbGarbage{\tm'}{\tm}$.
 That is,
 we must check that if $\redseq$ and $\redseqtwo$ are garbage
 then $\redseq \sqcup \redseqtwo$ is garbage.
-We have already seen this in~\rlem{join_of_garbage_is_garbage}.
+We have already seen this in~\rprop{properties_of_garbage}.
 \end{proof}
 
 We aim to show that garbage-free derivations form an $\USLB$.
@@ -293,9 +293,9 @@ Let us show that this forms an upper semilattice with bottom.
     Let $\cls{\redseq} \leqF \cls{\redseqtwo} \leqF \cls{\redseqthree}$
     and let us show that $\cls{\redseq} \leqF \cls{\redseqthree}$.
     Note that $\redseq/\redseqtwo$ and $\redseqtwo/\redseqthree$ are garbage.
-    By the fact that the projection of garbage is garbage (\rlem{projection_of_garbage_is_garbage})
+    By the fact that the projection of garbage is garbage (\rprop{properties_of_garbage})
     the derivation $(\redseq/\redseqtwo)/(\redseqtwo/\redseqthree)$ is garbage.
-    Moreover, by the fact that the composition of garbage is garbage (\rlem{composition_of_garbage_is_garbage}),
+      Moreover, by the fact that the composition of garbage is garbage (\rprop{properties_of_garbage}),
     we have that $(\redseqtwo/\redseqthree)((\redseq/\redseqtwo)/(\redseqtwo/\redseqthree))$ is also garbage.
     In general the following holds:
     \[
@@ -306,7 +306,7 @@ Let us show that this forms an upper semilattice with bottom.
       & \permeq & (\redseqtwo/\redseqthree)((\redseq/\redseqtwo)/(\redseqthree/\redseqtwo))   & \text{ since $A(B/A) \permeq B(A/B)$ in general} \\
       \end{array}
     \]
-    So since any prefix of a garbage derivation is garbage (\rlem{prefix_of_garbage})
+    So since any prefix of a garbage derivation is garbage (\rprop{properties_of_garbage})
     we conclude that $\redseq/\redseqthree$ is garbage.
     This means that $[\redseq] \leqF [\redseqthree]$, as required.
   \end{enumerate}
@@ -335,7 +335,7 @@ Let us show that this forms an upper semilattice with bottom.
     We must show that $\redseq/((\redseq \sqcup \redseqtwo) \sieve \tm')$ is garbage.
     Note that $\redseq \permle \redseq \sqcup \redseqtwo$,
     so in particular $\redseq/((\redseq \sqcup \redseqtwo) \sieve \tm') \permle (\redseq \sqcup \redseqtwo)/((\redseq \sqcup \redseqtwo) \sieve \tm')$.
-    Given that any prefix of a garbage derivation is garbage (\rlem{prefix_of_garbage}),
+    Given that any prefix of a garbage derivation is garbage (\rprop{properties_of_garbage}),
     it suffices to show that $(\redseq \sqcup \redseqtwo)/((\redseq \sqcup \redseqtwo) \sieve \tm')$ is garbage.
     This is a straightforward consequence of the fact that projecting after a sieve is garbage (\rlem{projection_after_sieving_is_garbage}).
   \item {\bf Least upper bound.}
@@ -347,10 +347,10 @@ Let us show that this forms an upper semilattice with bottom.
     Note that $(\redseq \sqcup \redseqtwo) \sieve \tm' \permle \redseq \sqcup \redseqtwo$
     as a consequence of the fact that the sieve is a prefix (\rlem{sieve_is_prefix}).
     So in particular $((\redseq \sqcup \redseqtwo) \sieve \tm')/\redseqthree \permle (\redseq \sqcup \redseqtwo)/\redseqthree$.
-    Given that any prefix of a garbage derivation is garbage (\rlem{prefix_of_garbage}),
+    Given that any prefix of a garbage derivation is garbage (\rprop{properties_of_garbage}),
     it suffices to show that $(\redseq \sqcup \redseqtwo)/\redseqthree$ is garbage.
     But $(\redseq \sqcup \redseqtwo)/\redseqthree \permeq \redseq/\redseqthree \sqcup \redseqtwo/\redseqthree$
-    so we conclude by the fact that the join of garbage is garbage (\rlem{join_of_garbage_is_garbage}).
+    so we conclude by the fact that the join of garbage is garbage (\rprop{properties_of_garbage}).
   \end{enumerate}
 \end{enumerate}
 \end{proof}
@@ -371,8 +371,8 @@ Let:
 \]
 Note that $\alpha$ and $\beta$ are garbage by \rlem{projection_after_sieving_is_garbage}
 and hence $\gamma$ is also garbage, as a consequence of
-the facts that the join of garbage is garbage~(\rlem{join_of_garbage_is_garbage})
-and that the projection of garbage is garbage~(\rlem{projection_of_garbage_is_garbage}).
+the facts that the join of garbage is garbage~(\rprop{properties_of_garbage})
+and that the projection of garbage is garbage~(\rprop{properties_of_garbage}).
 Remark that, in general, $AB \sqcup CD \permeq (A \sqcup C)(B/(C/A) \sqcup D/(A/C))$.
 Then the statement of this lemma is a consequence of the following chain of equalities:
 \[
@@ -453,9 +453,9 @@ This amounts to checking that $\ulbG$ is indeed a lax 2-functor:
       \redseq\alpha/\redseqtwo & = & (\redseq/\redseqtwo)(\alpha/(\redseqtwo/\redseq)) \\
     \end{array}
   \]
-  is garbage, as it is the composition of garbage derivations~(\rlem{composition_of_garbage_is_garbage}):
+    is garbage, as it is the composition of garbage derivations~(\rprop{properties_of_garbage}):
   the derivation $\redseq/\redseqtwo$ is garbage since $\cls{\redseq} \leqF \cls{\redseqtwo}$ (by definition),
-  and the derivation $\alpha/(\redseqtwo/\redseq)$ is garbage since $\alpha$ is garbage~(\rlem{projection_of_garbage_is_garbage}).
+  and the derivation $\alpha/(\redseqtwo/\redseq)$ is garbage since $\alpha$ is garbage~(\rprop{properties_of_garbage}).
   Moreover, the choice of representative does not matter,
   since if $\redseq_1 \permeq \redseq_2$ and $\redseqtwo_1 \permeq \redseqtwo_2$ and $\alpha_1 \permeq \alpha_2$
   then $\redseq_1\alpha_1/\redseqtwo_1 \permeq \redseq_2\alpha_2/\redseqtwo_2$.
@@ -581,7 +581,7 @@ Let us check that $\varphi$ and $\psi$ are morphisms of $\USLB$s, and that they 
             \end{array}
           \]
           Note that this is garbage by \rlem{projection_after_sieving_is_garbage}.
-          So by \rlem{prefix_of_garbage}, $(\redseq \sieve \tm')/(\redseqtwo \sieve \tm')$ is also garbage,
+          So by \rprop{properties_of_garbage}, $(\redseq \sieve \tm')/(\redseqtwo \sieve \tm')$ is also garbage,
           as required.
     \item On the other hand, let us show that
           $\ulbG(\ptF{\cls{\redseqtwo \sieve \tm'}}{\cls{\redseq \sieve \tm'}})(\cls{\redseq/(\redseq \sieve \tm')})

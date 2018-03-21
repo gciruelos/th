@@ -1,6 +1,6 @@
 
-In the next subsection, we characterize garbage-free derivations by giving
-a procedure (``sieving'') that, in some sense, erases all the garbage from a derivation.
+In this subsection, we will characterize garbage-free derivations by giving
+a procedure--\emph{sieving}--that, in some sense, erases all the garbage from a derivation.
 
 \begin{definition}[Sieving]
 Let $\tm' \refines \tm$ where $\tm'$ is a correct term,
@@ -30,40 +30,13 @@ This definition is shown to be well-defined (terminating) in the following lemma
 \end{definition}
 
 \begin{lemma}[Sieving is well-defined]
+\llem{sieving_is_well_defined}
 The operation $\redseq \sieve \tm'$ is well-defined.
 \end{lemma}
 \begin{proof}
-Proving this amounts to showing that the recursion scheme is well-founded.
-It suffices to show that there is a measure $M$ ranging over the non-negative
-integers such that
-$M(\redseq,\tm') > M(\redseq/\redex_0,\tm'/\redex_0)$
-whenever $\redex_0$ is the leftmost coarse step for $(\redseq,\tm')$.
-Indeed, if we define:
-\[
-  M(\redseq,\tm') \eqdef \lengthof{\redseq/\tm'}
-\]
-where $\lengthof{\redseq/\tm'}$ stands for the length of the derivation $\redseq/\tm'$
-in the distributive lambda-calculus, then we may conclude by checking that the following inequality holds:
-\[
-  \lengthof{\redseq/\tm'} > \lengthof{(\redseq/\redex_0)/(\tm'/\redex_0)}
-\]
-First observe that
-$\redex_0 \permle \redseq$
-so, by \rcoro{simulation_residuals_and_prefixes},
-$\redex_0/\tm' \permle \redseq/\tm'$
-and, by \rprop{prefixes_as_subsets},
-$\names(\redex_0/\tm') \permle \names(\redseq/\tm')$.
-Then we have:
-\[
-  \begin{array}{rcll}
-  \lengthof{\redseq/\tm'}
-   & = & \#\names(\redseq/\tm') & \text{by \rcoro{length_of_derivation_is_number_of_distinct_names}} \\
-   & > & \#(\names(\redseq/\tm') \setminus \names(\redex_0/\tm')) & \text{since $\redex_0/\tm' \neq \emptyset$ and $\names(\redex_0/\tm') \subseteq \names(\redseq/\tm')$} \\
-   & = & \#\names((\redseq/\tm') / (\redex_0/\tm')) & \text{by \rlem{names_after_projection_along_a_step}} \\
-   & = & \#\names((\redseq/\redex_0) / (\tm'/\redex_0)) & \text{by \rcoro{permutation_equivalence_in_terms_of_names} and \rlem{generalized_cube_lemma}} \\
-   & = & \lengthof{(\redseq/\redex_0) / (\tm'/\redex_0)} & \text{by \rcoro{length_of_derivation_is_number_of_distinct_names}}
-  \end{array}
-\]
+\SeeAppendixRef{sieving_is_well_defined_proof}
+We show that the recursion is well-founded using the measure
+  $M(\redseq,\tm') = \lengthof{\redseq/\tm'}$.
 \end{proof}
 
 \begin{lemma}[Sieving is compatible with permutation equivalence]
@@ -71,57 +44,13 @@ Then we have:
 Let $\redseq \permeq \redseqtwo$. Then $\redseq \sieve \tm' \permeq \redseqtwo \sieve \tm'$.
 \end{lemma}
 \begin{proof}
-First observe that, given two permutation equivalent derivations $\redseq$ and $\redseqtwo$,
-a step $\redex$ is coarse for $(\redseq,\tm')$ if and only if $\redex$ is coarse for $(\redseqtwo,\tm')$,
-since:
-\[
-  (\redex \permle \redseq) \iff (\redex/\redseq = \emptyset) \iff (\redex/\redseqtwo = \emptyset) \iff (\redex \permle \redseqtwo)
-\]
-We proceed by induction on the length of $\redseq \sieve \tm'$.
-There are two cases, depending on whether there is a coarse step for $(\redseq,\tm')$.
-\begin{enumerate}
-\item {\bf If there are no coarse steps for $(\redseq,\tm')$.}
-  Then there are no coarse steps for $(\redseqtwo,\tm')$,
-  so $\redseq \sieve \tm' = \emptyDerivation = \redseqtwo \sieve \tm'$.
-\item {\bf If there exists a coarse step for $(\redseq,\tm')$.}
-  Let $\redex_0$ be the leftmost coarse step for $(\redseq,\tm')$.
-  By the preceding observation, $\redex_0$ is also the leftmost coarse step for $(\redseqtwo,\tm')$.
-
-  Note also that $\redseq/\redex_0 \permeq \redseqtwo/\redex_0$,
-  as a consequence of the well-known properties of permutation equivalence.
-  Moreover, the length of $(\redseq/\redex_0) \sieve (\tm'/\redex_0)$ is
-  shorter than the length of $\redseq \sieve \tm'$,
-  so by \ih, $(\redseq/\redex_0) \sieve (\tm'/\redex_0) = (\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)$.
-  To conclude the proof, note that:
-  \[
-    \redseq \sieve \tm' = \redex_0 ((\redseq/\redex_0) \sieve (\tm'/\redex_0))
-    \eqih \redex_0 ((\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)) = \redseqtwo \sieve \tm'
-  \]
-\end{enumerate}
+\SeeAppendixRef{sieving_is_compatible_with_permutation_equivalence_proof}
+By induction on the length of $\redseq \sieve \tm'$, observing that
+$(\redex \permle \redseq) \iff (\redex/\redseq = \emptyset) \iff (\redex/\redseqtwo = \emptyset) \iff (\redex \permle \redseqtwo)$.
 \end{proof}
 
-\begin{lemma}[The sieve is a prefix]
-\llem{sieve_is_prefix}
-Let $\redseq : \tm \rtobeta \tmtwo$ and $\tm' \refines \tm$.
-Then $\redseq \sieve \tm' \permle \redseq$.
-\end{lemma}
-\begin{proof}
-By induction on the length of $\redseq \sieve \tm'$.
-There are two cases, depending on whether there exists a coarse step for $(\redseq,\tm')$.
-\begin{enumerate}
-\item {\bf If there are no coarse steps for $(\redseq,\tm')$.}
-  Then trivially $\redseq \sieve \tm' = \emptyDerivation \permle \redseq$.
-\item {\bf If there exists a coarse step for $(\redseq,\tm')$.}
-  Let $\redseq_0$ be the leftmost coarse step for $(\redseq,\tm')$.
-  Then:
-  \[
-    \begin{array}{rcll}
-      \redseq \sieve \tm'
-      & = & \redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0)) \\
-      & \permle & \redex_0(\redseq/\redex_0) & \text{by \ih} \\
-      & \equiv  & \redseq(\redex_0/\redseq)  & \text{since $A(B/A) \permeq B(A/B)$ in general} \\
-      & =       & \redseq                    & \text{since $\redex_0 \permle \redseq$ as $\redex_0$ is coarse for $(\redseq,\tm')$} \\
-    \end{array}
-  \]
-\end{enumerate}
-\end{proof}
+\begin{example}
+TODO{Poner ejemplo (usar algun ejemplo de los anteriores)}
+\end{example}
+
+In the next section we will prove some further results about sieving.
