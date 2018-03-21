@@ -129,83 +129,6 @@ is contracted along the derivation $\redexthree\redseqthree$,
 contradicting the hypothesis.
 \end{proof}
 
-\subsection*{The leftmost coarse step has at most one residual}
-\begin{lemma}[The leftmost coarse step has at most one residual]
-\llem{leftmost_coarse_step_has_at_most_one_residual}
-Let $\redex_0$ be the leftmost coarse step for $(\redseq,\tm')$,
-and let $\redseqtwo \permle \redseq$.
-Then $\#(\redex_0/\redseqtwo) \leq 1$.
-%:%Moreover, if $\redex_0 \permle \redseqtwo$ then $\redex_0 \in \redseqtwo$.
-%:%Recall that $\redex \in \redseq$ means that $\redseq$ can be written as $\redseq_1\redextwo\redseqtwo_2$
-%:%such that $\redextwo$ is a residual of $\redex$, \ie $\redextwo \in \redex/\redseq_1$.
-\end{lemma}
-\begin{proof}
-By induction on the length of $\redseqtwo$. The base case is immediate.
-For the inductive step, let $\redseqtwo = \redextwo \redseqthree \permle \redseq$.
-Then in particular $\redextwo \permle \redseq$.
-We consider two cases, depending on whether $\redex_0 = \redextwo$.
-\begin{enumerate}
-\item {\bf Equal, $\redex_0 = \redextwo$.}
-  Then $\redex_0/\redseqtwo = \redex_0/\redex_0\redseqthree = \emptyset$ and we are done.
-  %:%Moreover, $\redex_0 \in \redex_0\redseqthree$.
-\item {\bf Non-equal, $\redex_0 \neq \redextwo$.}
-  First we argue that $\redex_0/\redextwo$ has exactly one residual $\redex_1 \in \redex_0/\redextwo$.
-  To see this, we consider two further cases, depending on whether
-  $\redextwo$ is $\tm'$-garbage or not:
-  \begin{enumerate}
-  \item {\bf If $\redextwo$ is not $\tm'$-garbage.}
-    Then $\redextwo \permle \redseq$ and $\redextwo/\tm' = \emptyset$, so $\redextwo$ is coarse for $(\redseq,\tm')$.
-    Since $\redex_0$ is the leftmost coarse step, this means that $\redex$ is to the left of $\redextwo$.
-    So $\redex_0$ has exactly one residual $\redex_1 \in \redex_0/\redextwo$.
-  \item {\bf If $\redextwo$ is $\tm'$-garbage.}
-    Let us write the term $\tm$ as $\tm = \conof{(\lam{\var}{\tmtwo})\tmthree}$, where
-    $(\lam{\var}{\tmtwo})\tmthree$ is the pattern of the redex $\redextwo$.
-    By \rlem{refinement_context}
-    the term $\tm'$ is of the form $\tm' = \con'[\Delta_1,\hdots,\Delta_n]$,
-    where $\con'$ is a many-hole context such that $\con' \refines \con$
-    and $\Delta_i \refines (\lam{\var}{\tmtwo})\tmthree$ for all $1 \leq i \leq n$.
-    We know that $\redextwo$ is garbage, so $n = 0$ and $\tm' = \con'$ is actually
-    a $0$-hole context (\ie a term).
-
-    On the other hand, $\redex_0$ is coarse for $(\redseq,\tm')$, so in particular
-    it is not $\tm'$-garbage.
-    This means that the pattern of the redex $\redex_0$ cannot occur inside the argument $\tmthree$
-    of the redex $\redextwo$.
-    So $\redextwo$ does not erase or duplicate $\redex$,
-    \ie $\redex_0$ has exactly one residual $\redex_1 \in \redex_0/\redextwo$.
-  \end{enumerate}
-  Now we have that $\redex_0/\redextwo\redseqthree = \redex_1/\redseqthree$.
-  We are left to show that $\#(\redex_0/\redextwo\redseqthree) \leq 1$.
-  %:%and, moreover, if $\redex_0 \permle \redextwo\redseqthree$ then $\redex_0 \in \redextwo\redseqthree$.
-  Let us show that we may apply the \ih on $\redex_1$.
-  More precisely, observe that $\redseqthree \permle \redseq/\redextwo$ since $\redextwo\redseqthree \permle \redseq$.
-  To apply the \ih it suffices to show that $\redex_1$ is coarse for $(\redseq/\redextwo,\tm'/\redextwo)$.
-  Indeed, we may check the two conditions
-  for the definition that $\redex_1$ is coarse for $(\redseq/\redextwo,\tm'/\redextwo)$.
-  \begin{enumerate}
-  \item Firstly, $\redex_1 = \redex_0/\redextwo \permle \redseq/\redextwo$ holds, as a consequence of the fact that $\redex_0 \permle \redseq$.
-  \item Secondly, we may check that $\redex_1$ is not $(\tm'/\redextwo)$-garbage.
-        To see this, \ie that $\redex_1/(\tm'/\redextwo)$ is non-empty,
-        we check that $\names(\redex_1/(\tm'/\redextwo))$ is non-empty.
-        \[
-          \begin{array}{rcll}
-          \names(\redex_1/(\tm'/\redextwo))
-          & = & \names((\redex_0/\redextwo)/(\tm'/\redextwo)) & \text{ by definition of $\redex_1$} \\
-          & = & \names((\redex_0/\tm')/(\redextwo/\tm')) & \text{ by \rlem{generalized_cube_lemma}} \\
-          & = & \names(\redex_0/\tm') \setminus \names(\redextwo/\tm') & \text{ by \rlem{names_after_projection_along_a_step}} \\
-          & = & \names(\redex_0/\tm')
-          \end{array}
-        \]
-        For the last step, note that $\names(\redex_0/\tm')$ and $\names(\redextwo/\tm')$ are disjoint,
-        since $\redex_0 \neq \redextwo$, as a consequence of \rlem{different_redexes_have_disjoint_images}.
-  \end{enumerate}
-  Applying the \ih, we obtain that $\#(\redex_0/\redextwo\redseqthree) = \#(\redex_1/\redseqthree) \leq 1$.  
-  %:%Moreover, suppose that $\redex_0 \permle \redseqtwo = \redextwo\redseqthree$.
-  %:%Then $\redex_1 = \redex_0/\redextwo \permle \redseqthree$.
-  %:%By \ih, $\redex_1 \in \redseqthree$, so $\redex_0 \in \redseqthree$, which concludes the proof.
-\end{enumerate}
-\end{proof}
-
 \subsection*{Proof of \rprop{characterization_of_garbage} --- Characterization of garbage}
 \label{characterization_of_garbage_proof}
 Let $\redseq : \tm \rtobeta \tmtwo$ and $\tm' \refines \tm$.
@@ -258,7 +181,6 @@ so let us prove $2 \implies 3$ and $3 \implies 2$:
 
 
 \subsection*{Proof of \rprop{characterization_of_garbage_free_derivations} --- Characterization of garbage-free derivations}
-\label{characterization_of_garbage_proof}
 \label{characterization_of_garbage_free_derivations_proof}
 Let $\redseq : \tm \rtobeta \tmtwo$ and $\tm' \refines \tm$.
 The following are equivalent:
