@@ -21,6 +21,7 @@ and $\tm' \refines \tm$:
 \end{notation}
 
 \begin{example}
+\lexample{having_garbage_naive}
 Let $(\lam{\varthree}{\lam{\var}{\var \varthree}}) (I I) \in \terms$.
 This term has the following derivation space.
 
@@ -147,24 +148,24 @@ as seen in the following example.
       &
       &
       (\lam{\var}{\vartwo\var\var})((\lam{\var}{\var})\varthree)
-      \ar_-{\redex}[dl] \ar^-{\redextwo}[dr]
+      \ar_-{\redex_1}[dl] \ar^-{\redextwo}[dr]
       &
     \\
       &
       \vartwo((\lam{\var}{\var})\varthree)((\lam{\var}{\var})\varthree)
-      \ar_-{\redextwo_1}[dl]
-      \ar@{.>}^-{\redextwo_2}[dr]
+      \ar_-{\redextwo_{11}}[dl]
+      \ar@{.>}^-{\redextwo_{21}}[dr]
       &
       &
       (\lam{\var}{\vartwo\var\var})\varthree
-      \ar@/^1cm/^{\redex'}[ddll]
+      \ar@/^1cm/^{\redex_2}[ddll]
     \\
       \vartwo\varthree((\lam{\var}{\var})\varthree)
-      \ar@{.>}_-{\redextwo'_2}[dr]
+      \ar@{.>}_-{\redextwo_{22}}[dr]
       &
       &
       \vartwo((\lam{\var}{\var})\varthree)\varthree
-      \ar^-{\redextwo'_1}[dl]
+      \ar^-{\redextwo_{12}}[dl]
       &
     \\
       &
@@ -173,23 +174,45 @@ as seen in the following example.
       &
     }
   \]
-  Consider moreover the following refinement (using numbers for labels, for readability):
+  Consider moreover the following refinement:
   \[
     (\lamp{1}{\var}{\vartwo^{[\alpha^{2}] \tolab{3} [] \tolab{4} \beta^{5}}\,[\var^{\alpha^2}]\,[]})
     [(\lamp{6}{\var}{\var^{\alpha^2}})[\varthree^{\alpha^2}]]
     \refines
     (\lam{\var}{\vartwo\var\var})((\lam{\var}{\var})\varthree)
   \]
+  It has the following derivation space (letting $\typ = [\alpha^{2}] \tolab{3} [] \tolab{4} \beta^{5}$):
+  \[
+    \xymatrix@C=.4cm{
+      &
+      (\lamp{1}{\var}{\vartwo^{\typ}\,[\var^{\alpha^2}]\,[]})
+      [(\lamp{6}{\var}{\var^{\alpha^2}})[\varthree^{\alpha^2}]]
+      \ar_-{\redex'_{1}}[dl]
+      \ar^-{\redextwo'}[dr]
+      &
+    \\
+      \vartwo^{\typ}\,[(\lamp{6}{\var}{\var^{\alpha^2}})[\varthree^{\alpha^2}]]\,[]
+      \ar_-{\redextwo'_1}[dr]
+      &
+      &
+      (\lamp{1}{\var}{\vartwo^{\typ}\,[\var^{\alpha^2}]\,[]}) [\varthree^{\alpha^2}]
+      \ar^-{\redex'_2}[dl]
+    \\
+      &
+      \vartwo^{\typ}\,[\varthree^{\alpha^2}]\,[]
+      &
+    }
+  \]
   Then we can observe that:
   \begin{itemize}
-  \item $\redex, \redex', \redextwo, \redextwo_1, \redextwo'_1$ are not garbage.
-  \item $\redextwo_2, \redextwo'_2$ are garbage.
+  \item $\redex_1, \redex_2, \redextwo, \redextwo_{11}, \redextwo_{12}$ are not garbage.
+  \item $\redextwo_{21}, \redextwo_{22}$ are garbage.
   \end{itemize}
   In particular, the {\em na\"ive} notion of ``having garbage'' is not well-defined modulo permutation equivalence:
   the derivations
-  $\redex\redextwo_1\redextwo'_2$
+  $\redex_1\redextwo_{11}\redextwo_{22}$
   and
-  $\redextwo\redex'$
+  $\redextwo\redex_2$
   are permutation equivalent,
   but the former contains a garbage step, while the latter does not.
 \end{example}
@@ -210,11 +233,11 @@ for every derivation $\redseqtwo$ such that $\redseqtwo \permle \redseq$:
 \end{definition}
 
 For example, in the situation of \rexample{naive_notion_of_non_garbage_fails}
-the derivation $\redextwo\redex'$ is {\bf not} garbage-free,
-since $\redex\redextwo_1 \permle \redextwo\redex'$
-and $\redextwo\redex'/\redex\redextwo_1 \permeq \redextwo'_2$
+the derivation $\redextwo\redex_2$ is {\bf not} garbage-free,
+since $\redex_1\redextwo_{11} \permle \redextwo\redex_2$
+and $\redextwo\redex_2/\redex_1\redextwo_{11} \permeq \redextwo_{22}$
 which is garbage but non-empty.
-In contrast, $\redex\redextwo_1$ is garbage-free.
+In contrast, $\redex_1\redextwo_{11}$ is garbage-free.
 
 
 \begin{lemma}[The notion of garbage-free is well-defined modulo permutation equivalence]

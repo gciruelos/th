@@ -1,0 +1,267 @@
+
+To prove \rprop{semilattices_of_garbage_free_and_garbage_derivations} we need a few
+auxiliary lemmas:
+
+\begin{lemma}
+\llem{sieving_is_compatible_with_permutation_equivalence}
+Let $\redseq \permeq \redseqtwo$. Then $\redseq \sieve \tm' = \redseqtwo \sieve \tm'$.
+\end{lemma}
+\begin{proof}
+Observe that, given two permutation equivalent derivations $\redseq$ and $\redseqtwo$,
+a step $\redex$ is coarse for $(\redseq,\tm')$ if and only if $\redex$ is coarse for $(\redseqtwo,\tm')$,
+since
+$
+  (\redex \permle \redseq) \iff (\redex/\redseq = \emptyset) \iff (\redex/\redseqtwo = \emptyset) \iff (\redex \permle \redseqtwo)
+$.
+Using this observation, the proof is straightforward by induction on the length of $\redseq \sieve \tm'$.
+\end{proof}
+
+\begin{lemma}[Sieving trailing garbage]
+\llem{sieving_trailing_garbage}
+Let $\redseq$ and $\redseqtwo$ be composable derivations, and let $\tm' \refines \src(\redseq)$.
+If $\redseqtwo$ is $(\tm'/\redseq)$-garbage, then $\redseq\redseqtwo \sieve \tm' = \redseq \sieve \tm'$.
+\end{lemma}
+\begin{proof}
+By induction on the length of $\redseq \sieve \tm'$.
+If there are no coarse steps for $(\redseq,\tm')$,
+then by \rprop{characterization_of_garbage},
+the derivation $\redseq$ is $\tm'$-garbage,
+so $\redseq\redseqtwo$ is $\tm'$-garbage by \rprop{properties_of_garbage}.
+Resorting to \rprop{characterization_of_garbage}
+we obtain that $\redseq\redseqtwo \sieve \tm' = \emptyDerivation = \redseq \sieve \tm'$,
+as required.
+
+If there exists a coarse step for $(\redseq,\tm')$,
+let $\redex_0$ be the leftmost such step.
+Then since $\redex_0 \permle \redseq$ also $\redex_0 \permle \redseq\redseqtwo$,
+so $\redex_0$ is a coarse step for $(\redseq\redseqtwo,\tm')$.
+In particular, since there exists at least one coarse step for $(\redseq\redseqtwo,\tm')$,
+let $\redextwo_0$ be the leftmost such step.
+We argue that $\redex_0 = \redextwo_0$.
+We consider two cases, depending on whether $\redextwo_0$ is coarse for $(\redseq,\tm')$:
+\begin{enumerate}
+\item {\bf If $\redextwo_0$ is coarse for $(\redseq,\tm')$.}
+  Then $\redex_0$ and $\redextwo_0$ are both simultaneously
+  coarse for $(\redseq,\tm')$ and for $(\redseq\redseqtwo,\tm')$.
+  Note that $\redex_0$ cannot be to the left of $\redextwo_0$,
+  since then $\redextwo_0$ would not be the leftmost coarse step for $(\redseq\redseqtwo,\tm')$.
+  Symmetrically, $\redextwo_0$ cannot be to the left of $\redex_0$,
+  since then $\redex_0$ would not be the leftmost coarse step for $(\redseq,\tm')$.
+  Hence $\redex_0 = \redextwo_0$ as claimed.
+\item {\bf If $\redextwo_0$ is not coarse for $(\redseq,\tm')$.}
+  We argue that this case is impossible.
+  Note that $\redextwo_0 \permle \redseq\redseqtwo$ but it is not the case that $\redextwo_0 \permle \redseq$,
+  so $\redextwo_0/\redseq$ is not empty.
+  Note also that $\redextwo_0/\redseq \permle \redseqtwo$,
+  so by \rcoro{simulation_residuals_and_prefixes}
+  we have that $(\redextwo_0/\redseq)/(\tm'/\redseq) \permle \redseqtwo/(\tm'/\redseq)$.
+  Moreover, $\redseqtwo/(\tm'/\redseq) = \emptyDerivation$ is empty because $\redseqtwo$ is $(\tm'/\redseq)$-garbage.
+  This means that $(\redextwo_0/\redseq)/(\tm'/\redseq) = \emptyDerivation$.
+  Then we have the following chain of equalities:
+  \[
+    \begin{array}{rcll}
+      \emptyset & = & \names((\redextwo_0/\redseq)/(\tm'/\redseq)) \\
+                & = & \names((\redextwo_0/\tm')/(\redseq/\tm'))               & \text{by \rcoro{permutation_equivalence_in_terms_of_names} and \rlem{generalized_cube_lemma}} \\
+                & = & \names(\redextwo_0/\tm') \setminus \names(\redseq/\tm') & \text{by \rlem{names_after_projection_along_a_step}} \\
+                & = & \names(\redextwo_0/\tm')
+    \end{array}
+  \]
+  To justify the last step, start by noting that no residual of $\redextwo_0$ is contracted along the derivation $\redseq$.
+  Indeed, if $\redextwo_0$ had a residual, then $\redseq = \redseq_1\redextwo_1\redseq_2$ where $\redextwo_1 \in \redextwo_0/\redseq$.
+  But recall that $\redextwo_0$ is the leftmost coarse step for $(\redseq\redseqtwo,\tm')$ and
+  $\redseq_1 \permle \redseq\redseqtwo$, so it has at most one residual (\rlem{leftmost_coarse_step_has_at_most_one_residual}).
+  This means that $\redextwo_0/\redseq_1 = \redextwo_1$, so $\redextwo_0/\redseq = \emptyset$, which is a contradiction.
+  Given that no residuals of $\redextwo_0$ are contracted along the derivation $\redseq$,
+  we have that the sets $\names(\redextwo_0/\tm')$ and $\names(\redseq/\tm')$ are disjoint
+  which justifies the last step.
+  
+  According to the chain of equalities above, we have that $\names(\redextwo_0/\tm') = \emptyset$.
+  This means that $\redextwo_0$ is $\tm'$-garbage.
+  This in turn contradicts the fact that $\redextwo_0$ is coarse for $(\redseq\redseqtwo,\tm')$,
+  confirming that this case is impossible.
+\end{enumerate}
+We have just claimed that $\redex_0 = \redextwo_0$. Then we conclude as follows:
+\[
+  \begin{array}{rcll}
+  \redseq\redseqtwo \sieve \tm'
+  & = & \redex_0((\redseq\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)) \\
+  & = & \redex_0(((\redseq/\redex_0)(\redseqtwo/(\redex_0/\redseq))) \sieve (\tm'/\redex_0)) \\
+  & = & \redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0)) \HS\text{by \ih, as $\redseqtwo/(\redex_0/\redseq)$ is garbage by \rprop{properties_of_garbage}} \\
+  & = & \redseq \sieve \tm' \\
+  \end{array}
+\]
+\end{proof}
+
+Let us check the two items of \rprop{semilattices_of_garbage_free_and_garbage_derivations}:
+\begin{enumerate}
+\item
+  {\bf The set $\ulbFree{\tm'}{\tm}$ forms a finite lattice.}
+  Let us check all the conditions:
+  \begin{enumerate}
+  \item {\bf Partial order.}
+    First let us show that $\leqF$ is a partial order.
+    \begin{enumerate}
+    \item {\bf Reflexivity.}
+      It is immediate that $\cls{\redseq} \leqF \cls{\redseq}$ holds since $\redseq/\redseq = \emptyDerivation$ is garbage.
+    \item {\bf Antisymmetry.}
+      Let $\cls{\redseq} \leqF \cls{\redseqtwo} \leqF \cls{\redseq}$.
+      This means that $\redseq/\redseqtwo$ and $\redseqtwo/\redseq$ are garbage.
+      Then:
+      \[
+        \begin{array}{rcll}
+        \redseq
+        & \permeq & \redseq \sieve \tm' & \text{ since $\redseq$ is garbage-free, by \rprop{characterization_of_garbage_free_derivations}} \\
+        & \permeq & \redseq(\redseqtwo/\redseq) \sieve \tm' & \text{ since $\redseqtwo/\redseq$ is garbage, by \rlem{sieving_trailing_garbage}} \\
+        & \permeq & \redseqtwo(\redseq/\redseqtwo) \sieve \tm' & \text{ since $A(B/A) \permeq B(A/B)$ in general, using \rlem{sieving_is_compatible_with_permutation_equivalence}} \\
+        & \permeq & \redseqtwo \sieve \tm' & \text{ since $\redseq/\redseqtwo$ is garbage, by \rlem{sieving_trailing_garbage}} \\
+        & \permeq & \redseqtwo & \text{ since $\redseqtwo$ is garbage-free, by \rprop{characterization_of_garbage_free_derivations}} \\
+        \end{array}
+      \]
+      Since $\redseq \permeq \redseqtwo$ we conclude that $\cls{\redseq} = \cls{\redseqtwo}$,
+      as required.
+    \item {\bf Transitivity.}
+      Let $\cls{\redseq} \leqF \cls{\redseqtwo} \leqF \cls{\redseqthree}$
+      and let us show that $\cls{\redseq} \leqF \cls{\redseqthree}$.
+      Note that $\redseq/\redseqtwo$ and $\redseqtwo/\redseqthree$ are garbage.
+      By the fact that the projection of garbage is garbage~(\rprop{properties_of_garbage})
+      the derivation $(\redseq/\redseqtwo)/(\redseqtwo/\redseqthree)$ is garbage.
+      The composition of garbage is also garbage~(\rprop{properties_of_garbage}),
+      so $(\redseqtwo/\redseqthree)((\redseq/\redseqtwo)/(\redseqtwo/\redseqthree))$ is garbage.
+      In general the following holds:
+      \[
+        \begin{array}{rcll}
+        \redseq/\redseqthree
+        & \permle & (\redseq/\redseqthree)((\redseqtwo/\redseqthree)/(\redseq/\redseqthree))    & \text{ since $A \permle AB$ in general} \\
+        & \permeq & (\redseqtwo/\redseqthree)((\redseq/\redseqthree)/(\redseqtwo/\redseqthree)) & \text{ since $A(B/A) \permeq B(A/B)$ in general} \\
+        & \permeq & (\redseqtwo/\redseqthree)((\redseq/\redseqtwo)/(\redseqthree/\redseqtwo))   & \text{ since $A(B/A) \permeq B(A/B)$ in general} \\
+        \end{array}
+      \]
+      So since any prefix of a garbage derivation is garbage~(\rprop{properties_of_garbage})
+      we conclude that $\redseq/\redseqthree$ is garbage.
+      This means that $[\redseq] \leqF [\redseqthree]$, as required.
+    \end{enumerate}
+  \item {\bf Finite.}
+    Let us check that $\ulbFree{\tm'}{\tm}$ is a finite lattice, \ie that it has a finite number of elements.
+    Recall that $\ulbFree{\tm'}{\tm}$ is the set of equivalence classes $\cls{\redseq}$ where $\redseq$
+    is $\tm'$-garbage-free.
+
+    On one hand, recall that the $\lambdadist$-calculus is finitely branching and strongly normalizing~(\rprop{strong_normalization}).
+    So by K\"onig's lemma the set of $\todist$-derivations starting from $\tm'$
+    is bounded in length. More precisely, there is a constant $M$ such that
+    for any $\tmtwo' \in \termsdist$ and any derivation $\redseq : \tm' \todist^* \tmtwo'$
+    we have that the length $|\redseq|$ is bounded by $M$.
+
+    On the other hand, let $F = \set{\redseq \ST \redseq \text{ is $\tm'$-garbage-free and } \redseq \sieve \tm' = \redseq}$.
+    Consider the mapping $\varphi : \ulbFree{\tm'}{\tm} \to F$
+    given by $\cls{\redseq} \mapsto \redseq \sieve \tm'$, and note that:
+    \begin{itemize}
+    \item
+      $\varphi$ does not depend on the choice of representative,
+      that is, if $\cls{\redseq} = \cls{\redseqtwo}$ then $\varphi(\cls{\redseq}) = \redseq \sieve \tm' = \redseqtwo \sieve \tm' = \varphi(\cls{\redseqtwo})$.
+      This is a consequence of~\rlem{sieving_is_compatible_with_permutation_equivalence}.
+    \item
+      $\varphi$ is a well-defined function, that is $\varphi(\cls{\redseq}) \in F$.
+      This is because $\varphi(\cls{\redseq}) = \redseq \sieve \tm'$ is $\tm'$-garbage-free by \rprop{properties_of_sieving}.
+      Moreover, we have that $\varphi(\cls{\redseq}) \sieve \tm' = (\cls{\redseq} \sieve \tm') \sieve \tm' = \cls{\redseq} \sieve \tm'= \varphi(\cls{\redseq})$,
+      which is also a consequence of~\rlem{sieving_is_compatible_with_permutation_equivalence},
+      and the fact that $\cls{\redseq} \sieve \tm' \permeq \redseq$~(\rprop{properties_of_sieving}).
+    \item
+      $\varphi$ is injective. Indeed, suppose that $\varphi(\cls{\redseq}) = \varphi(\cls{\redseqtwo})$,
+      that is, $\redseq \sieve \tm' = \redseqtwo \sieve \tm'$.
+      Then $\redseq \permeq \redseq \sieve \tm' = \redseqtwo \sieve \tm' \permeq \redseqtwo$
+      by \rprop{properties_of_sieving} since $\redseq$ and $\redseqtwo$ are $\tm'$-garbage-free.
+      Hence $\cls{\redseq} = \cls{\redseqtwo}$.
+    \end{itemize}
+    Since $\varphi : \ulbFree{\tm'}{\tm} \to F$ is injective, it suffices to show that $F$ is finite
+    to conclude that $\ulbFree{\tm'}{\tm}$ is finite.
+    Recall that the $\lambda$-calculus is finitely branching, so the number of derivations of a certain length
+    is finite. To show that $F$ is finite, it suffices to show that the length of derivations in $F$ is
+    bounded by some constant.
+    Let $\redseq$ be a derivation in $F$. We have that $\redseq = \redseq \sieve \tm'$.
+    By construction of the sieve, none of the steps of $\redseq \sieve \tm'$ are garbage.
+    That is $\redseq = \redseq \sieve \tm' = \redex_1\hdots\redex_n$ where for all $i$ we have that
+    $\redex_i/(\tm'/\redex_1\hdots\redex_{i-1}) \neq \emptyset$.
+    So we have that the length of $\redseq/\tm'$ is greater than the length of $\redseq$
+    for all $\redseq \in F$:
+    \[
+      |\redseq/\tm'| = \sum_{i=1}^{n} |\underbrace{\redex/(\tm'/\redex_1\hdots\redex_{i-1})}_{\neq \emptyset}| \geq n = |\redseq|
+    \]
+    As a consequence given any $\tobeta$-derivation $\redseq \in F$ we have that $|\redseq| \leq |\redseq/\tm'| \leq M$.
+    This concludes the proof that $\ulbFree{\tm'}{\tm}$ is finite.
+  \item {\bf Bottom element.}
+    As the bottom element take $\bot_{(\ulbFree{\tm'}{\tm})} := \cls{\emptyDerivation}$.
+    Observe that this is well-defined since $\emptyDerivation$ is $\tm'$-garbage-free.
+    Moreover, let us show that $\bot_{(\ulbFree{\tm'}{\tm})}$ is the least element.
+    Let $[\redseq]$ be an arbitrary element of $\ulbFree{\tm'}{\tm}$
+    and let us check that $\bot_{(\ulbFree{\tm'}{\tm})} \leqF [\redseq]$.
+    This is immediate since,
+    by definition, $\bot_{(\ulbFree{\tm'}{\tm})} \leqF [\redseq]$
+    if and only if $\emptyDerivation/\redseq$ is garbage.
+    But $\emptyDerivation/\redseq = \emptyDerivation$ is trivially garbage.
+  \item {\bf Join.}
+    Let $[\redseq],[\redseqtwo]$ be arbitrary elements of $\ulbFree{\tm'}{\tm}$,
+    and let us check that $[\redseq] \lorF [\redseqtwo]$ is the join.
+    First observe that $[\redseq] \lorF [\redseqtwo]$ is well-defined
+    \ie that $(\redseq \sqcup \redseqtwo) \sieve \tm'$ is $\tm'$-garbage-free,
+    which is an immediate consequence of \rprop{characterization_of_garbage_free_derivations}.
+    Moreover, it is indeed the least upper bound of $\set{[\redseq],[\redseqtwo]}$:
+    \begin{enumerate}
+    \item {\bf Upper bound.}
+      Let us show that $[\redseq] \leqF [\redseq] \lorF [\redseqtwo]$; the proof for $[\redseqtwo]$ is symmetrical.
+      We must show that $\redseq/((\redseq \sqcup \redseqtwo) \sieve \tm')$ is garbage.
+      Note that $\redseq \permle \redseq \sqcup \redseqtwo$,
+      so in particular $\redseq/((\redseq \sqcup \redseqtwo) \sieve \tm') \permle (\redseq \sqcup \redseqtwo)/((\redseq \sqcup \redseqtwo) \sieve \tm')$.
+      Given that any prefix of a garbage derivation is garbage (\rprop{properties_of_garbage}),
+      it suffices to show that $(\redseq \sqcup \redseqtwo)/((\redseq \sqcup \redseqtwo) \sieve \tm')$ is garbage.
+      This is a straightforward consequence of the fact that projecting after a sieve is garbage (\rlem{projection_after_sieving_is_garbage}).
+    \item {\bf Least upper bound.}
+      Let $[\redseq], [\redseqtwo] \leqF [\redseqthree]$,
+      and let us show that $[\redseq] \lorF [\redseqtwo] \leqF [\redseqthree]$.
+      We know that $\redseq/\redseqthree$ and $\redseqtwo/\redseqthree$ are garbage,
+      and we are to show that $((\redseq \sqcup \redseqtwo) \sieve \tm')/\redseqthree$
+      is garbage.
+      Note that $(\redseq \sqcup \redseqtwo) \sieve \tm' \permle \redseq \sqcup \redseqtwo$
+      as a consequence of the fact that the sieve is a prefix (\rlem{sieve_is_prefix}).
+      So in particular $((\redseq \sqcup \redseqtwo) \sieve \tm')/\redseqthree \permle (\redseq \sqcup \redseqtwo)/\redseqthree$.
+      Given that any prefix of a garbage derivation is garbage (\rprop{properties_of_garbage}),
+      it suffices to show that $(\redseq \sqcup \redseqtwo)/\redseqthree$ is garbage.
+      But $(\redseq \sqcup \redseqtwo)/\redseqthree \permeq \redseq/\redseqthree \sqcup \redseqtwo/\redseqthree$
+      so we conclude by the fact that the join of garbage is garbage (\rprop{properties_of_garbage}).
+    \end{enumerate}
+  \item {\bf Top element.}
+    Since $\ulbFree{\tm'}{\tm}$ is finite,
+    its elements are $\set{\cls{\redseqthree_1}, \hdots, \cls{\redseqthree_n}}$.
+    It suffices to take $\top := \cls{\redseqthree_1} \lorF \hdots \lorF \cls{\redseqthree_n}$
+    as the top element.
+  \item {\bf Meet.}
+    Let $\cls{\redseq},\cls{\redseqtwo} \in \ulbFree{\tm'}{\tm}$.
+    Note that the set $L = \set{\cls{\redseqthree} \in \ulbFree{\tm'}{\tm} \ST \cls{\redseqthree} \leqF \cls{\redseq} \text{ and } \cls{\redseqthree} \leqF \cls{\redseqtwo}}$
+    is finite because, as we have already proved, the set $\ulbFree{\tm'}{\tm}$ is itself finite.
+    Then $L = \set{\cls{\redseqthree_1}, \hdots, \cls{\redseqthree_n}}$.
+    Take $\cls{\redseq} \landF \cls{\redseqtwo} := \cls{\redseqthree_1} \lorF \hdots \lorF \cls{\redseqthree_n}$.
+    It is straightforward to show that $\cls{\redseq} \landF \cls{\redseqtwo}$
+    thus defined is the greatest lower bound for $\set{\cls{\redseq},\cls{\redseqtwo}}$.
+  \end{enumerate}
+
+\item
+  {\bf The set $\ulbGarbage{\tm'}{\tm}$ forms an upper semilattice.}
+  The semilattice structure of $\ulbGarbage{\tm'}{\tm}$ is inherited from $\ulbDerivLam{\tm}$.
+  More precisely, $\cls{\redseq} \permle \cls{\redseqtwo}$ is declared to hold if $\redseq \permle \redseqtwo$,
+  the bottom element is $\cls{\emptyDerivation}$, and the join is
+  $\cls{\redseq} \sqcup \cls{\redseqtwo} = \cls{\redseq \sqcup \redseqtwo}$.
+  Let us check that this is an upper semilattice:
+  \begin{enumerate}
+  \item {\bf Partial order.}
+    The relation $(\permle)$ is a partial order on $\ulbGarbage{\tm'}{\tm}$ because it is already a partial order in $\ulbDerivLam{\tm}$.
+  \item {\bf Bottom element.}
+    It suffices to note that the empty derivation $\emptyDerivation : \tm \tobeta^* \tm$
+    is $\tm'$-garbage, so $\cls{\emptyDerivation} \in \ulbGarbage{\tm'}{\tm}$
+    is the least element.
+  \item {\bf Join.}
+    By \rprop{properties_of_garbage} we know that if $\redseq$ and $\redseqtwo$
+    are $\tm'$-garbage then $\redseq \sqcup \redseqtwo$ is $\tm'$-garbage,
+    so $\cls{\redseq} \sqcup \cls{\redseqtwo}$ is indeed the least upper bound
+    of $\set{\cls{\redseq}, \cls{\redseqtwo}}$.
+  \end{enumerate}
+\end{enumerate}
+
