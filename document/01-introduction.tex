@@ -1,6 +1,6 @@
 \chapter{Introduction}
 
-The space of computations of a program may have a complex structure.
+The space of computations of programs often have a complex structure.
 Consider a side-effect free programming language.
 The possible computations of a tuple $(A,B)$
 are rewrite sequences $(A,B) \to \hdots \to (A',B')$.
@@ -20,6 +20,18 @@ from a quantitative point of view.
 A better understanding may also suggest program optimizations,
 and it should allow to justify that certain program conversions are sound:
 \eg that they do not turn a terminating program into a non-terminating one.
+
+The study of different notions of equivalence of programs~\cite{Tesis:Morris,Bre16}
+may greatly benefit from a better understanding of space of computations, too.
+Usually, several different notions of observational equivalence may be
+established, depending of how a program behaves under an arbitrary context $\con$.
+For example, a possible definition says that two terms $M$ and $N$
+are observationally equivalent if for any context $\con$, we have that
+$\conof{M}$ has a normal form if and only if $\conof{N}$ has a normal form.
+Understanding the space of computations of $M$ (and $N$) would be a key
+tool to reason about the different notions of observational equivalence.
+
+\bigskip
 
 The pure $\lambda$-calculus is the quintessential functional programming language.
 Computations in the $\lambda$-calculus have been thoroughly
@@ -50,7 +62,8 @@ whenever $\redseq$ performs less computational work than $\redseqtwo$.
 Formally, $\redseq \permle \redseqtwo$ is defined to hold whenever the {\em projection} $\redseq/\redseqtwo$ 
 is empty\footnote{The notion of projection defined by means of residuals
 is the standard one, see \eg \cite[Chapter~12]{Barendregt:1984}
-or \cite[Section~8.7]{Terese}.}.
+or \cite[Section~8.7]{Terese}.
+We will define this more formally in the preliminaries.}.
 For example, if $K = \lam{\var}{\lam{\vartwo}{\var}}$,
 the derivation space of the term $(\lam{\var}{\var\var})(K\varthree)$
 can be depicted with the \emph{reduction graph} below.
@@ -86,6 +99,7 @@ For instance, $\redextwo\redex_2$ is a prefix of $\redex\redextwo'\redexthree'$:
   &
     \varthree
   }
+  \tag{1} \label{eq:redgraph}
 \]
 Remark that the relation $\permle$ is reflexive and transitive but not antisymmetric,
 \ie it is a quasi-order but not an order.
@@ -114,11 +128,11 @@ For example, relating the derivation space of an application $\tm\tmtwo$
 with the derivation spaces of $\tm$ and $\tmtwo$ appears to be a hard problem.
 L\'evy also noted that the {\em greatest lower bound} of two derivations does
 not necessarily exist, meaning that the derivation space of a term does not form a lattice in general.
-Even when it forms a lattice, it may not necessarily be a {\em distributive} lattice, as observed for example by
-Laneve~\cite{laneve1994distributive}.
+And even when it forms a lattice, it may not necessarily be a {\em distributive} lattice,
+as observed by Laneve~\cite{laneve1994distributive}.
 
 Consider the following counterexample
-\footnote{Similar to an example due to Laneve~\cite{laneve1994distributive}.}, showing that the meet of derivations is not well-defined.
+\footnote{Similar to an example due to Laneve~\cite{laneve1994distributive}.}, showing that the meet of derivations is not well-defined in general.
 Let $\Omega = (\lam{\var}{\var\var})\lam{\var}{\var\var}$,
 and consider the reduction space of
   $(\lam{\var}{(\lam{\vartwo}{a})(\var \Omega)}) (\lam{\varthree}{b})$,
@@ -160,7 +174,7 @@ where the steps $U_i$ contract $\Omega$:
 Observe that $ST$ and $R$ do not have a greatest lower bound: $ST$ and $R$ are not
 comparable, and neither are $S$ and $R$.
 Furthermore, for all $n \in \mathbb{N}$ we have that $U_1 \hdots U_n \sqsubseteq R$
-and $T_1 \hdots T_n \sqsubseteq ST$ so the meet $R \sqcap ST$ does not exist.
+and $U_1 \hdots U_n \sqsubseteq ST$ so the meet $R \sqcap ST$ does not exist.
 
 
 In \cite{DBLP:conf/ctcs/Mellies97}, Melli\`es showed that
@@ -173,7 +187,7 @@ one of {\em external} and one of {\em internal} derivations.
 The difficulty to understand derivation spaces is due to three pervasive phenomena
 of \emph{interaction} between computations.
 The first phenomenon is \emph{duplication}:
-in the reduction graph of above, the step $\redextwo$ duplicates the step $\redex$,
+in the reduction graph above (\ref{eq:redgraph}), the step $\redextwo$ duplicates the step $\redex$,
 resulting in two copies of $\redex$: the steps $\redex_1$ and $\redex_2$.
 In such situation, one says that $\redex_1$ and $\redex_2$ are \emph{residuals} of $\redex$,
 and, conversely, $\redex$ is an \emph{ancestor} of $\redex_1$ and $\redex_2$.
@@ -233,21 +247,8 @@ where $\basetyp$ ranges over one of denumerably many {\em base types},
 and $\mtyp$ represents a {\em multiset of types}.
 Here $[\typ_i]_{i=1}^{n}$ denotes the multiset containing the types $\typ_1,\hdots,\typ_n$
 with their respective multiplicities.
-A multiset $[\typ_i]_{i=1}^{n}$ intuitively stands for the (non-idempotent) intersection $\typ_1 \cap \hdots \cap \typ_n$.
-The {\em sum of multisets} $\mtyp + \mtyptwo$ is defined as their union (adding multiplicities).
-A {\em typing context} $\tctx$ is a partial function mapping variables to multisets of types.
-The domain of $\tctx$ is the set of variables $\var$ such that $\tctx(\var)$ is defined.
-We assume that typing contexts always have {\em finite domain} and hence they may be written as
-$\var_1 : \mtyp_1, \hdots, \var_n : \mtyp_n$.
-The {\em sum of contexts} $\tctx + \tctxtwo$ is their pointwise sum,
-\ie $(\tctx + \tctxtwo)(\var) := \tctx(\var) + \tctxtwo(\var)$ if $\tctx(\var)$ and $\tctxtwo(\var)$ are both defined,
-$(\tctx + \tctxtwo)(\var) := \tctx(\var)$ if $\tctxtwo(\var)$ is undefined,
-and $(\tctx + \tctxtwo)(\var) := \tctxtwo(\var)$ if $\tctx(\var)$ is undefined.
-We write $\tctx +_{i=1}^{n} \tctxtwo_i$ to abbreviate $\tctx + \tctxtwo_1 + \hdots + \tctxtwo_n$.
-The {\em disjoint sum of contexts} $\tctx \oplus \tctxtwo$ stands for $\tctx + \tctxtwo$, provided that
-the domains of $\tctx$ and $\tctxtwo$ are disjoint.
-A {\em typing judgment} is a triple $\tctx \vdash \tm : \typ$,
-representing the knowledge that the term $\tm$ has type $\typ$ in the context $\tctx$.
+A multiset $[\typ_i]_{i=1}^{n}$ intuitively stands for the (non-idempotent)
+intersection $\typ_1 \cap \hdots \cap \typ_n$, and $\oplus$ stands for disjoint union.
 Type assignment rules for system $\mathcal{W}$ are as follows.
 
 \begin{definition}[System $\mathcal{W}$]
@@ -264,7 +265,7 @@ Type assignment rules for system $\mathcal{W}$ are as follows.
   \indrule{\toE}{
     \tctx \vdash \tm : [\typtwo_i]_{i=1}^{n} \to \typ
     \HS
-    (\tctxtwo_i \vdash \tmtwo_i : \typtwo_i)_{i=1}^{n}
+    (\tctxtwo_i \vdash \tmtwo : \typtwo_i)_{i=1}^{n}
   }{
     \tctx +_{i=1}^{n} \tctxtwo_i \vdash \tm\,\tmtwo : \typ
   }
@@ -322,7 +323,8 @@ The remainder of this work is organized as follows:
   In \rcha{preliminaries}, we review some standard notions of order and rewriting theory, as well as some
   basic notions of the $\lambda$-calculus that we will use throughout the work.
 \item
-  In \rcha{lambdadist}, we introduce a confluent calculus $\lambdadist$ based on system $\mathcal{W}$.
+  In \rcha{lambdadist}, we introduce a confluent calculus, $\lambdadist$,
+  based on system $\mathcal{W}$.
   The desirable properties of system~$\mathcal{W}$ of~\cite{bucciarelli2017non} still hold in $\lambdadist$.
   Moreover, $\lambdadist$ is confluent.
   We impose confluence forcibly, by decorating subtrees with distinct labels, so that
