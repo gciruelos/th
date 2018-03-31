@@ -2,7 +2,7 @@ Having defined the correspondance between terms we
 have to somehow show how that correspondance is compatible with the notions
 of reduction in both calculi.
 
-For this, we puth forth two simulation results, one that deals with simulating steps
+For this, we put forth two simulation results, one that deals with simulating steps
 of the $\lambda$-calculus in the $\lambdadist$-calculus, and another that does the
 reverse.
 
@@ -101,7 +101,7 @@ But that is not possible in general, to see that consider the following countere
   {\small
     \xymatrix@R=.25cm@C=.5cm{
       (\lam{\var}{\var \var}) ((\lam{\vartwo}{\vartwo}) a)
-      \ar@{->>}[r]^-{\beta}
+      \ar@{.>>}[r]^-{\beta}
       \ar@{}[d]|*=0[@]{\rtimes}
       &
       \tmtwo
@@ -123,7 +123,7 @@ Note that if $\tmtwo$ is to be refined by
   \[(\lamp{1}{\var}{\var^{[\alpha] \to \beta} [\var^{\alpha}]})
           [a^{[\alpha] \to \beta},
            (\lamp{3}{\vartwo}{\vartwo^\alpha}) a^\alpha]\]
-Then it must be an application, $\tmtwo = \tmtwo_1 \tmtwo_2$, such that $\tmtwo_2$
+then it must be an application, $\tmtwo = \tmtwo_1 \tmtwo_2$, such that $\tmtwo_2$
 is refined by both $a^{[\alpha] \to \beta}$ and $(\lam{\vartwo}{\vartwo^\alpha}) a^\alpha$---
 but that is impossible, because the first says $\tmtwo_2$ should be a variable, and the second
 says it should be an application.
