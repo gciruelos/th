@@ -86,10 +86,11 @@ of the substitutions we would need to separate the list $[a^\beta, b^\alpha]$ in
 Altough are going to prove that the $\lambdadist$-calculus is confluent,
 actually a strictly stronger property holds: strong permutation.
 This property says that if we "open" a diagram with two (different) steps,
-we can "close" it with two steps, too; and it also gives us information
+we can "close" it with two steps too; and it also gives us information
 about which are those closing steps, via their labels.
 The fact that this stronger property holds gives us the chance to
-develop a functorial residual theory, as we will learn in the next chapter.
+develop a functorial residual theory (\cf Full Stability, \rlem{full_stability}),
+as we will learn in the next chapter.
 
 
 
@@ -121,7 +122,7 @@ The step $\redex$ is of the form:
 \]
 We proceed by induction on $\con$, and within each case we separate in different
 cases depending on where $\redextwo$ is located (which recall that is different
-than $\redex$ by hypothesis)
+than $\redex$ by hypothesis).
 \SeeAppendixRef{strong_permutation_proof}
 \end{proof}
 
@@ -130,11 +131,11 @@ than $\redex$ by hypothesis)
 
 The Strong Permutation property may also be called \emph{sub-commutativity}
 or \emph{WCR$^{\leq 1}$} in some contexts.
-\footnote{In reality, sub-commutativity and WCR$^{\leq 1}$ are slightly different,
+\footnote{In reality, sub-commutativity and WCR$^{\leq 1}$ are slightly different
+than strong permutation,
 but equivalent:
 as they don't ask for the steps to be different,
 but allow the closing steps to be at most one (instead of exactly one).}
-
 As a consequence of strong permutation, reduction is subcommutative,
 \ie $(\lefttodist \circ \todist)\ \subseteq (\todist^= \circ \lefttodist^=)$
 where
