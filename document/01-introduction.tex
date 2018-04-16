@@ -1,6 +1,99 @@
 \chapter{Introduction}
 
-The space of computations of a program may have a complex structure.
+The main concern of this work will be to analyze and understand \emph{spaces of computations}.
+To understand what a space of computations is, we need to introduce what a rewriting system is.
+A rewriting system is a set of terms together with a rewriting rule between them.
+For example, the elementary arithmetic (addition and multiplication of natural numbers)
+can be seen as a rewriting system, where the terms are:
+\[
+  \tm, \tmtwo ::= \tm + \tmtwo \ |\ \tm \cdot \tmtwo \ |\ \underline{n}
+\]
+\noindent where $n \in \mathbb{N}$. We write $\underline{n}$ to mean that we have a term,
+not only a natural number.
+
+And we have two rewriting rules, one that says how to add and another that says how to multiply:
+\[
+  \underline{n} + \underline{m} \to \underline{n + m}
+\]
+\[
+  \underline{n} \cdot \tm \to \underbrace{\tm + \tm + ... + \tm}_{n \text{ times}}
+\]
+
+Actually, to be completely formal we should say that the rewriting rules are the \emph{contextual clausures}
+of the ones above, which intuitively means that we can apply the rules anywhere we want in the term.
+For example, if we had the term $\underline{3} + \underline{0} \cdot (\underline{4} + \underline{5})$,
+we can apply the first rule to get $\underline{3} + \underline{0} \cdot \underline{9}$,
+and then the second one to get $\underline{3} + \underline{0}$, which can be rewritten to $\underline{3}$.
+
+But notice that instead of doing the first step we did, we could have directly applied the second rewrite rule
+onto our term, which would have yielded $\underline{3} + \underline{0}$, saving one step.
+
+The space of computations of a term $\tm$ is the graph that has all reducts of $\tm$ as nodes,
+and edges between two nodes if one can be rewritten to the other.
+In the example above, the computation space of $\underline{3} + \underline{0} \cdot (\underline{4} + \underline{5})$
+would be the following.
+
+\[
+\xymatrix@C=1cm{
+  & \underline{3} + \underline{0} \cdot (\underline{4} + \underline{5}) \ar[dr] \ar[dl]& \\
+  \underline{3} + \underline{0} \cdot \underline{9} \ar[rr] & & \underline{3} + \underline{0} \ar[dl] \\
+  & \underline{3} &
+}
+\]
+
+To learn some other notions of rewriting theory, consider the following examples.
+
+\[
+\xymatrix{
+  \underline{0} \cdot (\underline{5} + \underline{5}) \ar[d] \ar[dr] &                                           \\
+  \underline{0}                                                      & \ar[l] \underline{0} \cdot \underline{10}
+}
+\]
+
+Notice how the step that performed the sum was not needed, as we could have done the multiplication
+directly. We will concentrate in this kinds of phenomena in this work: steps that do not perform interesting
+work. Later on, we will call these steps \emph{garbage}.
+
+In the next example we will name our steps to make the explanation clearer.
+
+\[
+\xymatrix@C=1cm{
+  & \underline{1} \cdot (\underline{5} + \underline{5}) \ar[dl]^{\redex} \ar[dr]_{\redextwo}& \\
+\underline{1} \cdot \underline{10} \ar[dr]^{\redextwo'} & & \underline{5} + \underline{5} \ar[dl]_{\redex'} \\
+  & \underline{10} &
+}
+\]
+
+This example allows us to present the notion of \emph{residuals}. We have two
+steps that perform the sum $\underline{5} + \underline{5} \to \underline{10}$, $\redex$ and $\redex'$.
+These steps are formally different, but are essentially the same, and in a strong sense:
+we will say that $\redex'$ is the residual of $\redex$ after $\redextwo$, \ie, it is what is left of $\redex$
+after $\redextwo$. We will write this $\redex / \redextwo = \set{\redex'}$.
+Also notice how there is no ``faster'' reduction  strategy, all reductions are the same length.
+
+Let us consider a last, slightly more complicated, example.
+
+\[
+\xymatrix@C=1cm{
+  & \underline{2} \cdot (\underline{5} + \underline{5}) \ar[dl]^{\redex} \ar[dr]_{\redextwo} & & \\
+\underline{2} \cdot \underline{10} \ar@/_3pc/[ddrr]^{\redextwo'} & & (\underline{5} + \underline{5}) + (\underline{5} + \underline{5}) \ar[dl]_{\redex_1} \ar[dr]_{\redex_2}& \\
+  & \underline{10} + (\underline{5} + \underline{5}) \ar[dr]_{\redex_2'} & & (\underline{5} + \underline{5}) + \underline{10} \ar[dl]_{\redex_1'} \\
+  & & \underline{10} + \underline{10} \ar[d]^{\redexthree}& \\
+  & & \underline{20} &
+}
+\]
+
+Notice here how the residual of $\redex$ after $\redextwo$ is a set of two steps, $\set{\redex_1, \redex_2}$.
+That means that if we performed $\redextwo$, we need to to those two steps to do the work $\redex$ alone did.
+
+We would be inclined to guess that a good reduction strategy would be to always multiply
+a number to a number, such that we don't multiply work. But that strategy fails when we have a 0 as an operand.
+
+\bigskip
+
+
+What we want to do in this work is to understand the spaces of computations of programs,
+which may have a very complex structure.
 Consider a side-effect free programming language.
 The possible computations of a tuple $(A,B)$
 are rewrite sequences $(A,B) \to \hdots \to (A',B')$.
@@ -13,15 +106,33 @@ In contrast, the space of computations of a function application $f(A)$ is not s
 to characterize. The difficulty is that $f$ may use the value of $A$ zero, one, or
 possibly many times.
 
-The motivation of this work is attempting to {\bf understand spaces of computations}.
-We hope that this may be helpful to better understand the properties of {\em evaluation strategies},
+Another difficulty is that a program may \emph{hang}, which means it has an infinite rewrite sequence.
+This did not happen in the elementary arithmetic example above, where we always arrive to a result.
+More importantly, a program may finish or not depending on what rewriting rule we choose in each step.
+
+We hope understanding the spaces of computations of programs
+may be helpful to better understand the properties of {\em evaluation strategies},
 such as call-by-name or call-by-value,
 from a quantitative point of view.
 A better understanding may also suggest program optimizations,
 and it should allow to justify that certain program conversions are sound:
 \eg that they do not turn a terminating program into a non-terminating one.
 
+
+
+
 The pure $\lambda$-calculus is the quintessential functional programming language.
+The lambda calculus is a rewriting system that can represent all computable functions in a concise manner.
+Terms of the lambda calculus can be variables, functions or applications.
+
+\[
+  \tm, \tmtwo ::= \var \ | \ \lam{\var}{\tm} \ | \ \tm\, \tmtwo
+\]
+
+And we only have one rewriting rule, the function application
+$(\lam{\var}{\tm}) \tmtwo \to \subs{\tm}{\var}{\tmtwo}$,
+where $\subs{\tm}{\var}{\tmtwo}$ means to replace every occurrence of $\var$ in $\tm$ with $\tmtwo$.
+
 Computations in the $\lambda$-calculus have been thoroughly
 studied since its conception in the 1930s.
 The well-known theorem by Church and Rosser~\cite{church1936some}
