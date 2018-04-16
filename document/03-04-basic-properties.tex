@@ -1,4 +1,9 @@
-The following lemmas show that the rewrite rule $\todist$ is well-defined.
+
+The first lemma talks about the shape of the typing context of a given typing judgement.
+Specifically, that the typing context will contain $\var : \typ$ for each free variable
+$\var^\typ$ that occurs in the term, and nothing else.
+
+This lemma will be very useful to prove a lot of upcoming results.
 
 \begin{lemma}[Linearity]
 \llem{linearity}
@@ -8,18 +13,12 @@ Let $\var$ be any variable,
 and consider the $n \geq 0$ free occurrences of the variable $\var$ in the term $\tm$,
 more precisely, write $\tm$ as $\tm = \conhat\of{\var^{\typ_1},\hdots,\var^{\typ_n}}$,
 where $\conhat$ is a context with $n$-holes such that $\var \not\in \fv{\conhat}$.
-Then $\tctx(\var) = \set{\typ_1,\hdots,\typ_n}$.
 \end{lemma}
 \begin{proof}
 \SeeAppendixRef{linearity_proof}
 By induction on $\tm$.
 \end{proof}
 
-This first lemma talks about the shape of the typing context of a given typing judgement.
-Specifically, that the typing context will contain $\var : \typ$ for each free variable
-$\var^\typ$ that occurs in the term, and nothing else.
-
-This lemma will be very useful to prove a lot of upcoming results.
 
 \begin{remark}
   Given that variables are labeled with their types, it is more or less easy to obtain
@@ -35,6 +34,7 @@ This lemma will be very useful to prove a lot of upcoming results.
 
 
 
+The following properties show that the rewrite rule $\todist$ is well-defined.
 
 \begin{lemma}[$\termsdist$ is closed under $\todist$]
 \llem{closed_under_arrow}
@@ -42,7 +42,7 @@ Let $\tm \in \termsdist$ such that $\tm \todist \tm'$. Then $\tm' \in \termsdist
 \end{lemma}
 \begin{proof}
   \SeeAppendixRef{closed_under_arrow_proof}
-Let $\tm = \conof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$. We proceed by induction on $\con$.
+Let $\tm = \conof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$. By induction on $\con$.
 \end{proof}
 
 

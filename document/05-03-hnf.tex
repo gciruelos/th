@@ -1,4 +1,4 @@
-When we defined what a refinement is, we saw that some terms had refinements and other
+When we defined what a refinement is, we saw that some terms had refinements and others
 did not, but the reason behind that was not clear.
 
 In this section we will see that terms that can be refined are exactly the terms
@@ -15,7 +15,7 @@ if it is of the form:
 \[
   \tm = \lam{\var_1}{\hdots\lam{\var_n}{\vartwo\,\tm_1\,\hdots\,\tm_m}}
 \]
-Note that $\vartwo$ might be or not be among the $\var_1,\hdots,\var_n$.
+where $\vartwo$ might be or not be among the $\var_1,\hdots,\var_n$.
 Similarly, a term $\tm \in \termsdist$ of the distributive lambda-calculus is a \defn{head normal form}
 if it is of the form:
 %there exist an integer $n \geq 0$,
@@ -30,7 +30,7 @@ if it is of the form:
 \end{definition}
 
 We say that a term \emph{has} a head normal form if it can be reduced to a head normal form.
-And the claim that we are putting forward is that a term can be refined if and only if it has
+The claim that we are putting forward is that a term can be refined if and only if it has
 a head normal form.
 
 Note that for terms that \emph{are} head normal forms this is easy. The idea is that
@@ -40,6 +40,8 @@ then it is refined by
 if $\var_i \neq \vartwo$ for every $i$ (otherwise the type of $\vartwo$ is slightly different,
 but the term has the same shape).
 
+The claim that terms that are refinable are exactly the ones that have
+a head normal form is formally stated as follows.
 
 \begin{lemma}
 \llem{hnf_has_refinement}
@@ -84,15 +86,15 @@ invariant by $\todist$-expansion (\ie by $\todist^{-1}$).
 \end{proof}
 
 
-Note that, in general, there is no need to refine a head normal form using empty lists for
+Note that, in general, there is no need to refine a head normal form using an empty lists for
 all parameters.
-A head normal form has a corresponding B\"om tree, from which one
+A head normal form has a corresponding B\"ohm tree, from which one
 can obtain an \defn{approximant},
-$\lam{\var_1}{\hdots\lam{\var_n}{\Omega\,\Omega\,\hdots\,\Omega}}$
+$\lam{\var_1}{\hdots\lam{\var_n}{\vartwo\,\Omega\,\Omega\,\hdots\,\Omega}}$
 \cite{Barendregt:1984,dezani-ciancaglini-bohm-approximant}.
 A finite approximant is essentially any finite prefix of the B\"om tree, given by the grammar
 $A ::= \Omega |\lam{\var_1}{\hdots\lam{\var_n}{A_1\,A_2\,\hdots\,A_m}}$.
-$(2 \implies 3)$ from \rprop{has_hnf_has_refinement} may be generalized to arbitrary
+$(2 \iff 3)$ from \rprop{has_hnf_has_refinement} may be generalized to arbitrary
 finite approximations. We did not delve into this theory.
 
 

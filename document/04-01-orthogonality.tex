@@ -2,9 +2,9 @@
 Recall from the preliminaries that some abstract rewriting systems have the property of being
 \emph{orthogonal}.
 Being orthtogonal entails a myriad of properties and results that make working
-with orthogonal rewrite systems very easy.
+with orthogonal rewrite systems very pleasant.
 Informally, in an orthogonal rewrite system residuals behave and have the properties
-that one would expect, some of them are summarized in the table that follows.
+that one would expect, some of which are summarized in the table that follows.
 
 {\footnotesize
 \[
@@ -60,7 +60,8 @@ that one would expect, some of them are summarized in the table that follows.
 }
 
 As we stated in the preliminaries, one must check four axioms in order to prove that
-a given system (in this case $\lambdadist$) is orthogonal.
+a given system (in this case $\lambdadist$) is orthogonal:
+Autoerasure, Finite Residuals, Finite Developments, and Semantic Orthogonality.
 
 Let's see why the axiom called Finite Developments is interesting.
 As stated in \cite{thesismellies}, the \emph{Axiome FD}, or finite developments axiom,
@@ -145,31 +146,33 @@ some of the upcoming propositions. Consider the following term:
 What follows is its derivation space, \ie,
 all possible derivations that have the previous term as a source.
 
+\[
 \xymatrix{
-  (\lamp{\lab_1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
-    [\lamp{\lab_2}{\vartwo}{\vartwo^\alpha},
-    (\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha]]
-    \ar@[->][r]_-{\lab_3}^-{\redextwo}
-    \ar@[->][d]_{\lab_1}^{\redex}
+  (\lamp{1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
+    [\lamp{2}{\vartwo}{\vartwo^\alpha},
+    (\lamp{3}{\varthree}{\varthree^\alpha}) [w^\alpha]]
+    \ar@[->][r]_-{3}^-{\redextwo}
+    \ar@[->][d]_{1}^{\redex}
   &
-  (\lamp{\lab_1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
-    [\lamp{\lab_2}{\vartwo}{\vartwo^\alpha},
+  (\lamp{1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
+    [\lamp{2}{\vartwo}{\vartwo^\alpha},
     w^\alpha]
-   \ar@[->][d]^{\lab_1}_{\redex'}
+   \ar@[->][d]^{1}_{\redex'}
   \\
-  (\lamp{\lab_2}{\vartwo}{\vartwo^\alpha})
-   ((\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha])
-   \ar@[->][r]_{\lab_3}^{\redextwo'}
-   \ar@[->][d]_{\lab_2}^{\redexthree}
+  (\lamp{2}{\vartwo}{\vartwo^\alpha})
+   ((\lamp{3}{\varthree}{\varthree^\alpha}) [w^\alpha])
+   \ar@[->][r]_{3}^{\redextwo'}
+   \ar@[->][d]_{2}^{\redexthree}
    &
-  (\lamp{\lab_2}{\vartwo}{\vartwo^\alpha})  [w^\alpha]
-  \ar@[->][d]_{\lab_2}^{\redexthree'}
+  (\lamp{2}{\vartwo}{\vartwo^\alpha})  [w^\alpha]
+  \ar@[->][d]_{2}^{\redexthree'}
    \\
-  (\lamp{\lab_3}{\varthree}{\varthree^\alpha})  [w^\alpha]
-  \ar@[->][r]_{\lab_3}^{\redextwo''}
+  (\lamp{3}{\varthree}{\varthree^\alpha})  [w^\alpha]
+  \ar@[->][r]_{3}^{\redextwo''}
   &
   w^\alpha
   }
+\]
 \end{example}
 
 Some facts about these derivations:
@@ -182,5 +185,5 @@ Some facts about these derivations:
   \item $\redextwo / \redex = \set{\redex''}$ and
     $\redextwo / \redex \redexthree = \set{\redextwo''}$. Remember that in $\lambdadist$,
     residuals are either empty or singletons, so we will often skip the parentheses.
-  \item $\name(\redexthree) = \name(\redexthree') = \lab_3$.
+  \item $\name(\redexthree) = \name(\redexthree') = 3$.
 \end{itemize}

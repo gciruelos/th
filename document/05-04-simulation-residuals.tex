@@ -125,7 +125,8 @@ The diagram for the inductive case is:
 \]
 \end{definition}
 
-This extension of the definition works as expected for compositions.
+This extension of the definition works as expected for compositions,
+as shown by the following lemma.
 
 \begin{lemma}[Simulation residuals and composition]
 \llem{simulation_residuals_composition}
@@ -186,6 +187,55 @@ and checks they work together as expected.
 
 We first enunciate a basic cube lemma that deals with single steps,
 which we later on will generalize to arbitrary derivations.
+
+But before that let us explain what the cube lemma does.
+The situation it speaks about is as shown in the following diagram.
+
+\[
+\xymatrix{
+  & \tm
+  \ar[dl]_{\redex} \ar[dr]^{\redextwo}
+  &
+  & \refinedby
+  &
+  & \tm'
+  \ar[dl]_{\redex / \tm'} \ar[dr]^{\redextwo / \tm'}
+  &
+  \\
+  \ar@{->>}[dr]_{\redextwo / \redex}
+  &
+  &
+  \ar@{->>}[dl]^{\redex / \redextwo}
+  &
+  &
+  \tm' / \redex
+  \ar@{->>}[dr]
+  &
+  &
+  \tm' / \redextwo
+  \ar@{->>}[dl]^{\alpha}
+  \\
+  &
+  &
+  &
+  &
+  &
+  &
+  \\
+}
+\]
+
+In the diagram before, $\alpha$ is a complete development of some set of steps
+$\redexset_\alpha$.
+The cube lemma reconciles the two possible ways of writing $\redexset_\alpha$.
+See that $\redexset_\alpha$ can be seen as projecting $\redex / \redextwo$
+on the term $\tm' / \redextwo$, which would suggest
+$\redexset_\alpha = (\redex / \redextwo) / (\tm' / \redextwo)$.
+On the other hand, if we only concentrate on the right hand side of the
+diagram, $\redexset_\alpha$ may be seen as simply the residual of $\redex / \tm'$
+after $\redextwo / \tm'$, \ie, $(\redex / \tm') / (\redextwo / \tm')$.
+The basic cube lemma states that this two different ways of seing $\redexset_\alpha$
+yield the same set of steps.
 
 \begin{lemma}[Basic cube lemma for simulation residuals]
 \llem{cube_lemma_for_simulation_residuals}
@@ -254,7 +304,8 @@ By induction on depth of $\redexset$, \ie the maximum length of any development 
 \end{proof}
 \bigskip
 
-The last lemma helps us prove that the operation of projecting derivations from the pure
+Having shown the previous lemma, we are able to
+prove that the operation of projecting derivations from the pure
 $\lambda$-calculus to the $\lambdadist$-calculus is compatible with
 permutation equivalence.
 
@@ -362,6 +413,22 @@ Then the mapping $\ulbDerivLam{\tm} \to \ulbDerivDist{\tm'}$
 given by $\cls{\redseq} \mapsto \cls{\redseq/\tm'}$ is a morphism of upper
 semilattices.
 \end{corollary}
+\begin{proof}
+We need to check that the morphism is monotonic and that it preserves joins.
+First, if $\redseq \permle \redseqtwo$ 
+then $\redseq\redseqthree \permeq \redseqtwo$ for some $\redseqthree$.
+So $\redseq/\tm \permle (\redseq/\tm)(\redseqthree/(\tm/\redseq)) = \redseq\redseqthree/\tm \permeq \redseqtwo/\tm$
+by Compatibility~(\rprop{compatibility_of_simulation_residuals_and_permutation_equivalence}).
+
+Secondly,
+$
+  (\redseq \sqcup \redseqtwo)/\tm =
+  \redseq(\redseqtwo/\redseq)/\tm =
+  (\redseq/\tm)((\redseqtwo/\redseq)/(\tm/\redseq)) \permeq
+  (\redseq/\tm)((\redseqtwo/\tm)/(\redseqtwo/\redseq)) =
+  (\redseq/\tm) \sqcup (\redseqtwo/\tm)
+$.
+\end{proof}
 
 \begin{example}
 \lexample{algebraic_simulation_example}

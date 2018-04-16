@@ -1,8 +1,9 @@
 \lsec{lattices_and_derivation_spaces}
 In this section we are going to consider the derivation spaces of terms in
-the $\lambdadist$-calculus as lattices, and prove properties about those lattices.
+the $\lambdadist$-calculus as lattices and prove properties about those lattices.
 
-The \defn{space of derivations} of a term $\tm$ is the set
+In a general orthogonal rewrite system,
+the \defn{space of derivations} of a term $\tm$ is the set
 $\set{\redseq : \src(\redseq) = \tm}$ (usually modulo permutation equivalence),
 together with the order relation $\permle$.
 Recall that
@@ -17,7 +18,7 @@ and axiomatic results~\cite{thesismellies},
 derivation spaces of terms of orthogonal abstract rewrite systems are
 \emph{upper semilattices}. This means that they have joins, but not necessarily meets.
 
-Joins for these systems are given essentially by their confluence property \TODO{OK?}:
+Joins for these systems are given essentially by their confluence property:
 the join (or least upper bound)
 of two reductions $\redseq$, $\redseqtwo$ is $\redseq (\redseqtwo / \redseq)$
 (or equivalently $\redseqtwo (\redseq / \redseqtwo)$).
@@ -26,7 +27,7 @@ terms of orthogonal abstract rewrite systems have pushouts.
 
 \begin{example} Laneve's counterexample from the introduction
 showed that the meet of derivations is not well defined for the pure lambda calculus
-(which is a orthogonal abstract rewrite system \TODO{citar aca}).
+(which is a orthogonal abstract rewrite system \cite{thesismellies}).
 Let $\Omega = (\lam{\var}{\var\var})\lam{\var}{\var\var}$,
 and consider the reduction space of
 $(\lam{\var}{(\lam{\vartwo}{a})(\var \Omega)}) (\lam{\varthree}{b})$
@@ -71,7 +72,7 @@ As we pointed out in the introduction,
 $ST$ and $R$ do not have a greatest lower bound: $ST$ and $R$ are not
 comparable, and neither are $S$ and $R$,
 and for all $n \in \mathbb{N}$ we have that $U_1 \hdots U_n \sqsubseteq R$
-and $T_1 \hdots T_n \sqsubseteq ST$ so the meet $R \sqcap ST$ does not exist.
+and $U_1 \hdots U_n \sqsubseteq ST$ so the meet $R \sqcap ST$ does not exist.
 \end{example}
 
 \bigskip
@@ -93,7 +94,7 @@ That is, each operation is distributive over the other.
 \end{definition}
 
 \begin{example}
-For example, if $X$ is a set, then $(\mathcal{P}(\mathcal{X}), \subseteq, \cup, \cap)$,
+For example, if $X$ is a set, then $(\mathcal{P}(X), \subseteq, \cup, \cap)$,
 its powerset,
 is a distributive lattice.
 \end{example}
@@ -101,7 +102,7 @@ is a distributive lattice.
 If we want to prove that $\ulbDerivDist{\tm}$ is a distributive lattice,
 we need to prove that it is a lattice and that it satisfies the distributivity property.
 We know that $\ulbDerivDist{\tm}$ is a join semilattice (or upper semilattice), so
-to prove that it is a lattice next we need to define its meet and prove that it works.
+to prove that it is a lattice we need to define a meet that works.
 
 \subsection*{Meets}
 
@@ -387,14 +388,14 @@ and finally that it is a monomorphism:
 \begin{example}
 If we consider the derivation space from \rexample{derivation-ids-ex},
 we see that we have 8 derivations modulo permutation equivalence,
-representable by the powerset of the set of labels $\set{\lab_1, \lab_2, \lab_3}$.
+representable by the powerset of the set of labels $\set{1, 2, 3}$.
 Some examples:
 \begin{itemize}
   \item $\emptyset$ represents the empty derivation, $\emptyDerivation$.
-  \item $\set{\lab_1}$ represents $\redex$.
-  \item $\set{\lab_1, \lab_2, \lab_3}$ represents $[\redex \redextwo' \redexthree'']$,
+  \item $\set{1}$ represents $\redex$.
+  \item $\set{1, 2, 3}$ represents $[\redex \redextwo' \redexthree'']$,
     which is equal to $[\redex \redexthree \redextwo'']$ and $[\redextwo \redex' \redexthree']$.
-  \item As $\set{\lab_1}$ represents $\redex$ and $\set{\lab_3}$ represents $\redextwo$, and $\set{\lab_1} \cup {\lab_3} = \set{\lab_1, \lab_3}$, we know that $\redex \sqcup \redextwo = [\redex \redextwo']$.
+  \item As $\set{1}$ represents $\redex$ and $\set{3}$ represents $\redextwo$, and $\set{1} \cup {3} = \set{1, 3}$, we know that $\redex \sqcup \redextwo = [\redex \redextwo']$.
 \end{itemize}
 \end{example}
 

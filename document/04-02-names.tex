@@ -1,6 +1,6 @@
 
-As we said before, the fact that in $\lambdadist$ names of steps
-are given by labels of lambdas, which are pairwise different,
+The fact that in $\lambdadist$ names of steps
+are given by labels of lambdas, which by correctness are pairwise different,
 and that the calculus has no deletion nor duplication will
 make names of steps suitable to name derivations (\ie series of steps).
 
@@ -34,8 +34,8 @@ There are several notions that can define the fact that a step $\redex$ is perfo
 a derivation $\redseq$ (where $\redex$ and $\redseq$ are coinitial).
 
 One of this notions is the one that says that whatever $\redex$ does,
-is done by $\redseq$, \ie, $\redex / \redseq = \emptyset$,
-there's no more $\redex$-related work to do. This is usually written as
+is also done by $\redseq$, \ie, $\redex / \redseq = \emptyset$:
+there is no more $\redex$-related work to do. This is usually written as
 $\redex \permle \redseq$. This notion can be easily extended to derivations:
 $\redseqtwo \permle \redseq$ if $\redseqtwo / \redseq = \emptyDerivation$.
 
@@ -121,8 +121,8 @@ reductions is useful. Recall that the names of a reduction are the set of names 
 What follows is a list of different results that characterize properties
 of reductions in terms of its name.
 
-It is immediate to note that,
-when composing derivations $\redseq, \redseqtwo$,
+It is immediate to note that
+when composing two derivations $\redseq, \redseqtwo$,
 the set of names of $\redseq\redseqtwo$
 results from the union of the names of $\redseq$ and $\redseqtwo$:
 
@@ -181,6 +181,10 @@ $\names(\redseq) = \biguplus_{i=1}^{n} \set{\name(\redex_i)}$
 and
 $\#(\names(\redseq)) = n$, as required.
 \end{proof}
+
+The names of a derivation are coherent and work well
+with all the usual residual theory definitions: projections, prefix order, and permutation
+equivalence.
 
 \begin{lemma}[Names after a projection]
 \llem{names_after_projection_along_a_step}

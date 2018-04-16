@@ -3,16 +3,19 @@
 In this section we will see two important lemmas that guarantee certain properties
 of residues after steps or derivations.
 
-\bigskip
+The result that we will call full stability can be seen as a functorial extension
+to the confluence result: confluence speaks about happens to terms after
+two coinitial derivations,
+while full stability speaks about what happens to steps after two coinitial derivations.
+
 \subsection*{Creation}
 
 The first of this lemmas is creation.
 We say that a step $\redex$ is \defn{created} by another step $\redextwo$ if
 there is no step $\redex'$ coinitial with $\redextwo$ such that $\redex \in \redex' / \redextwo$.
-\TODO{checkear def con pablo}
 What this means is that we weren't able to do what $\redex$ does before executing $\redextwo$.
 For example, in \rexample{derivation-ids-ex} we claimed
-that the step $\redexthree$ iscreated by $\redex$, which indeed is.
+that the step $\redexthree$ is created by $\redex$, which indeed is.
 
 Having a lemma that characterizes creation is relevant because in proofs,
 it is common to have edge cases where a new redex is created.
@@ -89,7 +92,7 @@ which is a strong version of stability in the sense of Lévy \cite{levy_redex_st
 
 Recall that L\'evy's stability states that for any $\redex \neq \redextwo$,
 if $\redexthree_1$ and $\redexthree_2$ have a common descendant $\redexthree_3$, as in the figure below,
-then they have a common ancestor $\redexthree_0$:
+then they have a common ancestor $\redexthree_0$.
 \[
   \xymatrix@C=.5cm@R=.5cm{
     &&&
@@ -104,7 +107,7 @@ then they have a common ancestor $\redexthree_0$:
     &
     & \ar[d]_{\redexthree_3} &
   \\
-  &&&.
+    &&&
   }
 \]
 
@@ -112,12 +115,12 @@ In the figure above, if $\redexthree_1$ and $\redexthree_2$ have a common descen
 $\redexthree_3$ means that $\redexthree_3 \in \redexthree_1 / (\redextwo / \redex)$
 and $\redexthree_3 \in \redexthree_2 / (\redex / \redextwo)$.
 Informally, this means that $\redexthree_1$ and $\redexthree_2$ do the same work,
-which means that work is enabled by either performing $\redex$ or $\redextwo$.
-If stability holds, that means that we could actually perform the work that
+which means that that work is enabled by either performing $\redex$ or $\redextwo$.
+The fact that a system is stable means that we could actually perform the work that
 $\redexthree_1$ and $\redexthree_2$ do, without executing $\redex$ nor $\redextwo$
 (by doing $\redexthree_0$).
 
-Hence, what stability means is that steps are created in an essentially unique way.
+Hence, what stability means is that steps are created essentially in a unique way.
 
 
 \begin{lemma}[Stability]
@@ -154,7 +157,8 @@ By induction on the context $\con$ we argue that $\redex/\redextwo$ creates $\re
 
 Next we prove \emph{full stability}, which is an extension to Lévy's notion of
 stability, from steps to arbitrary reductions. Informally, it says that if we are able
-to execute the same step after different reductions, then the step existed before
+to execute the same step after two completely different derivations,
+then the step existed before
 both reductions---\ie, a step is only created by a single reduction (modulo permutation
 equivalence).
 

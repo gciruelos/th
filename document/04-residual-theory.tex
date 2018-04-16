@@ -1,7 +1,16 @@
 \chapter{Residual theory}
 \lcha{residual_theory}
 In this section we will develop the theory of residuals of the $\lambdadist$-calculus.
-The basic concepts of general rewriting theory where outlined in \rsec{rewriting_theory_preliminaries},
+We do this as it will help us to prove that derivation spaces of $\lambdadist$
+terms have a very simple structure. This together with the fact that
+the $\lambdadist$-calculus
+can simulate the $\lambda$-calculus in a strong sense (as we will learn in the next chapter)
+will make the $\lambdadist$-calculus a very useful tool
+to analyize the pure $\lambda$-calculus.
+
+
+The basic concepts of general rewriting theory were outlined in
+the preliminaries (\rsec{rewriting_theory_preliminaries}),
 and we will now concentrate in the specifics of our calculus.
 
 Informally, the residual of a step after another is what is left of a step after executing another one; it is a set of steps.
@@ -15,7 +24,7 @@ Then there are two steps we can perform (we shall call them $\redex$ and $\redex
   \redextwo &:
     (\lam{\var}{\vartwo})((\lam{\varthree}{\varthree}) w) \to (\lam{\var}{\vartwo}) w
 \end{align*}
-Then the residual of $\redex$ after $\redextwo$ is the step $(\lam{\var}{\vartwo}) w \to w$.
+The residual of $\redex$ after $\redextwo$ is the step $(\lam{\var}{\vartwo}) w \to w$.
 On the other hand, the residual of $\redextwo$ after $\redex$ is the empty set:
 $\redextwo$ was erased by $\redex$.
 \end{example}
@@ -41,7 +50,7 @@ calculus, then:
     \name(\redex) & \eqdef & \lab & \text{ is the \defn{name} of $\redex$}
   \end{array}
 \]
-Two steps $\redex, \redextwo$
+Two steps $\redex$ and $\redextwo$
 are \defn{coinitial} if $\src(\redex) = \src(\redextwo)$
 and \defn{cofinal} if $\tgt(\redex) = \tgt(\redextwo)$.
 \end{definition}
