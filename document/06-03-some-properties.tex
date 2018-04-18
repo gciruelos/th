@@ -1,5 +1,6 @@
 What follows are two results that describe what happens when one executes a garbage step or garbage derivation.
-In short, if a garbage derivation creates or duplicates another step, then the step is garbage.
+In short, if a garbage derivation creates or duplicates a step $\redex$,
+then $\redex$ is garbage.
 This makes sense, as one should not need to execute garbage in order to create a ``needed'' step.
 
 \begin{lemma}[Garbage only creates garbage]

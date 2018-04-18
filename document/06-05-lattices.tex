@@ -9,11 +9,14 @@ This factorization can be considered over derivation spaces because
 it \emph{glues} well: the factorizations of two different derivations will
 be compatible in a strong sense.
 
-Let's recall why this factorization theorem is important.
-\TODO{hnf ...}.
+Let us recall why this factorization theorem is important.
+If we have a term $\tm$ refined by another $\tm'$, then
+$\tm'$ represents some head normal form $\tmtwo$ of $\tm$,
+and the fact that a derivation is garbage with respect to $\tm'$
+means that it does not contribute to arrive to $\tmtwo$.
 
 
-We introduce the following definition mostly to fix nomenclature and notation:
+We introduce the following definitions mostly to fix nomenclature and notation:
 
 \begin{definition}[Upper semilattices]
 An \defn{upper semilattice} is a triple $(X,\leq,\lor)$
@@ -64,7 +67,8 @@ We will be interested in the following notion of lax $2$-functor:
       for any two morphisms $g : X \to Y$, $f : Y \to Z$ in $\Cat$.
 \end{enumerate}
 As usual with functors, we may write $F$ to stand for either $F_1$ or $F_2$,
-when clear from the context.
+when clear from the context. Related lax functor definitions
+can be found in \cite{StreetLaxFunctor}.
 \end{definition}
 
 Recall that we will have a factorization for each derivation,
@@ -72,6 +76,14 @@ and we want to somehow glue those factorizations such that
 factorizations behave well under semilattice operations.
 That can be done with an adaptation of Grothendieck's construction
 for partially ordered sets.
+
+The Grothendieck construction allows us to perform a ``twisted product''
+between a structure and a functor from that structure.
+This is what we want to do because we have a structure that
+represents garbage-free derivations from a term,
+and we have a functor from that structure to the category of semi-lattices:
+for every garbage-free derivation $\redseq$ we have a semi-lattice that represents
+the garbage derivations $\set{\redseqtwo \ |\ \src(\redseqtwo) = \tgt(\redseq)}$.
 
 \begin{definition}[Grothendieck construction for partially ordered sets]
 Let $A$ be a poset, and let $B : A \to \Poset$ be a mapping associating

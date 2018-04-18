@@ -22,8 +22,8 @@ and $\tm' \refines \tm$:
 
 \begin{example}
 \lexample{having_garbage_naive}
-Let $(\lam{\varthree}{\lam{\var}{\var \varthree}}) (I I) \in \terms$.
-This term has the following derivation space.
+Let $(\lam{\varthree}{\lam{\var}{\var \varthree}}) (I I) \in \terms$,
+which has the following derivation space.
 
 \[
 \xymatrix{
@@ -231,6 +231,11 @@ for every derivation $\redseqtwo$ such that $\redseqtwo \permle \redseq$:
   \redseq/\redseqtwo = \emptyDerivation.
 \]
 \end{definition}
+
+Intuitively, what the definition of garbage-free says is that we cannot strip
+$\redseq$ in some way such that a part is garbage: if we
+divide $\redseq$ in two parts $\redseqtwo$ and $\redseq / \redseqtwo$
+and the second part is garbage, then it actually was the empty derivation.
 
 For example, in the situation of \rexample{naive_notion_of_non_garbage_fails}
 the derivation $\redextwo\redex_2$ is {\bf not} garbage-free,
