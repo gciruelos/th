@@ -1,2 +1,47 @@
 \chapter{Conclusions}
 \label{ch:conclusions}
+
+In this thesis we defined a calculus based on non-idempotent intersection types,
+which we called $\lambdadist$.
+Admittedly, its syntax is complex because of the labeling of variables
+and the correctness invariant, which where \textit{ad hoc}
+additions so that the calculus was confluent.
+However the derivation spaces of this calculus are very simple structures,
+they are distributive lattices (\rthm{lattice_is_distributive}),
+and are representable as rings of sets (\rthm{lattice_ring_of_sets}),
+
+Then we proved that derivation spaces in the $\lambda$-calculus
+can be mapped onto these simpler derivation spaces, via a strong
+simulation result (\rcoro{algebraic_simulation}).
+Using this, we proved how the derivation space of any $\lambda$-term that has a
+head normal form can be factorized as a ``twisted product'' of garbage-free
+and garbage derivations (\rthm{factorization_ulb_derivations}).
+
+We think this validates the hypothesis that explicitly representing resource
+management can shed some light on the structure of derivation spaces.
+We would like to know what would happen if we changed $\lambdadist$ for
+another resource calculus, whether or not similar results can be found.
+
+The Factorization theorem (\rthm{factorization_ulb_derivations})
+is reminiscent of Melliès’ \cite{DBLP:conf/ctcs/Mellies97} external--internal
+factorization. It should be possible to establish a formal correspondence between these
+notions. As noted by Melliès, any evaluation strategy that always picks external steps is
+hypernormalizing. It should be easy to show that this holds for evaluation strategies picking
+non-garbage steps, using the terminology of this paper.
+
+Open is the question that we posed after \rprop{has_hnf_has_refinement},
+to study the relationship between refinements of a term of the $\lambda$-calculus
+and its approximants.
+It should not be hard to prove that there is a correspondence,
+\ie that for a given a term $\tm$ and an approximant $A$,
+we can find one refinement of $\tm$ whose normal form refines a head normal form of $\tm$
+that corresponds to $A$.
+
+A related question is the one of whether it is possible to characterize garbage in the same
+way we did in this work without using the $\lambdadist$-calculus.
+We believe a plausible way to do this would be to use approximants:
+instead of defining garbage with respect to a refinement we define garbage
+with respect to an approximant.
+Such a result would not have any $\lambdadist$ traces in its statement,
+but $\lambdadist$ may help to prove it easily.
+

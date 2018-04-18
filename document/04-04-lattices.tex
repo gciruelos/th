@@ -283,6 +283,7 @@ This concludes the proof.
 \subsection*{Distributive lattice}
 
 \begin{theorem}[Derivations modulo $\permeq$ form a distributive lattice]
+\lthm{lattice_is_distributive}
 Let $\tm \in \termsdist$ be a correct term.
 Then derivations modulo $\permeq$ form a lattice $\ulbDerivDist{\tm}$.
 More precisely, let $X$ be the set of derivations in the distributive lambda-calculus going out from $\tm$,
@@ -351,6 +352,7 @@ as a consequence of \rcoro{permutation_equivalence_in_terms_of_names}:
 \end{remark}
 
 \begin{theorem}[The lattice of derivations is representable as a ring of sets]
+\lthm{lattice_ring_of_sets}
 If $\tm \in \termsdist$ is a correct term,
 then $\names : \ulbDerivDist{\tm} \to \powerset(\labelset)$ is a monomorphism of lattices,
 where $\ulbDerivDist{\tm}$ is the lattice of derivations of $\tm$
