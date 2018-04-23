@@ -22,7 +22,6 @@ An auxiliary lemma is proven afterwards.
 If $\redex = \redextwo$ then it is easy to see that the proposition holds, so we can assume that $\redex \neq \redextwo$.
   Also, note that it is enough to see that $\names((\redex/\tm')/(\redextwo/\tm')) = \names(((\redex/\redextwo)/(\tm'/\redextwo))$, as we will do that in some cases.
 We proceed by induction on $\tm$.
-\begin{gonzaenv}
 \begin{enumerate}
   \item {\bf Variable $\tm = \var$.} This case is trivial (there are no steps with a variable as a source).
   \item {\bf Abstraction, $\tm = \lam{\var}{\tmthree}$.}
@@ -243,12 +242,10 @@ We proceed by induction on $\tm$.
         \end{enumerate}
     \end{enumerate}
 \end{enumerate}
-\end{gonzaenv}
 \end{proof}
 
 
 
-\begin{gonzaenv}
 \begin{lemma}[Simulation of contexts]
 \llem{simulation_of_context}
 Let $\contwo$ be an $n$-hole context in $\termsdist$
@@ -287,4 +284,3 @@ By induction on $\con$.
   \item {\bf $\con = \con'' \tmfour$.} This case is straightforward using the inductive hypothesis.
 \end{enumerate}
 \end{proof}
-\end{gonzaenv}

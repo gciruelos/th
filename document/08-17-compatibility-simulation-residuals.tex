@@ -29,7 +29,6 @@ Then:
 \end{enumerate}
 \end{proposition}
 \begin{proof}
-\begin{pabloenv}
 Recall that permutation equivalence is defined as the reflexive and transitive closure of the
 permutation axiom $\redseqthree_1 \redex \redseqtwo \redseqthree_2 \permeq \redseqthree_1 \redextwo \redseq \redseqthree_2$,
 where
@@ -98,19 +97,16 @@ We prove each item separately:
     \HS
     \text{ and }
     \HS
-    \gonza{\redseqthree_1 \redextwo \redseq \redseqthree_2 / \tm'= (\redseqthree_1 / \tm') (\redextwo \redseq/\tmtwo') (\redseqthree_2/\tmthree'')}
+    \redseqthree_1 \redextwo \redseq \redseqthree_2 / \tm'= (\redseqthree_1 / \tm') (\redextwo \redseq/\tmtwo') (\redseqthree_2/\tmthree'')
   \]
   where $\tmtwo' = \tm'/\redseqthree_1$,
         $\tmthree' = \tmtwo'/\redseqthree_1\redex\redseqtwo$,
         and
         $\tmthree'' = \tmtwo'/\redseqthree_1\redextwo\redseq$.
   \\
-  \gonza{
   In a manner similar as before, we can prove that $\redex\redseqtwo/\tmtwo' \permeq \redextwo\redseq/\tmtwo'$.
   And, with that and Item 1, we can see that $\tmthree' = \tmthree''$,
   hence $(\redseqthree_2/\tmthree') \permeq (\redseqthree_2/\tmthree'')$,
   which finishes the proof.
-  }
 \end{enumerate}
-\end{pabloenv}
 \end{proof}
