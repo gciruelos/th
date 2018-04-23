@@ -1,54 +1,11 @@
 
 \begin{lemma}[Refinement of a substitution]
-\TODO{La ida no vale ($\tm'$ no necesariamente es correcto)}
 \llem{refinement_substitution}
-\llem{refinement_substitution_inverse}
-The following are equivalent, which relates refinement and capture-avoiding substitution:
-  \begin{enumerate}
-  \item $\tm' \refines \subs{\tm}{\var}{\tmtwo}$
-  \item $\tm'$ is of the form $\subs{\tm'}{\var}{[\tmtwo_1', \hdots, \tmtwo_n']}$,
-        where $\tm' \refines \tm$ and $\tmtwo'_i \refines \tmtwo$ for all $1 \leq i \leq n$.
-  \end{enumerate}
+If $\tm'$ is of the form $\subs{\tm'}{\var}{[\tmtwo_1', \hdots, \tmtwo_n']}$,
+where $\tm' \refines \tm$ and $\tmtwo'_i \refines \tmtwo$ for all $1 \leq i \leq n$
+then $\tm' \refines \subs{\tm}{\var}{\tmtwo}$.
 \end{lemma}
 \begin{proof}
-We prove each direction separately:
-\begin{itemize}
-\item $(1 \implies 2)$
-  By induction on $\tm$.
-  \begin{enumerate}
-    \item {\bf Variable (same), $\tm = \var$.} In this case $\subs{\tm}{\var}{\tmtwo} = \tmtwo$,
-      and $\tm'$, which refines $\tmtwo$ by hypothesis, can be written as $\subs{\var}{\var}{\tm'}$.
-    \item {\bf Variable (different), $\tm = \vartwo$.} In this case $\subs{\tm}{\var}{\vartwo} = \tm = \vartwo$.
-      Then $\tm'$ must be $\vartwo^\typ$, which can be written as $\subs{\vartwo^\typ}{\var}{\emptylset}$.
-    \item {\bf Abstraction, $\tm = \lam{\vartwo}{\tmthree}$.}
-      In this case $\subs{\tm}{\var}{\vartwo} = \subs{(\lam{\vartwo}{\tmthree})}{\var}{\tmtwo}
-                                              = \lam{\vartwo}{\subs{\tmthree}{\var}{\tmtwo}}$.
-      Then $\tm' = \lamp{\lab}{\vartwo}{\tmthree''}$, where $\tmthree'' \refines \subs{\tmthree}{\var}{\tmtwo}$.
-      By inductive hypothesis, $\tmthree'' = \subs{\tmthree'}{\var}{\ls{\tmtwo}}$,
-        where $\tmthree' \refines \tmthree$ and $\tmtwo'_i \refines \tmtwo$ for every $i$.
-      Then $\tm' = \lamp{\lab}{\vartwo}{\tmthree''}
-      = \lamp{\lab}{\vartwo}{\subs{\tmthree'}{\var}{\ls{\tmtwo}}}
-      = \subs{(\lamp{\lab}{\vartwo}{\tmthree'})}{\var}{\ls{\tmtwo}}$, so we are done.
-    \item {\bf Application, $\tm = \overline{\tmthree} \tmthree$.}
-      In this case $\subs{\tm}{\var}{\tmtwo} = \subs{(\overline{\tmthree} \tmthree)}{\var}{\tmtwo}
-                                              = \subs{\overline{\tmthree}}{\var}{\tmtwo}
-                                                  \subs{\tmthree}{\var}{\tmtwo}$.
-      Then $\tm' = \overline{\tmthree}'' [\tmthree''_1, \hdots, \tmthree''_n]$
-        where $\overline{\tmthree}'' \refines \subs{\overline{\tmthree}}{\var}{\tmtwo}$ and
-              $\tmthree''_i \refines \subs{\tmthree}{\var}{\tmtwo}$.
-      So, by inductive hypothesis, $\overline{\tmthree}'' = \subs{\overline{\tmthree}'}{\var}{\ls{\tmtwo}_0}$
-                               and $\tmthree''_i = \subs{\tmthree'_i}{\var}{\ls{\tmtwo}_i}$
-          where $\overline{\tmthree}' \refines \overline{\tmthree}$,
-                $\tmthree' \refines \tmthree$, and
-                $\ls{\tmtwo}_{i, j} \refines \tmtwo$ for all $0 \leq i \leq n$ and $1 \leq j \leq |\ls{\tmtwo}_i|$.
-
-      Finally we get what we wanted, \ie
-        $\tm' = \subs{\overline{\tmthree}'}{\var}{\ls{\tmtwo}_0}
-                      [\subs{\tmthree'_1}{\var}{\ls{\tmtwo}_1}, \hdots, \subs{\tmthree'_n}{\var}{\ls{\tmtwo}_n}]
-                  = \subs{(\overline{\tmthree}' [\tmthree'_1, \hdots, \tmthree'_n])}{\var}{
-                    \ls{\tmtwo}_0 + \ls{\tmtwo}_1 + \hdots + \ls{\tmtwo}_n}$.
-  \end{enumerate}
-\item $(2 \implies 1)$
   By induction on $\tm$.
   \begin{enumerate}
   \item {\bf Variable (same), $\tm = \var$.} In this case, $\tm' = \var$.
@@ -84,7 +41,6 @@ We prove each direction separately:
         for all $i \in \set{1, \hdots, n}$,
     so we are done.
   \end{enumerate}
-\end{itemize}
 \end{proof}
 
 \begin{lemma}[Refinement of a context]
