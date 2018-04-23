@@ -1,202 +1,455 @@
-\TODO{fix this}
+Before proving \rprop{has_hnf_has_refinement}, we need a few auxiliary results.
 
-\begin{lemma}
-\llem{hnf_iff_distnf}
-Let $\tm \in \terms$ and $\tm' \in \termsdist$ such that $\tm \refinedby  \tm'$.
-Then $\tm$ is in head normal form if and only if $\tm'$ is in head normal form.
+\begin{lemma}[$\todist$-normal forms refine head normal forms]
+\llem{normal_forms_refine_hnfs}
+Let $\tm' \in \termsdist$ be a $\todist$-normal form
+and $\tm' \refines \tm$. Then $\tm$ is a head normal form.
 \end{lemma}
 \begin{proof}
-  We will do each direction separately.
-\begin{itemize}
-  \item[]{\bf $\Rightarrow$.}
-    We proceed by induction on $\tm$.
-    \begin{enumerate}
-    \item \Case{Variable, $\tm = \vartwo$}
-      Then $\tm'$ is necessarily $\vartwo^\typ$.
-    \item \Case{Abstraction, $\tm = \lam{\var_1}{\tmthree}$}
-      In this case, as $\tm'$ refines $\tm$, $\tm' = \lamp{\lab}{\var_1}{\tmthree'}$,
-        where $\tmthree' \refines \tmthree$.
-      Note that $\tmthree$ is in head normal form, so by inductive hypothesis we get that $\tmthree'$ is too.
-        Then $\tm'$ is in head normal form.
-    \item \Case{Application, $\tm = \tmthree \tmfour$}
-      Here, $\tm' = \tmthree' [\tmfour'_1, ..., \tmfour'_n]$,
-        where $\tmthree'$ refines $\tmthree$, and $\tmfour'_i$ refines $\tmfour$ for every $i$.
-
-
-      Note that as $\tm$ is in head normal form, then $\tmthree$ also is,
-        because it is of the form $\vartwo \tm_1 \hdots \tm_m$.
-        Then, by inductive hypothesis, we know that $\tmthree'$ is in head normal form, too.
-        Furthermore, because of the
-        shape that $\tmthree$ has, we know $\tmthree'$ does not have a lambda at the root
-        (because if it had it would not refine $\tmthree$).
-        So $\tmthree' = \vartwo \ls{\tm}_1 \hdots \ls{\tm}_m$ (with $m$ potentially $0$).
-
-      All this allows us to arrive at the conclusion that
-        $\vartwo \ls{\tm}_1 \hdots \ls{\tm}_m [\tmfour'_1, ..., \tmfour'_n]$, \ie $\tm'$, is in head normal form.
-    \end{enumerate}
-
-  \item[]{\bf $\Leftarrow$.} Analogous to $\Rightarrow$.
-\end{itemize}
+Observe, by induction on $\tm'$
+that if $\tm' \in \termsdist$ is a $\todist$-normal form, it must be
+of the form
+$
+  \lamp{\lab_1}{\var_1}{\hdots\lamp{\lab_n}{\var_n} \vartwo^\typ \ls{\tmtwo}_1 \hdots \ls{\tmtwo}_m}
+$,
+as it cannot have a subterm of the form $(\lamp{\lab'}{\varthree}{\tmthree})\ls{\tmfour}$.
+Then \[\lamp{\lab_1}{\var_1}{\hdots\lamp{\lab_n}{\var_n} \vartwo^\typ \ls{\tmtwo}_1 \hdots \ls{\tmtwo}_m} \refines \tm\].
+So $\tm$ is of the form $\lam{\var_1}{\hdots\lam{\var_n}{\vartwo \tmtwo_1 \hdots \tmtwo_n}}$,
+that is, $\tm$ is a head normal form.
 \end{proof}
 
+The following lemma is an adaptation of Subject~Expansion in~\cite{bucciarelli2017non}.
+\begin{lemma}[Subject Expansion]
+\llem{subject_expansion}
+If $\tctx \vdash \conof{\subs{\tm}{\var}{\ls{\tmtwo}}} : \typ$ is derivable,
+then $\tctx \vdash \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}} : \typ$ is derivable.
+\end{lemma}
+\begin{proof}
+The proof proceeds by induction on $\con$,
+and the base case by induction on $\tm$, 
+similar to the proof that substitution preserves typing in
+the proof of Subject~Reduction (\rsec{substitution_preserves_typing}).
+\end{proof}
 
+Correctness is not necessarily preserved by $\todist$-expansion.
+We need a stronger invariant, \defn{strong sequentiality},
+that will be shown to be preserved by expansion
+under appropiate conditions:
 
-
-
-\begin{lemma}[Backwards simulation]
-\TODO{Arreglar o cambiar demo o lema}
-\llem{backwards_simulation}
-Let $\tm,\tmtwo \in \terms$ be lambda-terms and $\tmtwo' \in \termsdist$ be a distributive term such that:
-
+\begin{definition}[Subterms and free subterms]
+The set of \defn{subterms} $\subterms{\tm}$ of a term $\tm$ is formally defined as follows:
 \[
-\xymatrix@C=1cm{
- \tm \ar[r]^{\beta} & \tmtwo \ar@{}[d]|*=0[@]{\rtimes} \\
-                    & \tmtwo' \\
-}
+  \begin{array}{rcl}
+    \subterms{\var^\typ} & \eqdef & \set{\var^\typ} \\
+    \subterms{\lamp{\lab}{\var}{\tm}} & \eqdef & \set{\lamp{\lab}{\var}{\tm}} \cup \subterms{\tm} \\
+    \subterms{\tm[\tmtwo_i]_{i=1}^n} & \eqdef & \set{\tm[\tmtwo_i]_{i=1}^n} \cup \subterms{\tm} \cup \cup_{i=1}^{n} \subterms{\tmtwo_i}
+  \end{array}
 \]
-
-Then there exists a term $\tm' \in \termsdist$ such that
+The set of \defn{free subterms} $\fsubterms{\tm}$ of a term $\tm$ is defined similarly,
+except for the abstraction case, which requires that the subterm in question
+do not include occurrences of bound variables:
 \[
-\xymatrix@C=1cm{
- \tm \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta} & \tmtwo \ar@{}[d]|*=0[@]{\rtimes} \\
- \tm' \ar@{.>>}[r]^{\dist} & \tmtwo' \\
-}
+  \begin{array}{rcl}
+    \fsubterms{\var^\typ} & \eqdef & \set{\var^\typ} \\
+    \fsubterms{\lamp{\lab}{\var}{\tm}} & \eqdef & \set{\lamp{\lab}{\var}{\tm}} \cup \set{\tmthree \in \fsubterms{\tm} \ST \var \not\in \fv{\tmthree}} \\
+    \fsubterms{\tm[\tmtwo_i]_{i=1}^n} & \eqdef & \set{\tm[\tmtwo_i]_{i=1}^n} \cup \fsubterms{\tm} \cup \cup_{i=1}^{n} \fsubterms{\tmtwo_i}
+  \end{array}
 \]
-Moreover, the proof is constructive.
+\end{definition}
+
+\begin{definition}[Strong sequentiality]
+A term $\tm$ is \defn{strongly sequential}
+if it is correct and, moreover,
+for every subterm $\tmtwo \in \subterms{\tm}$
+and any two free subterms $\tmtwo_1,\tmtwo_2 \in \fsubterms{\tmtwo}$ lying at disjoint positions of $\tmtwo$,
+the types of $\tmtwo_1$ and $\tmtwo_2$ have different external labels.
+\end{definition}
+
+\begin{example}
+The following examples illustrate the notion of strong sequentiality:
+\begin{enumerate}
+\item The term $\tm = (\lamp{1}{\var}{\vartwo^{\alpha^2}})[\,]$ is strongly sequential.
+      Note that $\tm$ and $\vartwo^{\alpha^2}$ have the same type, namely $\alpha^2$,
+      but they do not occur at {\em disjoint} positions.
+\item The term $\tm = (\lamp{1}{\var}{\var^{\alpha^2}})[\vartwo^{\alpha^2}]$ is strongly sequential.
+      Note that $\var^{\alpha^2}$ and $\vartwo^{\alpha^2}$ both have type $\alpha^2$,
+      but they are not simultaneously free subterms of the same subterm of $\tm$.
+\item The term $\tm = \lamp{1}{\vartwo}{ \var^{[\alpha^2] \tolab{3} [\alpha^2] \tolab{4} \beta^5} [\vartwo^{\alpha^2}] [\varthree^{\alpha^2}]}$
+      is not strongly sequential,
+      since $\vartwo^{\alpha^2}$ and $\varthree^{\alpha^2}$
+      have the same type and they are both free subterms of
+      $\var^{[\alpha^2] \tolab{3} [\alpha^2] \tolab{4} \beta^5} [\vartwo^{\alpha^2}] [\varthree^{\alpha^2}] \in \subterms{\tm}$.
+\end{enumerate}
+\end{example}
+
+\begin{lemma}[Refinement of a substitution: decomposition]
+\llem{refinement_substitution_inverse}
+If $\tmthree' \refines \subs{\tm}{\var}{\tmtwo}$
+and $\tmthree'$ is strongly sequential,
+then $\tmthree'$ is of the form $\subs{\tm'}{\var}{[\tmtwo'_i]_{i=1}^n}$.
+Moreover, given a fresh label~$\lab$,
+the term $(\lamp{\lab}{\var}{\tm'})[\tmtwo'_i]_{i=1}^{n}$ is strongly sequential,
+$\tm' \refines \tm$ and $\tmtwo'_i \refines \tmtwo$ for all $i=1..n$.
 \end{lemma}
 \begin{proof}
 By induction on $\tm$.
 \begin{enumerate}
-\item {\bf Variable (same), $\tm = \var$.} This case cannot happen, as $\tm$ has no redexes.
-\item {\bf Abstraction, $\tm = \lam{\vartwo}{\tmthree}$.}
-  In this case $\tmtwo = \lam{\vartwo}{\tmfour}$, where $\tmthree \to \tmfour$.
-  Then $\tmtwo'$ must be of the form $\lamp{\lab}{\vartwo}{\tmfour'}$, where $\tmfour' \refines \tmfour$.
-  So, using the inductive hypothesis we get that there is a term $\tmthree'$
-    such that $\tmthree' \refines \tmthree$ and $\tmthree' \tomulti_\dist \tmfour'$.
-  So, if we take $\tm'$ to be $\lamp{\lab}{\vartwo}{\tmthree'}$ we are done.
-  \[
-  \xymatrix@C=1cm{
-    \lam{\vartwo}{\tmthree} \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta} & \lam{\vartwo}{\tmfour} \ar@{}[d]|*=0[@]{\rtimes} \\
-    \lamp{\lab}{\vartwo}{\tmthree'} \ar@{->>}[r]^{\dist} & \lamp{\lab}{\vartwo}{\tmfour'} \\
-  }
-  \]
-
-\item {\bf Application, $\tm = \tmthree \tmfour$.}
-  Here there are three subcases depending on where the redex is.
+\item {\bf Variable (same), $\tm = \var$.}
+  Then $\tmthree' \refines \tmtwo$.
+  Let $\typ$ be the type of $\tmthree'$.
+  Taking $\tm' := \var^\typ \refines \var$
+  we have that $(\lamp{\lab}{\var}{\var^\typ})[\tmthree']$ is strongly sequential.
+  Regarding strong sequentiality,
+  observe that $\var^\typ$ and $\tmthree'$ have the same type, but they are not
+  simultaneously the free subterms of any subterm of $(\lamp{\lab}{\var}{\var^\typ})[\tmthree']$.
+\item {\bf Variable (different), $\tm = \vartwo \neq \var$.}
+  Then $\tmthree' \refines \vartwo$, so $\tmthree'$ is of the form $\vartwo^\typ$.
+  Taking $\tm' := \vartwo^\typ$ we have that
+  $(\lamp{\lab}{\var}{\vartwo^\typ})[\,]$ is strongly sequential.
+\item {\bf Abstraction, $\tm = \lam{\vartwo}{\tmfour}$.}
+  Then $\tmthree' \refines \lam{\vartwo}{\subs{\tmfour}{\var}{\tmtwo}}$ 
+  so $\tmthree'$ is of the form $\lamp{\lab'}{\vartwo}{\tmthree''}$
+  where $\tmthree'' \refines \subs{\tmfour}{\var}{\tmtwo}$.
+  By \ih, $\tmthree''$ is of the form $\subs{\tmfour'}{\var}{[\tmtwo'_i]_{i=1}^{n}}$
+  where $(\lamp{\lab}{\var}{\tmfour'})[\tmtwo'_i]_{i=1}^{n}$ is strongly sequential,
+  $\tmfour' \refines \tmfour$ and $\tmtwo'_i \refines \tmtwo$ for all $i=1..n$.
+  Taking $\tm' := \lamp{\lab'}{\vartwo}{\tmfour'}$,
+  we have that
+  $\tm' = \lamp{\lab'}{\vartwo}{\tmfour'} \refines \lam{\vartwo}{\tmfour} = \tm$.
+  Moreover, the term
+  $(\lamp{\lab}{\var}{\tm'})[\tmtwo_i]_{i=1}^{n}
+   = (\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})[\tmtwo_i]_{i=1}^{n}$
+  is strongly sequential.
+  Typability is a consequence of Subject Expansion~(\rlem{subject_expansion}).
+  The remaining properties are:
   \begin{enumerate}
-    \item {\bf The redex is in $\tmthree$.} This case is straightforward using the inductive hypothesis, much like the {\bf Abstraction} case.
-    \item {\bf The redex is in $\tmfour$.}
-      We have that $\tmthree \tmfour \to \tmthree \overline{\tmfour}$,
-      and that $\tmtwo' = \tmthree' [\overline{\tmfour}_1, \hdots, \overline{\tmfour}_n]$,
-      where $\tmthree' \refines \tmthree$ and $\overline{\tmfour}_i \refines \overline{\tmfour}$.
+  \item {\em Uniquely labeled lambdas.}
+    The multiset of labels decorating the lambdas of
+    $(\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})[\tmtwo_i]_{i=1}^{n}$
+    is given by
+    $\Lambda((\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})[\tmtwo_i]_{i=1}^{n})
+     = [\lab,\labtwo] + \Lambda(\tmfour') +_{i=1}^{n} \Lambda(\tmtwo_i)$.
+    It suffices to check that this multiset has no repeats.
+    The label $\lab$ is assumed to be fresh, so it occurs only once.
+    By \ih, $\tmthree'' = \subs{\tmfour'}{\var}{[\tmtwo'_i]_{i=1}^{n}}$,
+    so using \rlem{labels_over_lambdas_substitution} we have
+    $\Lambda(\tmthree') =
+     \Lambda(\lamp{\lab'}{\vartwo}{\tmthree'}) =
+     [\lab'] + \Lambda(\tmthree'') =
+     [\lab'] + \Lambda(\subs{\tmfour'}{\var}{[\tmtwo'_i]_{i=1}^{n}}) =
+     [\lab'] + \Lambda(\tmfour') +_{i=1}^n \Lambda(\tmtwo'_i)$.
+    Moreover, the term $\tmthree' = \lamp{\lab'}{\vartwo}{\tmthree''}$ is correct,
+    so this multiset has no repeats.
+  \item {\em Sequential contexts.}
+    Let $\tmsix$ be a subterm of $(\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})[\tmtwo'_i]_{i=1}^{n}$.
+    If $\tmsix$ is a subterm of $\tmfour'$ or a subterm of $\tmtwo'_i$ for some $i=1..n$ we conclude by \ih
+    since $(\lamp{\lab}{\var}{\tmfour'})[\tmtwo'_i]_{i=1}^{n}$ is known to be correct.
+    Moreover, if $\tctx \oplus \var : \mtyp \oplus \vartwo : \mtyptwo$ is the typing context for $\tmfour'$,
+    the typing contexts of
+    $\lamp{\labtwo}{\vartwo}{\tmfour'}$ and $\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}}$
+    are respectively $\tctx \oplus \var : \mtyp$ and $\tctx$, which are also sequential.
+    Finally, if $\tctxtwo_i$ is the typing context for $\tmtwo'_i$, for each $i=1..n$,
+    the typing context for $(\lamp{\lab}{\var}{\tmfour'})[\tmtwo'_i]_{i=1}^{n}$ 
+    is of the form $\tctx +_{i=1}^n \tctxtwo_i + \vartwo : \mtyptwo$, and it is sequential by \ih.
+    Hence the typing context for the whole term is $\tctx +_{i=1}^n \tctxtwo_i$, and it is sequential.
+  \item {\em Sequential types.}
+    \label{refinement_substitution_inverse__case_lambda_sequential_types}
+    Let $\tmsix$ be a subterm $(\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})[\tmtwo'_i]_{i=1}^{n}$,
+    and let $\mtypthree \tolab{\lab''} \typthree$ be a type that occurs in the typing context
+    or the type of $\tmsix$.
+    As in the previous case, we have that
+    $\tctx \oplus \var : [\typtwo_i]_{i=1}^n \oplus \vartwo : \mtyptwo \vdash \tmfour' : \typ$ is derivable
+    and $\tctxtwo_i \vdash \tmtwo'_i : \typtwo_i$ is derivable for all $i=1..n$.
+    Moreover, they are correct by \ih, so if $\tmsix$ is a subterm of $\tmfour'$ or a subterm of some $\tmtwo'_i$,
+    we are done.
+    There are three cases left for $\tmsix$:
+    \begin{enumerate}
+    \item {\bf Case $\tmsix = \lamp{\labtwo}{\vartwo}{\tmfour'}$.}
+      The typing context is $\tctx \oplus \var : [\typtwo_i]_{i=1}^n$ and the type $\mtyptwo \tolab{\labtwo} \typ$.
+    \item {\bf Case $\tmsix = \lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}}$.}
+      The typing context is $\tctx$ and the type $[\typtwo_i]_{i=1}^n \tolab{\lab} \mtyptwo \tolab{\labtwo} \typ$.
+    \item {\bf Case $\tmsix = (\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})[\tmtwo_i]_{i=1}^{n}$.}
+      The typing context is $\tctx$ and the type $\mtyptwo \tolab{\labtwo} \typ$.
+    \end{enumerate}
+    In all three cases, if $\mtypthree \tolab{\lab''} \typthree$ occurs in the typing context
+    or the type of $\tmsix$, then $\mtypthree$ can be shown to be sequential using the \ih.
+  \item {\em Strong sequentiality.}
+    \label{refinement_substitution_inverse__case_lambda_strong_sequentiality}
+    Let $\tmsix \in \subterms{(\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})[\tmtwo_i]_{i=1}^{n}}$
+    be a subterm,
+    and let $\tmsix_1,\tmsix_2 \in \fsubterms{\tmsix}$ be free subterms lying at disjoint positions of $\tmsix$.
+    We argue that the types of $\tmsix_1$ and $\tmsix_2$ have different external labels.
+    Consider the following five possibilities for $\tmsix_1$:
+    \begin{enumerate}
+    \item {\bf Case $\tmsix_1 = (\lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}})[\tmtwo_i]_{i=1}^{n}$.}
+      Impossible since $\tmsix_2$ must be at a disjoint position.
+    \item {\bf Case $\tmsix_1 = \lamp{\lab}{\var}{\lamp{\labtwo}{\vartwo}{\tmfour'}}$.}
+      Then the external label of the type of $\tmsix_1$ is the label $\lab$, which is fresh,
+      so it cannot coincide with the type of any other subterm.
+    \item {\bf Case $\tmsix_1 = \lamp{\labtwo}{\vartwo}{\tmfour'}$.}
+      Then $\tmsix_2$ must be a subterm of $\tmtwo_i$ for some $i=1..n$.
+      Note that $\tmsix$ must be the whole term,
+      and $n > 0$, so there is at least one free occurrence of $\var$ in $\lamp{\labtwo}{\vartwo}{\tmfour'}$.
+      This means that $\tmsix_1 \not\in \fsubterms{\tmsix}$, so this case is impossible.
+    \item {\bf Case $\tmsix_1$ is a subterm of $\tmfour'$.}
+      If $\tmsix_2$ is also a subterm of $\tmfour'$, we conclude since by \ih
+      $(\lamp{\lab}{\var}{\tmfour'})[\tmtwo'_i]_{i=1}^{n}$ is strongly sequential.
+      Otherwise, $\tmsix_2$ is a subterm of $\tmtwo_i$ for some $i=1..n$,
+      and we also conclude by \ih.
+    \item {\bf Case $\tmsix_1$ is a subterm of $\tmtwo_i$ for some $i=1..n$.}
+      If $\tmsix_2$ is a subterm of $\tmtwo_j$ for some $j=1..n$,
+      we conclude since by \ih
+      $(\lamp{\lab}{\var}{\tmfour'})[\tmtwo'_i]_{i=1}^{n}$ is strongly sequential.
+      If $\tmsix_2$ is any other subterm, note that the symmetric case has already been considered
+      in one of the previous cases.
+    \end{enumerate}
+  \end{enumerate}
+\item {\bf Application, $\tm = \tmfour\tmfive$.}
+  Then $\tmthree' \refines \subs{(\tmfour\tmfive)}{\var}{\tmtwo}$,
+  so it is of the form $\tmthree'_0[\tmthree'_j]_{j=1}^m$
+  where $\tmthree'_0 \refines \subs{\tmfour}{\var}{\tmtwo}$
+  and $\tmthree'_j \refines \subs{\tmfive}{\var}{\tmtwo}$ for all $j=1..m$.
+  By \ih we have that $\tmthree'_0$ is of the form
+  $\subs{\tmfour'}{\var}{\ls{\tmtwo}_0}$
+  and for all $j=1..m$ the term $\tmthree'_j$ is of the form
+  $\subs{\tmfive'_j}{\var}{\ls{\tmtwo}_j}$,
+  where $\tmfour' \refines \tmfour$
+  and $\tmfive'_j \refines \tmfive$ for all $j=1..m$.
+  Moreover,
+  the length of the list $\ls{\tmtwo}_j$ is $k_j$
+  and
+  $\ls{\tmtwo}_j = [\tmtwo^{(j)}_i]_{i=1}^{k_j}$ for all $j=0..m$,
+  and we have that $\tmtwo^{(j)}_i \refines \tmtwo$ for all $j=0..m,i=1..k_j$.
+  By \ih we also know that
+  $(\lamp{\lab}{\var}{\tmfour'})\ls{\tmtwo}_0$ is strongly sequential
+  and $(\lamp{\lab}{\var}{\tmfive'_j})\ls{\tmtwo}_j$ is strongly sequential for all $j=1..m$.
 
-      Note that for every $i$ we have that $\tmfour \to \overline{\tmfour} \refinedby \overline{\tmfour}_i$,
-      so we can use the inductive hypothesis, which tells us that there is a $\tmfour_i$ that refines $\tmfour$
-      and reduces to $\overline{\tmfour}_i$.
-      So we get what we wanted
-      \[
-      \xymatrix@C=1cm{
-        \tmthree \tmfour \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta} & \tmthree \overline{\tmfour} \ar@{}[d]|*=0[@]{\rtimes} \\
-        \tmthree'[\tmfour_1, \hdots, \tmfour_n] \ar@{->>}[r]^{\dist} & \tmthree'[\overline{\tmfour}_1, \hdots, \overline{\tmfour}_n] \\
-      }
-      \]
-    \item {\bf The redex is at the head.}
-      We have that $\tmthree = \lam{\var}{\overline{\tmthree}}$, and
-        $\tmthree \tmfour \to \subs{\overline{\tmthree}}{\var}{\tmfour}$.
-        As $\tmtwo' \refines \subs{\overline{\tmthree}}{\var}{\tmfour}$,
-        by \rlem{refinement_substitution_inverse} we know that
-        $\tmtwo' = \subs{\overline{\tmthree}'}{\var}{[\tmfour'_1, \hdots, \tmfour'_n]}$,
-        where $\overline{\tmthree}' \refines \overline{\tmthree}$ and $\tmfour'_i \refines \tmfour$.
+  Let $\tm' := \tmfour'[\tmfive'_j]_{j=1}^{m}$,
+  let $n := \sum_{j=0}^m k_j$,
+  and let $[\tmtwo'_1,\hdots,\tmtwo'_n] := \sum_{j=0}^m \ls{\tmtwo}_j$.
+  Note that $\tm' = \tmfour'[\tmfive'_j]_{j=1}^{m} \refines \tmfour\tmfive = \tm$
+  and $\tmtwo'_i \refines \tmtwo$ for all $i=1..n$.
 
-      Taking $\tm'$ to be $(\lamp{\lab}{\var}{\overline{\tmthree}'})[\tmfour'_1, \hdots, \tmfour'_n]$
-      covers our needs, because it reduces to $\tmtwo'$ and refines $\tm$.
+  Moreover, we have to check that $\tmthree' = \subs{\tm'}{\var}{[\tmtwo'_1,\hdots,\tmtwo'_n]}$.
+  To prove this,
+  note that $\subs{\tm'}{\var}{[\tmtwo'_1,\hdots,\tmtwo'_n]} = \subs{(\tmfour'[\tmfive'_j]_{j=1}^{m})}{\var}{[\tmtwo'_1,\hdots,\tmtwo'_n]}$.
+  Suppose that the multiset $\tmlabel{[\tmtwo'_1,\hdots,\tmtwo'_n]}$ were sequential.
+  Then the list of terms $[\tmtwo'_1,\hdots,\tmtwo'_n]$ would be partitioned
+  as $(\ls{\tmthree}_0,\hdots,\ls{\tmthree}_m)$
+  where $\ls{\tmthree}_j$ is a permutation of $\ls{\tmtwo}_j$ for all $j=0..m$,
+  and we would have indeed:
+  \[
+    \begin{array}{rcll}
+      \subs{\tm'}{\var}{[\tmtwo'_1,\hdots,\tmtwo'_n]}
+    & = &
+      \subs{(\tmfour'[\tmfive'_j]_{j=1}^{m})}{\var}{[\tmtwo'_1,\hdots,\tmtwo'_n]} \\
+    & = & 
+      \subs{\tmfour'}{\var}{\ls{\tmthree}_0}[\subs{\tmfive'_j}{\var}{\ls{\tmthree}_j}]_{j=1}^{m})
+      \hfill\text{ by $\tmlabel{[\tmtwo'_1,\hdots,\tmtwo'_n]}$ sequential} \\
+    & = & 
+      \subs{\tmfour'}{\var}{\ls{\tmtwo}_0}[\subs{\tmfive'_j}{\var}{\ls{\tmtwo}_j}]_{j=1}^{m})
+   \\
+    & = & 
+      \subs{\tmfour'}{\var}{\ls{\tmtwo}_0}[\subs{\tmfive'_j}{\var}{\ls{\tmtwo}_j}]_{j=1}^{m}) \hfill\text{by \rlem{substitution_permutation}} \\
+    & = & 
+      \tmthree'_0[\tmthree'_j]_{j=1}^{m} = \tmthree' \hfill\text{by \ih}
+    \end{array}
+  \]
+  To see that $\tmlabel{[\tmtwo'_1,\hdots,\tmtwo'_n]}$ is sequential,
+  note that for every $i \neq j$,
+  the terms $\tmtwo'_i$ and $\tmtwo'_j$ are free subterms of $\tmthree'$
+  and they lie at disjoint positions of $\tmthree'$.
+  Since $\tmthree'$ is strongly sequential, the types of $\tmtwo'_i$ and $\tmtwo'_j$
+  have different external labels. Hence $\tmlabel{[\tmtwo'_1,\hdots,\tmtwo'_n]}$ is sequential.
+
+  To conclude, we are left to check that $(\lamp{\lab}{\var}{\tm'})[\tmtwo'_1,\hdots,\tmtwo'_n]$ is strongly sequential:
+  \begin{enumerate}
+  \item {\em Uniquely labeled lambdas.}
+    The multiset of labels decorating the lambdas of $(\lamp{\lab}{\var}{\tm'})[\tmtwo'_1,\hdots,\tmtwo'_n]$
+    is given by
+    $\Lambda((\lamp{\lab}{\var}{\tm'})[\tmtwo'_1,\hdots,\tmtwo'_n]) =
+     [\lab] + \Lambda(\tm') +_{i=1}^{n} \Lambda(\tmtwo'_i)$.
+    It suffices to check that this multiset has no repeats.
+    The label $\lab$ is assumed to be fresh, so it occurs only once.
+    We have already argued that
+    $\tmthree' = \subs{\tm'}{\var}{[\tmtwo'_1,\hdots,\tmtwo'_n]}$,
+    so using \rlem{labels_over_lambdas_substitution} we have
+    $\Lambda(\tmthree') = \Lambda(\tm') +_{i=1}^n \Lambda(\tmtwo'_i)$.
+    Moreover $\tmthree'$ is correct, so this multiset has no repeats.
+  \item {\em Sequential contexts.}
+    Suppose that
+    $\tctx_0 \oplus \var : \mtyp_0 \vdash \tmfour' : [\typthree_j]_{j=1}^m \tolab{\labtwo} \typ$
+    is derivable,
+    $\tctx_j \oplus \var : \mtyp_j \vdash \tmfive'_j : \typthree_j$
+    is derivable for all $j=1..m$,
+    and $\tctxtwo_i \vdash \tmtwo'_i : \typtwo_i$ is derivable for all $i=1..n$.
+    Note that $\sum_{j=0}^{m} \mtyp_j = [\typtwo_i]_{i=1}^{n}$.
+
+    Let $\tmsix$ be a subterm of
+    $(\lamp{\lab}{\var}{\tmfour'[\tmfive'_j]_{j=1}^{m}})[\tmtwo'_1,\hdots,\tmtwo'_n]$.
+    Consider four cases for $\tmsix$:
+
+    \begin{enumerate}
+    \item {\bf Case $\tmsix = (\lamp{\lab}{\var}{\tmfour'[\tmfive'_j]_{j=1}^{m}})[\tmtwo'_1,\hdots,\tmtwo'_n]$.}
+      The typing context is $\sum_{j=0}^{m} \tctx_j + \sum_{i=1}^n \tctxtwo_i$.
+      By Subject~Expansion~(\rlem{subject_expansion})
+      the typing context of $\subs{(\tmfour'[\tmfive'_j]_{j=1}^{m})}{\var}{[\tmtwo'_1,\hdots,\tmtwo'_n]} = \tmthree'$
+      is also $\sum_{j=0}^{m} \tctx_j + \sum_{i=1}^n \tctxtwo_i$
+      and $\tmthree'$ is correct by hypothesis.
+      So $\sum_{j=0}^{m} \tctx_j + \sum_{i=1}^n \tctxtwo_i$ is sequential.
+    \item {\bf Case $\tmsix = \lamp{\lab}{\var}{\tmfour'[\tmfive'_j]_{j=1}^{m}}$.}
+      The typing context is
+      $\sum_{j=0}^{m} \tctx_j$,
+      which is sequential because $\sum_{j=0}^{m} \tctx_j + \sum_{i=1}^n \tctxtwo_i$ is sequential.
+    \item {\bf Case $\tmsix = \tmfour'[\tmfive'_j]_{j=1}^{m}$.}
+      The typing context is
+      $\sum_{j=0}^{m} \tctx_j \oplus \var : [\typtwo_i]_{i=1}^n$,
+      which is sequential because $\sum_{j=0}^{m} \tctx_j$ is sequential
+      and, moreover, $[\typtwo_i]_{i=1}^n = \tmlabel{[\typtwo'_1,\hdots,\typtwo'_n]}$
+      which we have already shown to be sequential.
+    \item {\bf Otherwise.}
+      Then $\tmsix$ is a subterm of $\tmfour'$, a subterm of $\tmfive'_j$ for some $j=1..m$,
+      or a subterm of some $\tmtwo'_i$ for some $i=1..n$.
+      Then we conclude since by \ih $(\lamp{\lab}{\var}{\tmfour'})\ls{\tmtwo}_0$
+      and all the $(\lamp{\lab}{\var}{\tmfive'_j})\ls{\tmtwo}_j$
+      are strongly sequential.
+    \end{enumerate}
+  \item {\em Sequential types.}
+    Let $\tmsix$ be a subterm of $(\lamp{\lab}{\var}{\tmfour'[\tmfive'_j]_{j=1}^{m}})[\tmtwo'_1,\hdots,\tmtwo'_n]$.
+    We claim that if $\mtyptwo \tolab{\lab''} \typfour$ occurs in the context or in the type of $\tmsix$,
+    then $\mtyptwo$ is sequential.
+    The proof is similar as for subcase \label{refinement_substitution_inverse__case_lambda_sequential_types}.
+  \item {\em Strong sequentiality.}
+    Let $\tmsix \in \subterms{(\lamp{\lab}{\var}{\tmfour'[\tmfive'_j]_{j=1}^{m}})[\tmtwo'_1,\hdots,\tmtwo'_n]}$
+    be a subterm,
+    and let $\tmsix_1,\tmsix_2 \in \fsubterms{\tmsix}$ be free subterms lying at disjoint positions of $\tmsix$.
+    We claim that the types of $\tmsix_1$ and $\tmsix_2$ have different external labels.
+    The proof is similar as for subcase \label{refinement_substitution_inverse__case_lambda_strong_sequentiality}.
   \end{enumerate}
 \end{enumerate}
 \end{proof}
 
-\bigskip
-
-Let $\tm \in \terms$.
-Then $\tm$ has a head normal form if and only if there exists $\tm' \in \termsdist$ such that $\tm \refinedby \tm'$.
-
-\begin{proof} We prove both directions separately.
-\begin{itemize}
-  \item[] {\bf $\Rightarrow$.} If $\tm$ has a head normal form that means that there is a derivation $\tm \rtobeta \tmtwo$ such that $\tmtwo$ is a head normal form.
-    As such, by \rlem{hnf_has_refinement}, it has a refinement, which we will call $\tmtwo'$.
-
-    We will prove that if $\tm \rtobeta \tmtwo \refinedby \tmtwo'$ then
-    there exists a $\tm'$ that refines $\tm$, and we will proceed by
-    induction on the length of the derivation $\tm \rtobeta \tmtwo$.
-    Note that this is enough
-    \begin{enumerate}
-      \item {\bf 0 steps, $\tm = \tmtwo$.} This case is trivial because we take $\tm'$ to be $\tmtwo'$.
-      \item {\bf Inductive case, $\tm \rtobeta \tmthree \tobeta \tmtwo$.}
-        Using backwards simulation (\rlem{backwards_simulation}), we know that
-        there is a term $\tmthree'$ such that $\tmthree' \refines \tmthree$ and $\tmthree' \tomulti_\dist \tmtwo'$.
-
-        Lastly, the inductive hypothesis tells us that there is a $\tm'$ that refines $\tm$.
-        Our argument can be summed up in the following diagram,
-        where the data labeled with $^1$ are what we know by hypothesis,
-        the one labeled with $^2$ is the result of Backwards simulation~(\rlem{backwards_simulation}),
-        and the one labeled with $^3$ is given by the inductive hypothesis.
-
-        \[
-        \xymatrix@C=1cm{
-          \tm  \ar@{}[d]|*=0[@]{\rtimes}^{^3} \ar@{->>}[r]^{\beta^1}
-            & \tmthree \ar@{}[d]|*=0[@]{\rtimes}^{^2} \ar[r]^{\beta^1}
-            & \tmtwo \ar@{}[d]|*=0[@]{\rtimes}^{^1}  \\
-          \tm' & \tmthree' \ar@{->>}[r]^{\dist} & \tmtwo' \\
-        }
-        \]
-    \end{enumerate}
-  \item[] {\bf $\Leftarrow$.} Let $\tm'$ such that $\tm' \refines \tm$.
-    The term $\tm'$ has a normal form, which is in particular a head normal form.
-    \TODO{esto hay que probarlo, pero capaz sale facil}
-
-    We will prove that if $\tm \refinedby \tm' \tomulti_\dist \tmtwo'$ and $\tmtwo'$ is a normal form,
-    then there exists a term $\tmtwo$ such that $\tm \rtobeta \tmtwo \refinedby \tmtwo'$.
-    Note that this is enough, because if $\tmtwo'$ is in head normal form (as in our case),
-    \rlem{hnf_iff_distnf} tells us that $\tmtwo$ is also in head normal form.
-
-    Recall that, in the distributive lambda-calculus,
-    the length of derivations starting from a fixed term
-    is bounded~(\rcoro{bounded_length_of_derivations})
-    as a corollary of the fact that the distributive lambda-calculus
-    is strongly normalizing and finitely branching, by K\"onig's lemma.
-    We proceed by induction on the length $n$ of the longest derivation going out from $\tm'$.
-    \begin{enumerate}
-      \item {\bf Base case, $n = 0$.} In this case $\tm' = \tmtwo'$,
-        so we can take $\tmtwo$ to be equal to $\tm$ and we are done.
-      \item {\bf Induction, $n > 0$.}
-        Then there is at least one step:
-        \[
-        \xymatrix@C=1cm{
-          \tm  \ar@{}[d]|*=0[@]{\rtimes}  & &      \\
-          \tm' \ar@{->}[r]^{\dist} & \tmthree' \ar@{->>}[r]^{\dist} & \tmtwo' \\
-        }
-        \]
-        Here, reverse simulation (\rprop{reverse_simulation}) tells us that there are $\tmthree$ and $\tmthree''$
-        such that:
-        \[
-        \xymatrix@C=1cm{
-          \tm  \ar@{}[d]|*=0[@]{\rtimes} \ar@{->}[rr]^{\beta} & & \tmthree  \ar@{}[d]|*=0[@]{\rtimes} \\
-          \tm' \ar@{->}[r]^{\dist} & \tmthree' \ar@{->>}[r]^{\dist} & \tmthree'' \\
-        }
-        \]
-        The longest derivation going out from $\tmthree''$ has $m$ steps.
-        Note that $m < n$, for otherwise there would be a derivation $\tm' \todist \tmthree' \rtodist \tmthree'' \rtodist ...$ 
-        of more than $n$ steps.
-
-        Furthermore, as $\termsdist$ is confluent~(\rcoro{confluence}) and strongly normalizing~(\rprop{termination}),
-        we have that $\tmthree'' \tomulti_\dist \tmtwo'$.
-        Since $m < n$, we can use the inductive hypothesis
-        on $\tmthree \refinedby \tmthree'' \tomulti_\dist \tmtwo'$, which closes the diagram:
-        \[
-        \xymatrix@C=1cm{
-          \tm  \ar@{}[d]|*=0[@]{\rtimes} \ar@{->}[r]^{\beta} & \tmthree \ar@{}[d]|*=0[@]{\rtimes} \ar@{->>}[r]^{\beta} & \tmtwo \ar@{}[d]|*=0[@]{\rtimes} \\
-          \tm' \ar@{->>}[r]^{\dist} & \tmthree'' \ar@{->>}[r]^{\dist} & \tmtwo' \\
-        }
-        \]
-    \end{enumerate}
-\end{itemize}
+\begin{lemma}[Backwards Simulation]
+\llem{backwards_simulation}
+Let $\tm,\tmtwo \in \terms$ be $\lambda$-terms and
+let $\tmtwo' \in \termsdist$ be a strongly sequential term such that
+$\tm \tobeta \tmtwo$ and $\tmtwo' \refines \tmtwo$.
+Then there exists a strongly sequential term $\tm' \in \termsdist$ such that:
+\[
+\xymatrix@R=.25cm{
+ \tm \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta} & \tmtwo \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tm' \ar@{.>>}[r]^{\dist} & \tmtwo' \\
+}
+\]
+\end{lemma}
+\begin{proof}
+Let $\tm = \conof{(\lam{\var}{\tmthree})\tmfour} \tobeta \conof{\subs{\tmthree}{\var}{\tmfour}} = \tmtwo$.
+The proof proceeds by induction on $\con$.
+\begin{enumerate}
+\item {\bf Empty, $\con = \conbase$.}
+  By \rlem{refinement_substitution_inverse} we have that $\tmtwo'$
+  is of the form $\subs{\tmthree'}{\var}{[\tmfour'_1,\hdots,\tmfour'_n]}$
+  where $\tmthree' \refines \tmthree$ and $\tmfour'_i \refines \tmfour$ for all $i=1..n$.
+  Moreover, taking $\lab$ to be a fresh label, $(\lamp{\lab}{\var}{\tmthree'})[\tmfour'_1,\hdots,\tmfour'_n]$ 
+  is strongly sequential and
+  $(\lamp{\lab}{\var}{\tmthree'})[\tmfour'_1,\hdots,\tmfour'_n] \refines (\lam{\var}{\tmthree})\tmfour$.
+\item {\bf Under an abstraction, $\con = \lam{\var}{\con'}$.}
+  Straightforward by \ih.
+\item {\bf Left of an application, $\con = \con'\,\tmthree$}
+  Straightforward by \ih.
+\item {\bf Right of an application, $\con = \tmthree\,\con'$}
+  Then $\tm = \tmthree\,\tmfour \tobeta \tmthree\,\tmfive = \tmtwo$
+  where $\tmfour \tobeta \tmfive$ and $\tmtwo' \refines \tmtwo$.
+  Then $\tmtwo'$ is of the form $\tmthree'[\tmfive'_1,\hdots,\tmfive'_n]$ where $\tmfive'_i \refines \tmfive$ for all $i=1..n$.
+  By \ih, for all $i=1..n$ we have that there exist $\tmfour'_1,\hdots,\tmfour'_n$ such that:
+  \[
+  \xymatrix@R=.25cm{
+   \tmfour \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta} & \tmfive \ar@{}[d]|*=0[@]{\rtimes} \\
+   \tmfour'_i \ar@{.>>}[r]^{\dist} & \tmfive'_i \\
+  }
+  \HS\HS\text{So we have:}
+  \xymatrix@R=.25cm{
+   \tmthree\,\tmfour \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta} & \tmthree\tmfive \ar@{}[d]|*=0[@]{\rtimes} \\
+   \tmthree'[\tmfour'_i]_{i=1}^{n} \ar@{.>>}[r]^{\dist} & \tmthree'[\tmfive'_i]_{i=1}^{n}  \\
+  }
+  \]
+  Moreover, $\tmthree'[\tmfour'_i]_{i=1}^{n}$ is strongly sequential, which can be concluded
+  from the facts that $\tmthree'[\tmfive'_i]_{i=1}^{n}$ is strongly sequential by hypothesis,
+  $\tmfour'_i$ is strongly sequential for all $i=1..n$ by \ih,
+  and $\tmfour'_i$ and $\tmfive'_i$ have the same types by Subject~Expansion~(\rlem{subject_expansion}).
+\end{enumerate}
 \end{proof}
+
+To prove \rprop{has_hnf_has_refinement} recall that it states that the following are equivalent:
+\begin{enumerate}
+\item There exists $\tm' \in \termsdist$ such that $\tm' \refines \tm$.
+\item There exists $\tm' \in \termsdist$ such that $\tm' \refines \tm$
+      and $\tm' \todist^* \lamp{\lab_1}{\var_1}{\hdots\lamp{\lab_n}{\var_n}{\vartwo^\typ[]\hdots[]}}$.
+\item There exists a head normal form $\tmtwo$ such that $\tm \tobeta^* \tmtwo$.
+\end{enumerate}
+Let us prove the chain of implications $1 \implies 3 \implies 2 \implies 1$:
+\begin{itemize}
+\item $(1 \implies 3)$
+  Let $\tm' \refines \tm$.
+  By Strong Normalization~(\rprop{termination}), reduce $\tm' \todist^* \tmtwo'$
+  to normal form.
+  We claim that there exists a term $\tmtwo$ such that $\tm \tobeta^* \tmtwo$ and $\tmtwo' \refines \tmtwo$.
+  Observe that, since $\lambdadist$ is strongly normalizing~(\rprop{termination})
+  and finitely branching, K\"onig's lemma ensures that there is a bound for the length of $\todist$-derivations
+  going out from a term $\tm' \in \termsdist$.
+  (Alternatively, according to the proof of Strong Normalization in~\rprop{termination},
+  the bound may be explicitly taken to be the number of lambdas in $\tm'$).
+  Call this bound the \defn{weight} of $\tm'$.
+
+  We proceed by induction on the weight of $\tm'$.
+  If the derivation is empty, we are done by taking $\tmtwo := \tm$.
+  If the derivation is non-empty, it is of the form $\tm' \todist \tmthree' \todist^* \tmtwo'$.
+  By Simulation~(\rprop{simulation}) there exist terms $\tmthree$ and $\tmthree''$
+  such that $\tmthree' \todist^* \tmthree'' \refines \tmthree$
+  and $\tm \tobeta \tmthree$. Since the $\lambdadist$-calculus is
+  confluent~(\rprop{strong_permutation}) and $\tmtwo'$ is a normal form,
+  we have that $\tmthree'' \rtodist \tmtwo'$.
+  Note that the weight of $\tm'$ is strictly larger than the weight of $\tmthree''$,
+  so by \ih there exists $\tmtwo$ such that $\tmthree \tobeta^* \tmtwo$
+  and $\tmtwo' \refines \tmtwo$:
+  \[
+    \xymatrix@R=.5cm{
+      \tm
+        \ar@{}[d]|*=0[@]{\rtimes} 
+        \ar[rr]^{\beta}
+    &
+    &
+      \tmthree
+        \ar@{}[d]|*=0[@]{\rtimes} 
+        \ar@{->>}[r]^{\beta}
+    &
+      \tmtwo
+        \ar@{}[d]|*=0[@]{\rtimes} 
+    \\
+      \tm'
+        \ar[r]^{\dist}
+    &
+      \tmthree'
+        \ar@{->>}[r]^{\dist}
+        \ar@/_.75cm/@{->>}[rr]^{\dist}
+    &
+      \tmthree''
+        \ar@{->>}[r]^{\dist}
+    &
+      \tmtwo'
+    }
+  \]
+  Finally, since $\tmtwo'$ is a $\todist$-normal form and $\tmtwo' \refines \tmtwo$,
+  \rlem{normal_forms_refine_hnfs}
+  ensures that $\tmtwo$ is a head normal form, as required.
+\item $(2 \implies 1)$ Obvious.
+\item $(3 \implies 2)$
+  Let $\tm \tobeta^* \tmtwo$ be a derivation to head normal form.
+  We claim that there exists $\tm' \in \termsdist$ such that $\tm'$ is strongly sequential,
+  and the normal form of $\tm'$ is of the form $\lamp{\lab_1}{\var_1}{\hdots\lamp{\lab_n}{\var_n}{\vartwo^\typ[]\hdots[]}}$.
+  By induction on the length of the derivation $\tm \tobeta^* \tmtwo$.
+  If the derivation is empty, $\tm = \tmtwo$ is a head normal form
+  and we conclude by \rlem{hnf_has_refinement}, observing that the constructed term $\tm' \refines \tm$
+  is strongly sequential.
+  If the derivation is non-empty, conclude using the \ih and Backwards Simulation~(\rlem{backwards_simulation}).
+\end{itemize}

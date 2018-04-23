@@ -1,6 +1,4 @@
 
-\TODO{Arreglar o cambiar esta demo.}
-
 We had a term $\tm \in \terms$ that is in head normal form,
 \ie $\tm = \lam{\var_1}{\hdots\lam{\var_n}{\vartwo\,\tm_1\,\hdots\,\tm_m}}$.
 
@@ -82,8 +80,8 @@ We proceed by induction on the pair $(n, m)$, that is, by induction on
           $\tmtwo' = \lamp{\lab_2}{\var_2}{\hdots\lamp{\lab_n}{\var_n}{\vartwo\,\emptylset\,\hdots\,\emptylset}}$.
 
         Let $\tm' = \lamp{\lab}{\var_1}{\tmtwo'}$, where $\lab$ is fresh.
-        \TODO{gonza: If $\var_1 = \vartwo$ and $\var_1 \neq \var_i$ for all $1 < i \leq n$,
-          then $\lab$ is the external label of $\vartwo$, and in any other case it is a fresh label.}
+        If $\var_1 = \vartwo$ and $\var_1 \neq \var_i$ for all $1 < i \leq n$,
+          then $\lab$ is the external label of $\vartwo$, and in any other case it is a fresh label.
         Here to make the proof tidier we will divide in two new cases,
           depending on whether $\var_1 = \vartwo$ and $\var_1 \neq \var_i$ for all $1 < i \leq n$, or not.
         \begin{enumerate}

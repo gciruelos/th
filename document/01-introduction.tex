@@ -18,7 +18,7 @@ one that says how to add and another that says how to multiply:
   \underline{n} \cdot \tm \to \underbrace{\tm + \tm + ... + \tm}_{n \text{ times}}
 \]
 
-Actually, to be completely formal we should say that the rewriting rules are the \emph{contextual clausures}
+Actually, to be completely formal we should say that the rewriting rules are the \emph{contextual closures}
 of the ones above, which intuitively means that we can apply the rules anywhere we want in the term.
 For example, if we had the term $\underline{3} + \underline{0} \cdot (\underline{4} + \underline{5})$,
 we can apply the first rule to get $\underline{3} + \underline{0} \cdot \underline{9}$,
@@ -50,7 +50,7 @@ To learn some other notions of rewriting theory, consider the following examples
 \]
 
 Notice how the step that performed the sum was not needed, as we could have done the multiplication
-directly. We will concentrate in this kinds of phenomena in this work: steps that do not perform interesting
+directly. We will concentrate in these kinds of phenomena in this work: steps that do not perform interesting
 work. Later on, we will call these steps \emph{garbage}.
 
 In the next example we will name our steps to make the explanation clearer.
@@ -65,7 +65,7 @@ In the next example we will name our steps to make the explanation clearer.
 
 This example allows us to present the notion of \emph{residuals}. We have two
 steps that perform the sum $\underline{5} + \underline{5} \to \underline{10}$, $\redex$ and $\redex'$.
-These steps are formally different, but are essentially the same, and in a strong sense:
+These steps are formally different, but do the same work. We can formalize this notion:
 we will say that $\redex'$ is the residual of $\redex$ after $\redextwo$, \ie, it is what is left of $\redex$
 after $\redextwo$. We will write this $\redex / \redextwo = \set{\redex'}$.
 Also notice how there is no ``faster'' reduction  strategy, all reductions are the same length.
@@ -98,7 +98,7 @@ The possible computations of a tuple $(A,B)$
 are rewrite sequences $(A,B) \to \hdots \to (A',B')$.
 These sequences can always be decomposed as two non-interfering computations
 $A \to \hdots \to A'$ and $B \to \hdots \to B'$.
-The reason is that the subexpressions $A$ and $B$ cannot interact with each other.
+The reason is that the sub-expressions $A$ and $B$ cannot interact with each other.
 Indeed, the space of computations of $(A,B)$ can be understood as
 the {\em product} of the spaces of $A$ and $B$.
 In contrast, the space of computations of a function application $f(A)$ is not so easy
@@ -208,11 +208,11 @@ For instance, $\redextwo\redex_2$ is a prefix of $\redex\redextwo'\redexthree'$:
   }
   \tag{1} \label{eq:redgraph}
 \]
-Remark that the relation $\permle$ is reflexive and transitive but not antisymmetric,
+Remark that the relation $\permle$ is reflexive and transitive but not anti-symmetric,
 \ie it is a quasi-order but not an order.
 For example $\redex\redextwo' \permle \redextwo\redex_1\redex_2' \permle \redex\redextwo'$
 but $\redex\redextwo' \neq  \redextwo\redex_1\redex_2'$.
-Antisymmetry may be recovered as usual when in presence of a quasi-order,
+Anti-symmetry may be recovered as usual when in presence of a quasi-order,
 namely by working modulo {\em permutation equivalence}:
 two derivations $\redseq$ and $\redseqtwo$
 are said to be permutation equivalent,
@@ -434,7 +434,7 @@ The remainder of this work is organized as follows:
   based on system $\mathcal{W}$.
   The desirable properties of system~$\mathcal{W}$ of~\cite{bucciarelli2017non} still hold in $\lambdadist$.
   Moreover, $\lambdadist$ is confluent.
-  We impose confluence forcibly, by decorating subtrees with distinct labels, so that
+  We impose confluence forcibly, by decorating sub-trees with distinct labels, so that
   a $\beta$-reduction step may distribute the arguments in a unique way.
 \item
   In \rcha{residual_theory}, we develop a theory of residuals for the

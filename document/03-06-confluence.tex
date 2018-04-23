@@ -83,7 +83,7 @@ of the substitutions we would need to separate the list $[a^\beta, b^\alpha]$ in
 
 \bigskip
 
-Altough are going to prove that the $\lambdadist$-calculus is confluent,
+Although are going to prove that the $\lambdadist$-calculus is confluent,
 actually a strictly stronger property holds: strong permutation.
 This property says that if we "open" a diagram with two (different) steps,
 we can "close" it with two steps too; and it also gives us information
@@ -100,7 +100,7 @@ If $\tm_0 \todistl{\lab_1} \tm_1$
 and $\tm_0 \todistl{\lab_2} \tm_2$
 are different steps, then there exists a term $\tm_3 \in \termsdist$ such that
 $\tm_1 \todistl{\lab_2} \tm_3$ and $\tm_2 \todistl{\lab_1} \tm_3$.
-Diagramatically,
+Diagrammatically,
 \[
     \xymatrix{
       \tm_0 \ar@{->}[d]^{\lab_2}
@@ -136,13 +136,13 @@ than strong permutation,
 but equivalent:
 as they don't ask for the steps to be different,
 but allow the closing steps to be at most one (instead of exactly one).}
-As a consequence of strong permutation, reduction is subcommutative,
+As a consequence of strong permutation, reduction is sub-commutative,
 \ie $(\lefttodist \circ \todist)\ \subseteq (\todist^= \circ \lefttodist^=)$
 where
 $\lefttodist$ denotes $(\todist)^{-1}$
 and $R^=$ denotes the reflexive closure of $R$.
 
-Moreover, it is well-known that subcommutativity implies confluence,
+Moreover, it is well-known that sub-commutativity implies confluence,
 \ie $(\lefttodist^* \circ \todist^*)\ \subseteq (\todist^* \circ \lefttodist^*)$
 (\cf \cite[Proposition 1.1.10]{Terese}). Note that the
 inverse does not hold, hence confluence is weaker than strong permutation, as we previously stated.
@@ -151,7 +151,7 @@ inverse does not hold, hence confluence is weaker than strong permutation, as we
 $\lambdadist$ is confluent, \ie,
 if $\tm_0 \tomdist \tm_1$ and $\tm_0 \tomdist \tm_2$, then there exists a term $\tm_3$
 such that $\tm_1 \tomdist \tm_3$ and $\tm_2 \tomdist \tm_3$.
-Diagramatically,
+Diagrammatically,
 \[
     \xymatrix{
       \tm_0 \ar@{->>}[d]

@@ -75,7 +75,7 @@ we cannot uniquely associate arguments with variables in the body of the lambdas
 For example, consider the following term.
 \[(\lamp{1}{x}{y^{[\alpha^2, \alpha^2] \tolab{3} \alpha^4} [x^{\alpha^2}, x^{\alpha^2}]})
 [a^{\alpha^2}, b^{\alpha^2}]\]
-We don't know which parameter to associate which eaich $x$---which parameter goes in the first $x$, $a$ or $b$?
+We don't know which parameter to associate which each $x$---which parameter goes in the first $x$, $a$ or $b$?
 
 To solve that problem we introduce an invariant that will ensure
 that problem does not manifest.
@@ -98,14 +98,14 @@ A term $\tm$ is correct if it is typable and it verifies the following three con
 \begin{enumerate}
 \item {\em Uniquely labeled lambdas.}
   If $\lamp{\lab}{\var}{\tmtwo}$ and $\lamp{\labtwo}{\vartwo}{\tmthree}$
-  are subterms of $\tm$ at different positions, then $\lab$ and $\labtwo$
+  are sub-terms of $\tm$ at different positions, then $\lab$ and $\labtwo$
   must be different labels.
   \footnote{This is not strictly necessary for our current purpose, but will be useful later.}
 \item {\em Sequential contexts.}
-  If $\tmtwo$ is a subterm of $\tm$ and $\tctx \vdash \tmtwo : \typ$
+  If $\tmtwo$ is a sub-term of $\tm$ and $\tctx \vdash \tmtwo : \typ$
   is derivable, then $\tctx$ must be sequential.
 \item {\em Sequential types.}
-  If $\tmtwo$ is a subterm of $\tm$,
+  If $\tmtwo$ is a sub-term of $\tm$,
   the judgment $\tctx \vdash \tmtwo : \typ$ is derivable,
   and there exists a type such that
   $(\mtyp \tolab{\lab} \typtwo \occursin \tctx)$ or $(\mtyp \tolab{\lab} \typtwo \occursin \typ)$,
@@ -141,12 +141,12 @@ a bounded variable will be evaluated.
 This will prove very useful to analyze the $\lambda$-calculus.
 
 The next lemma shows that a term is uniquely typable: this means that for a given term
-there is only one type and typing context that satisfy the typing judgement.
+there is only one type and typing context that satisfy the typing judgment.
 Moreover, all proof trees are the same.
 
 Note that for all proof trees to be the same it is crucial that
 we only consider correct terms, because otherwise when we apply the rule
-$\toE$ we may have the possiblity to choose between different orders for the
+$\toE$ we may have the possibility to choose between different orders for the
 parameters.\footnote{This implies that a weaker uniqueness result holds for
 incorrect terms: proof trees are equal modulo permutations when the rule $\toE$
 is applied, but as we don't care about incorrect terms we don't need to consider this.}

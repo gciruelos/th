@@ -3,7 +3,7 @@ The idea is straightforward: in order apply a lambda abstraction to a list of ar
 replace each occurrence of the variable bounded by the lambda with the corresponding argument.
 
 To do that we need to define notation for the type
-of ocurrences of a free variable. If $\tm$ is typable,
+of occurrences of a free variable. If $\tm$ is typable,
 $\varlabel{\var}{\tm}$
 stands for the multiset
 of types of the free occurrences of $\var$ in $\tm$.
@@ -118,7 +118,7 @@ whenever each substitution $\tm_i\sub{\var}{\ls{\tmtwo}}$ is well-defined.
 
 \begin{lemma}
 $\subs{\tm}{\var}{\ls{\tmtwo}} = \tm\sub{\var}{\ls{\tmtwo}'}$
-whenever $\varlabel{\var}{\tm} = \tmlabel{\ls{\tmtwo}}$ and $\ls{\tmtwo}$ is a sublist of $\ls{\tmtwo}'$.
+whenever $\varlabel{\var}{\tm} = \tmlabel{\ls{\tmtwo}}$ and $\ls{\tmtwo}$ is a sub-list of $\ls{\tmtwo}'$.
 \end{lemma}
 \begin{proof}
 By induction on $\tm$.
@@ -133,7 +133,7 @@ By induction on $\tm$.
 \item {\bf Abstraction, $\tm = \lamp{\lab}{\vartwo}{\tmthree}$.}
   On the left, $\subs{(\lamp{\lab}{\vartwo}{\tmthree})}{\var}{\ls{\tmtwo}} = \lamp{\lab}{\vartwo}{\subs{\tmthree}{\var}{\ls{\tmtwo}}}$.
   On the right $(\lamp{\lab}{\vartwo}{\tmthree})\sub{\var}{\ls{\tmtwo}'} = \lamp{\lab}{\vartwo}{\tmthree\sub{\var}{\ls{\tmtwo}}'}$.
-  The right-hand side of both equantions are the same by inductive hypothesis.
+  The right-hand side of both equations are the same by inductive hypothesis.
 \item {\bf Application, $\tm = \tmfour [\tmthree_1, \hdots, \tmthree_n]$.}
   On the left side we have that
     $\subs{(\tmfour [\tmthree_i]_{i=1}^n)}{\var}{\ls{\tmtwo}} =
@@ -144,7 +144,7 @@ By induction on $\tm$.
   On the other hand, $((\tmfour [\tmthree_i]_{i=1}^n))\sub{\var}{\ls{\tmtwo}'} =
       \tmfour\sub{\var}{\ls{\tmtwo}'} [\tmthree_i\sub{\var}{\ls{\tmtwo}'}]_{i=1}^n$.
 
-  Note that for every $i \in \set{0, ..., n}$, $\ls{\tmtwo}_i$ is a sublist of $\ls{\tmtwo}$.
+  Note that for every $i \in \set{0, ..., n}$, $\ls{\tmtwo}_i$ is a sub-list of $\ls{\tmtwo}$.
   Then, by inductive hypothesis, $\subs{\tmfour}{\var}{\ls{\tmtwo}_0} = \tmfour\sub{\var}{\ls{\tmtwo}'}$
   and $\subs{\tmthree_i}{\var}{\ls{\tmtwo}_i} = \tmthree_i\sub{\var}{\ls{\tmtwo}'}$, which is what we wanted.
 \end{enumerate}

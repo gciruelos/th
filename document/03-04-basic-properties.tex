@@ -1,5 +1,5 @@
 
-The first lemma talks about the shape of the typing context of a given typing judgement.
+The first lemma talks about the shape of the typing context of a given typing judgment.
 Specifically, that the typing context will contain $\var : \typ$ for each free variable
 $\var^\typ$ that occurs in the term, and nothing else.
 
@@ -23,10 +23,10 @@ By induction on $\tm$.
 \begin{remark}
   Given that variables are labeled with their types, it is more or less easy to obtain
   the type of a given (correct and typable) term.
-  Moreover, Linearity (\rlem{linearity}) shows that it is easy to obtain the context of the typing judgement.
+  Moreover, Linearity (\rlem{linearity}) shows that it is easy to obtain the context of the typing judgment.
 
   In summary, given a term $\tm$ that is correct and typable
-  it is straightforward to obtain its typing judgement
+  it is straightforward to obtain its typing judgment
   $\tctx \vdash \tm : \typ$.
   It is also straightforward to find out whether the term is typable or not---the
   typability will manifest itself while we try to find $\typ$.

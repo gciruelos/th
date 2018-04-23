@@ -79,7 +79,7 @@ $(2 \Rightarrow 3)$
   By induction on $\redseq$.
   If $\redseq$ is empty, the implication is vacuously true,
   so let $\redseq = \redextwo\redseqtwo$
-  and consider two subcases, depending on whether $\redex = \redextwo$.
+  and consider two sub-cases, depending on whether $\redex = \redextwo$.
   If $\redex = \redextwo$, then indeed the first step of $\redseq = \redex\redseqtwo$
   has the same name as $\redex$.
   On the other hand, if $\redex \neq \redextwo$, 
@@ -95,7 +95,7 @@ $(3 \Rightarrow 1)$
   By induction on $\redseq$.
   If $\redseq$ is empty, the implication is vacuously true,
   so let $\redseq = \redextwo\redseqtwo$
-  and consider two subcases, depending on whether $\name(\redex) = \name(\redextwo)$.
+  and consider two sub-cases, depending on whether $\name(\redex) = \name(\redextwo)$.
   If $\name(\redex) = \name(\redextwo)$ then $\redex$ and $\redextwo$ must be the same step,
   since terms are correct, which means that labels decorating lambdas are pairwise distinct.
   Hence $\redex \in \redseq = \redex\redseqtwo$.
@@ -195,7 +195,7 @@ $\names(\redseq/\redseqtwo) = \names(\redseq) \setminus \names(\redseqtwo)$
 First we claim that $\names(\redseq/\redex) = \names(\redseq) \setminus \set{\name(\redex)}$.
 We proceed by induction on $\redseq$.
 The base case is immediate, so let $\redseq = \redextwo\redseqtwo$
-and consider two subcases, depending on whether $\redex = \redextwo$.
+and consider two sub-cases, depending on whether $\redex = \redextwo$.
 If $\redex = \redextwo$,
 then:
 \[
