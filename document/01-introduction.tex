@@ -2,29 +2,32 @@
 
 The main concern of this work will be to analyze and understand \emph{spaces of computations}.
 To understand what a space of computations is, we need to introduce the notion of rewriting systems.
-A rewriting system is a set of terms together with a rewriting rule between them.
+A rewriting system is a set of objects $A$ and a binary \emph{rewriting} relation
+$\to \subseteq A \times A$: if $a_1 \to a_2$ we say that $a_1$ can be \emph{rewritten} to $a_2$.
 For example, the elementary arithmetic (addition and multiplication of natural numbers)
-can be seen as a rewriting system, where the terms are:
+can be seen as a rewriting system, where the objects (called \emph{terms} in this case) are:
 \[
   \tm, \tmtwo ::= \tm + \tmtwo \ |\ \tm \cdot \tmtwo \ |\ \underline{n}
 \]
 \noindent with $n \in \mathbb{N_0}$. We write $\underline{n}$ to mean that we have a term,
-not only a natural number. The terms are equipped with two rewriting rules,
-one that says how to add and another that says how to multiply:
+not only a natural number.
+The terms are equipped with three rewriting rules,
+one that says how to add and two that say how to multiply:
 \[
-  \underline{n} + \underline{m} \to \underline{n + m}
-\]
-\[
-  \underline{n} \cdot \tm \to \underbrace{\tm + \tm + ... + \tm}_{n \text{ times}}
+\begin{array}{rclc}
+  \underline{n} + \underline{m} & \to & \underline{n + m} & \\
+  \underline{n} \cdot \tm       & \to & \underbrace{\tm + \tm + ... + \tm}_{n \text{ times}} & \text{ if } n > 0 \\
+  \underline{0} \cdot \tm       & \to & \underline{0} &
+\end{array}
 \]
 
-Actually, to be completely formal we should say that the rewriting rules are the \emph{contextual closures}
-of the ones above, which intuitively means that we can apply the rules anywhere we want in the term.
+Actually, to be completely formal we should say that the rewriting relation is the \emph{contextual closure}
+of the rules above, which intuitively means that we can apply the rules anywhere we want in the term.
 For example, if we had the term $\underline{3} + \underline{0} \cdot (\underline{4} + \underline{5})$,
 we can apply the first rule to get $\underline{3} + \underline{0} \cdot \underline{9}$,
-and then the second one to get $\underline{3} + \underline{0}$, which can be rewritten to $\underline{3}$.
+and then the third one to get $\underline{3} + \underline{0}$, which can be rewritten to $\underline{3}$.
 
-But notice that instead of doing the first step we did, we could have directly applied the second rewrite rule
+But notice that instead of doing the first step we did, we could have directly applied the third rewrite rule
 onto our term, which would have yielded $\underline{3} + \underline{0}$, saving one step.
 
 The space of computations of a term $\tm$ is the graph that has all reducts of $\tm$ as nodes,
@@ -65,7 +68,8 @@ In the next example we will name our steps to make the explanation clearer.
 
 This example allows us to present the notion of \emph{residuals}. We have two
 steps that perform the sum $\underline{5} + \underline{5} \to \underline{10}$, $\redex$ and $\redex'$.
-These steps are formally different, but do the same work. We can formalize this notion:
+These steps are formally different (they are different elements of the rewriting relation),
+but do the same work. We can formalize this notion:
 we will say that $\redex'$ is the residual of $\redex$ after $\redextwo$, \ie, it is what is left of $\redex$
 after $\redextwo$. We will write this $\redex / \redextwo = \set{\redex'}$.
 Also notice how there is no ``faster'' reduction  strategy, all reductions are the same length.

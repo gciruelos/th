@@ -54,6 +54,18 @@
 \newtheorem{remark}[dummythm]{Remark}
 \newtheorem{notation}[dummythm]{Notation}
 
+\usepackage{chngcntr}
+\counterwithin{lemma}{chapter}
+\counterwithin{convention}{chapter}
+\counterwithin{proposition}{chapter}
+\counterwithin{theorem}{chapter}
+\counterwithin{example}{chapter}
+\counterwithin{corollary}{chapter}
+\counterwithin{definition}{chapter}
+\counterwithin{remark}{chapter}
+\counterwithin{notation}{chapter}
+
+
 % El \expandafter\uppercase es un hack para que anden las refs
 % en los headings.
 % https://tex.stackexchange.com/questions/13885/reference-undefined-in-section-with-amsbook
