@@ -103,7 +103,7 @@ We proceed by induction on $\tm$.
             the following diagram.
             \[
             {\tiny
-            \xymatrix@C=1cm{
+              \xymatrix@C=.5cm{
               (\lam{\var}{\conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}}) \tmsix
                 \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
                   & (\lam{\var}{\conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}}}) \tmsix & \\
@@ -143,7 +143,7 @@ We proceed by induction on $\tm$.
           \item {\bf $\redextwo$ is in $\tmsix$.} Again, we can summarize this case with a diagram.
             \[
             {\tiny
-            \xymatrix@C=1.4cm{
+              \xymatrix@C=.5cm{
               \conof{(\lam{\var}{\tmthree}) \tmthreevariant} \tmsix
                 \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
                   & \conof{\subs{\tmthree}{\var}{\tmthreevariant}} \tmsix  & \\
@@ -172,8 +172,8 @@ We proceed by induction on $\tm$.
           \item {\bf $\redextwo$ is at the root.} Then $\tmfive = \lam{\var}{\tmtwo}$
             and $\tm = (\lam{\var}{\tmtwo}) \conof{(\lam{\var}{\tmthree}) \tmthreevariant}$.
             \[
-            {\footnotesize
-            \xymatrix@C=1cm{
+            {\tiny
+              \xymatrix@C=.5cm{
               (\lam{\var}{\tmtwo}) \conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}
                 \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
                   & (\lam{\var}{\tmtwo}) \conof{\subs{\tmthree}{\vartwo}{\tmthreevariant}} & \\

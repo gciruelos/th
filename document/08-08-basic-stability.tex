@@ -95,7 +95,7 @@ We proceed by induction on the context $\con$ we argue that $\redex/\redextwo$ c
         $\con'_2 = (\lamp{\labthree}{\varthree}{\con''_2})\ls{\tmsix}$ and $\tmfive = \con''_2\of{\var^{\typ}\ls{\tmthree}}$.
         Given any term, context, or list of terms $\anon$ let us write $\anon^*$ to denote $\anon\sub{\var}{\ls{\tmtwo}}$.
         Then the situation is:
-        {\footnotesize
+        {\tiny
         \[
           \xymatrix@C=.5cm{
             (\lamp{\lab}{\var}{\con_1\of{  (\lamp{\labthree}{\varthree}{\con''_2\of{\var^{\typ}\ls{\tmthree}} })\ls{\tmsix} }})\,\ls{\tmtwo}
@@ -179,9 +179,9 @@ We proceed by induction on the context $\con$ we argue that $\redex/\redextwo$ c
       and $\ls{\tmthree} = [\ls{\tmthree}_1,\con''_1\of{\Sigma},\ls{\tmthree}_2]$.
       Given any term, context, or list of terms $\anon$ let us write $\anon^*$ to denote $\anon\sub{\var}{\ls{\tmtwo}}$.
       Then the situation is:
-      {\small
+      {\tiny
       \[
-        \xymatrix{
+        \xymatrix@C=.5cm{
           (\lamp{\lab}{\var}{\con_2\of{\var^\typ[\ls{\tmthree}_1,\con''_1\of{\Sigma},\ls{\tmthree}_2]}})\ls{\tmtwo}
           \ar[r]^-{\redex}
           \ar[d]_-{\redextwo}
@@ -442,9 +442,9 @@ We proceed by induction on the context $\con$ we argue that $\redex/\redextwo$ c
       Note also that by the Substitution lemma~(\rlem{substitution_lemma_alt}) we have that
       $\anon^\dagger\sub{\var}{\ls{\tmtwo}^\dagger} = {\anon^*}^\dagger$.
       Then the situation is the following:
-      {\small
+      {\footnotesize
       \[
-        \xymatrix{
+        \xymatrix@C=.1cm{
           (\lamp{\labtwo}{\vartwo}{\con''\of{ (\lamp{\lab}{\var}{\con_2\of{\var^\typ\,\ls{\tmfour}}})\,\ls{\tmtwo} }})\,\ls{\tmthree}
           \ar[r]^-{\redex}
           \ar[d]_-{\redextwo}
