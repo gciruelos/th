@@ -1,5 +1,5 @@
 Generally, intersection type systems are used on the pure $\lambda$-calculus.
-In such environment, a term may be able to be typed:
+In such environment, a term may be typed:
 for example, in system~$\mathcal{W}$,
 $\lam{x}{x x}$ can have the type $((\alpha \to \beta) \cap \alpha) \to \beta$,
 but the term $\Omega = (\lam{x}{x x}) (\lam{x}{x x})$ cannot
@@ -94,7 +94,7 @@ will come in handy later.
 A multiset of types $[\typ_1,\hdots,\typ_n]$ is \defn{sequential}
 if the external labels of $\typ_i$ and $\typ_j$ are different for all $i \neq j$.
 A typing context $\tctx$ is sequential if $\tctx(\var)$ is sequential for every $\var \in \dom\tctx$.
-A term $\tm$ is correct if it is typable and it verifies the following three conditions:
+A term $\tm$ is \defn{correct} if it is typable and it verifies the following three conditions:
 \begin{enumerate}
 \item {\em Uniquely labeled lambdas.}
   If $\lamp{\lab}{\var}{\tmtwo}$ and $\lamp{\labtwo}{\vartwo}{\tmthree}$

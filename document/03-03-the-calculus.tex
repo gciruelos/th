@@ -1,5 +1,5 @@
-What we want to do know is give the operational semantics for this calculus.
-The idea is straightforward: in order apply a lambda abstraction to a list of arguments we just
+What we want to do know is to give the operational semantics for this calculus.
+The idea is straightforward: in order to apply a lambda abstraction to a list of arguments we just
 replace each occurrence of the variable bounded by the lambda with the corresponding argument.
 
 To do that we need to define notation for the type
@@ -88,7 +88,7 @@ Substitution as we presented it can be hard to work with in some environments,
 as we have to track how substitution terms get distributed over the term they are
 being substituted in.
 
-The following alternative definition of deals with this by
+The following alternative definition of substitution deals with this by
 taking advantage of the fact that substitution is type-directed: it
 takes all terms all the way down and does not split them in the application case, but rather
 ``picks'' the correct term to substitute in the base case.
@@ -125,14 +125,14 @@ By induction on $\tm$.
 \begin{enumerate}
 \item {\bf Variable (same), $\tm = \var^\typ$.}
   First $\subs{\var^\typ}{\var}{[\tmtwo]} = \tmtwo$.
-  Also,$\var^\typ\sub{\var}{\ls{\tmtwo}'} = \tmtwo$,
+  Also, $\var^\typ\sub{\var}{\ls{\tmtwo}'} = \tmtwo$,
   because $\tmtwo$ is in $\ls{\tmtwo}'$ and it must be the only one for which the external label is the external label of $\typ$.
 \item {\bf Variable (different), $\tm = \vartwo$.}
   On the left hand side, $\subs{\vartwo^\typtwo}{\var}{\emptylset} = \vartwo^\typtwo$.
   On the right hand side, $\vartwo^\typtwo\sub{\var}{\ls{\tmtwo}'} = \vartwo^\typtwo$.
 \item {\bf Abstraction, $\tm = \lamp{\lab}{\vartwo}{\tmthree}$.}
   On the left, $\subs{(\lamp{\lab}{\vartwo}{\tmthree})}{\var}{\ls{\tmtwo}} = \lamp{\lab}{\vartwo}{\subs{\tmthree}{\var}{\ls{\tmtwo}}}$.
-  On the right $(\lamp{\lab}{\vartwo}{\tmthree})\sub{\var}{\ls{\tmtwo}'} = \lamp{\lab}{\vartwo}{\tmthree\sub{\var}{\ls{\tmtwo}}'}$.
+  On the right $(\lamp{\lab}{\vartwo}{\tmthree})\sub{\var}{\ls{\tmtwo}'} = \lamp{\lab}{\vartwo}{\tmthree\sub{\var}{\ls{\tmtwo}'}}$.
   The right-hand side of both equations are the same by inductive hypothesis.
 \item {\bf Application, $\tm = \tmfour [\tmthree_1, \hdots, \tmthree_n]$.}
   On the left side we have that
@@ -197,7 +197,7 @@ The notation $\conof{\tm}$ stands for the capturing substitution of the occurren
 
 In general an $n$-hole context is a term $\con$ with exactly $n \geq 0$ free occurrences of the distinguished variable $\conbase$.
 If $\con$ is an $n$-hole context, $\conof{\tm_1,\hdots,\tm_n}$ stands for the term
-that results from performing the substitution of the $i$-th occurrence of $\conbase_i$ (from left to right)
+that results from performing the substitution of the $i$-th occurrence of $\conbase$ (from left to right)
 by $\tm_i$.
-If $\con$ is an $n$-hole contexts for some $n$, we say that it is a many-hole context.
+If $\con$ is an $n$-hole context for some $n$, we say that it is a many-hole context.
 \end{definition}

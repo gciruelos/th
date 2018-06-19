@@ -6,11 +6,11 @@
 We are interested in understanding the derivation spaces
 of $\lambda$-terms.
 These derivation spaces, as we briefly mentioned earlier, have an structure that can be seen as an order.
-More specifically, the poset we will consider will be the one of derivations, where the order is giving by
+More specifically, the poset we will consider will be the one of derivations, where the order is given by
 the amount of \textit{work} each derivation does.
 
 But the structures we will work with are more than just posets, they have a richer structure,
-some of which we will define now.
+which we will define now.
 
 An \defn{upper semilattice} is a poset (\ie, a set $A$ with an order $\leq$)
 with a least element or \defn{bottom} $\bot \in A$,
@@ -24,7 +24,7 @@ and such that for every two elements $a, b \in A$
 there is a greatest lower bound or \defn{meet} $(a \land b) \in A$.
 A lattice is \defn{distributive} if $\land$ distributes over $\lor$ and vice versa.
 
-In the introduction we claimed that derivation spaces of $\lambda$-terms where
+In the introduction we claimed that derivation spaces of $\lambda$-terms were
 upper semilattices, but in general were not lattices.
 
 A \defn{morphism} of upper semilattices
@@ -69,8 +69,8 @@ Residuals are extended for projecting after a derivation,
 namely $\redex_n \in \redex_0/\redextwo_1\hdots\redextwo_n$
 if and only if there exist $\redex_1,\hdots,\redex_{n-1}$
 such that $\redex_{i+1} \in \redex_i/\redextwo_{i+1}$ for all $0 \leq i \leq n - 1$.
-Let $\redexset$ be a set of coinitial steps.
 
+Let $\redexset$ be a set of coinitial steps.
 A \defn{development} of $\redexset$ is a (possibly infinite) derivation $\redex_1\hdots\redex_n\hdots$
 such that for every index $i$ there exists a step $\redextwo \in \redexset$
 such that $\redex_i \in \redextwo/\redex_1\hdots\redex_{i-1}$.
@@ -188,8 +188,9 @@ the join is $\cls{\redseq} \sqcup \cls{\redseqtwo} = \cls{\redseq \sqcup \redseq
 and the bottom is $\bot = \cls{\emptyDerivation}$.
 
 The $\lambda$-calculus is an example of an orthogonal axiomatic rewrite system \cite{thesismellies}.
-Our structures of interest are the semilattices of derivations of the $\lambda$-calculus,
-written $\ulbDerivLam{\tm}$ for any given $\lambda$-term $\tm$.
+Our structures of interest are the semilattices of derivations from a given
+term $\tm$ of the $\lambda$-calculus,
+written $\ulbDerivLam{\tm}$.
 As usual, $\beta$-reduction in the $\lambda$-calculus
 is written $\tm \tobeta \tmtwo$
 and defined by the contextual closure of the axiom $(\lam{\var}{\tm})\tmtwo \tobeta \subs{\tm}{\var}{\tmtwo}$.
@@ -237,10 +238,11 @@ clear from the context.
 
 \section{Typing}
 
-In the framework of typed calculi, a typing judgment is a statement of the meta-theory that says that
-with a given a typing context, we can prove that some term has some type.
-For example, the judgment $\tctx \vdash \tm : \typ$ says that with the typing context
-$\tctx$ we can prove that $\tm$ has type $\typ$.
+In the framework of typed calculi, a typing judgment is a statement of the meta-theory that
+contains the knowledge that
+with a given typing context, we can prove that some term has some type.
+For example, knowing $\tctx \vdash \tm : \typ$ means that
+with the typing context $\tctx$ we can prove that $\tm$ has type $\typ$.
 
 \defn{Typing contexts}, or contexts for short,
 ranged over by $\tctx,\tctxtwo,\tctxthree,\hdots$ are (total) functions from variables to finite sets of types.

@@ -3,7 +3,9 @@
 The main concern of this work will be to analyze and understand \emph{spaces of computations}.
 To understand what a space of computations is, we need to introduce the notion of rewriting systems.
 A rewriting system is a set of objects $A$ and a binary \emph{rewriting} relation
-$\to \subseteq A \times A$: if $a_1 \to a_2$ we say that $a_1$ can be \emph{rewritten} to $a_2$.
+on $A$, called $\to$.
+If $a_1 \to a_2$ we say that $a_1$ can be \emph{rewritten} to $a_2$.
+
 For example, the elementary arithmetic (addition and multiplication of natural numbers)
 can be seen as a rewriting system, where the objects (called \emph{terms} in this case) are:
 \[
@@ -26,12 +28,22 @@ of the rules above, which intuitively means that we can apply the rules anywhere
 For example, if we had the term $\underline{3} + \underline{0} \cdot (\underline{4} + \underline{5})$,
 we can apply the first rule to get $\underline{3} + \underline{0} \cdot \underline{9}$,
 and then the third one to get $\underline{3} + \underline{0}$, which can be rewritten to $\underline{3}$.
+A derivation is simply a sequence of composable steps.
 
 But notice that instead of doing the first step we did, we could have directly applied the third rewrite rule
 onto our term, which would have yielded $\underline{3} + \underline{0}$, saving one step.
 
-The space of computations of a term $\tm$ is the graph that has all reducts of $\tm$ as nodes,
+Given a term $\tm$, its \emph{reduction graph} is the graph that has all
+reducts of $\tm$ as nodes,
 and edges between two nodes if one can be rewritten to the other.
+
+We could also consider the set of all reductions that
+start in $\tm$, and equip it with an order relation---usually a derivation
+is \emph{less than} another derivation if it does less work.
+The \emph{space of computations} of $\tm$ is that set modulo an equivalence relation---which
+usually says whether or not two derivations do the same amount of work.
+We will use the same kind of diagrams to represent computation spaces and reduction graphs.
+
 In the example above, the computation space of $\underline{3} + \underline{0} \cdot (\underline{4} + \underline{5})$
 would be the following.
 
@@ -87,7 +99,7 @@ Let us consider a last, slightly more complicated, example.
 \]
 
 Notice here how the residual of $\redex$ after $\redextwo$ is a set of two steps, $\set{\redex_1, \redex_2}$.
-That means that if we performed $\redextwo$, we need to to those two steps to do the work $\redex$ alone did.
+That means that if we performed $\redextwo$, we need to do those two steps to do the work $\redex$ alone did.
 
 We would be inclined to guess that a good reduction strategy would be to always multiply
 a number to a number, such that we don't multiply work. But that strategy fails when we have a 0 as an operand.
@@ -303,7 +315,7 @@ resulting in two copies of $\redex$: the steps $\redex_1$ and $\redex_2$.
 In such situation, one says that $\redex_1$ and $\redex_2$ are \emph{residuals} of $\redex$,
 and, conversely, $\redex$ is an \emph{ancestor} of $\redex_1$ and $\redex_2$.
 The second phenomenon is \emph{erasure}:
-in the diagram above, the step $\redexthree$ erases the step $\redex'_1$,
+in the diagram above (\ref{eq:redgraph}), the step $\redexthree$ erases the step $\redex'_1$,
 resulting in no copies of $\redex'_1$.
 The third phenomenon is \emph{creation}:
 in the diagram above, the step $\redex_2$ creates the step $\redexthree$,
@@ -400,7 +412,7 @@ represents the following typing derivation:
 \[
   \indrule{\toI}{
     \indrule{\toE}{
-      \indrule{var}{}{\var : [\alpha,\alpha] \to \beta \vdash \var : [\alpha,\alpha] \to \beta}
+      \indrule{var}{}{\var : [[\alpha,\alpha] \to \beta] \vdash \var : [\alpha,\alpha] \to \beta}
       \indrule{var}{}{\var : [\alpha] \vdash \var : \alpha}
       \indrule{var}{}{\var : [\alpha] \vdash \var : \alpha}
       \vspace{.1cm}
