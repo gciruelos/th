@@ -1,5 +1,5 @@
 
-The first lemma talks about the shape of the typing context of a given typing judgment.
+The first lemma is about the shape of the typing context of a given typing judgment.
 Specifically, that the typing context will contain $\var : \typ$ for each free variable
 $\var^\typ$ that occurs in the term, and nothing else.
 
@@ -13,6 +13,7 @@ Let $\var$ be any variable,
 and consider the $n \geq 0$ free occurrences of the variable $\var$ in the term $\tm$,
 more precisely, write $\tm$ as $\tm = \conhat\of{\var^{\typ_1},\hdots,\var^{\typ_n}}$,
 where $\conhat$ is a context with $n$-holes such that $\var \not\in \fv{\conhat}$.
+Then $\tctx(\var) = \set{\typ_1,\hdots,\typ_n}$.
 \end{lemma}
 \begin{proof}
 \SeeAppendixRef{linearity_proof}

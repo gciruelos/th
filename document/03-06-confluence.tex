@@ -83,7 +83,7 @@ of the substitutions we would need to separate the list $[a^\beta, b^\alpha]$ in
 
 \bigskip
 
-Although are going to prove that the $\lambdadist$-calculus is confluent,
+Although we are going to prove that the $\lambdadist$-calculus is confluent,
 actually a strictly stronger property holds: strong permutation.
 This property says that if we "open" a diagram with two (different) steps,
 we can "close" it with two steps too; and it also gives us information
@@ -96,17 +96,17 @@ as we will learn in the next chapter.
 
 \begin{proposition}[Strong Permutation]
 \lprop{strong_permutation}
-If $\tm_0 \todistl{\lab_1} \tm_1$
-and $\tm_0 \todistl{\lab_2} \tm_2$
+If $\tm_0 \todistl{\lab} \tm_1$
+and $\tm_0 \todistl{\lab'} \tm_2$
 are different steps, then there exists a term $\tm_3 \in \termsdist$ such that
-$\tm_1 \todistl{\lab_2} \tm_3$ and $\tm_2 \todistl{\lab_1} \tm_3$.
+$\tm_1 \todistl{\lab'} \tm_3$ and $\tm_2 \todistl{\lab} \tm_3$.
 Diagrammatically,
 \[
     \xymatrix{
-      \tm_0 \ar@{->}[d]^{\lab_2}
-            \ar@{->}[r]^{\lab_1} &
-      \tm_1 \ar@{-->}[d]^{\lab_2} \\
-            \ar@{-->}[r]^{\lab_1}
+      \tm_0 \ar@{->}[d]^{\lab'}
+            \ar@{->}[r]^{\lab} &
+      \tm_1 \ar@{-->}[d]^{\lab'} \\
+            \ar@{-->}[r]^{\lab}
       \tm_2 &
       \tm_3. \\
     }
@@ -121,7 +121,7 @@ The step $\redex$ is of the form:
            \todistl{\lab} \conof{\subs{\tm}{\var}{\ls{\tmtwo}}} = \tm_1
 \]
 We proceed by induction on $\con$, and within each case we separate in different
-cases depending on where $\redextwo$ is located (which recall that is different
+cases depending on where $\redextwo$ is located (which is different
 than $\redex$ by hypothesis).
 \SeeAppendixRef{strong_permutation_proof}
 \end{proof}
@@ -129,10 +129,10 @@ than $\redex$ by hypothesis).
 \bigskip
 
 
-The Strong Permutation property may also be called \emph{sub-commutativity}
-or \emph{WCR$^{\leq 1}$} in some contexts.
-\footnote{In reality, sub-commutativity and WCR$^{\leq 1}$ are slightly different
-than strong permutation,
+The Strong Permutation property may also be called Diamond Property in some contexts.
+\footnote{There are also two similar properties, called sub-commutativity and WCR$^{\leq 1}$
+which are slightly different properties
+from strong permutation,
 but equivalent:
 as they don't ask for the steps to be different,
 but allow the closing steps to be at most one (instead of exactly one).}

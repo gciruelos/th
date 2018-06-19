@@ -16,17 +16,6 @@ If $\redseq$ is a derivation, its set of names is
 
 A more precise way to say that our calculus has no duplication nor deletion is the following lemma.
 
-\begin{lemma}[Permanence]
-\llem{redex_permanence}
-If $\redex \not\in \redseq$ then $\redex/\redseq$ is a singleton.
-\end{lemma}
-\begin{proof}
-By induction on $\redseq$. The base case is trivial, so let $\redseq = \redextwo\redseqtwo$. 
-Note that $\redex \neq \redextwo$, so by \rlem{cardinality_of_the_set_of_residuals}
-we have that $\redex/\redextwo = \redextwo'$,
-where $\redextwo' \not\in \redseqtwo$.
-So $\redex/\redextwo\redseqtwo = \redextwo'/\redseqtwo$ is a singleton by \ih.
-\end{proof}
 
 \subsection*{Belonging}
 
@@ -50,6 +39,18 @@ We write $\redex \not\in \redseq$ if it is not the case that $\redex \in \redseq
 
 As it turns out, these two notions are equivalent in our calculus, because
 there is no deletion nor duplication of redexes.
+
+\begin{lemma}[Permanence]
+\llem{redex_permanence}
+If $\redex \not\in \redseq$ then $\redex/\redseq$ is a singleton.
+\end{lemma}
+\begin{proof}
+By induction on $\redseq$. The base case is trivial, so let $\redseq = \redextwo\redseqtwo$. 
+Note that $\redex \neq \redextwo$, so by \rlem{cardinality_of_the_set_of_residuals}
+we have that $\redex/\redextwo = \redextwo'$,
+where $\redextwo' \not\in \redseqtwo$.
+So $\redex/\redextwo\redseqtwo = \redextwo'/\redseqtwo$ is a singleton by \ih.
+\end{proof}
 
 \begin{lemma}[Characterization of belonging]
 \llem{characterization_of_belonging}

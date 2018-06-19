@@ -138,9 +138,9 @@ Next we present an example that will be useful to illustrate
 some of the upcoming propositions. Consider the following term:
 
 \[
-  (\lamp{\lab_1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
-    [\lamp{\lab_2}{\vartwo}{\vartwo^\alpha},
-    (\lamp{\lab_3}{\varthree}{\varthree^\alpha}) [w^\alpha]].
+  (\lamp{1}{\var}{\var^{[\alpha] \to \alpha} [\var^\alpha])}
+    [\lamp{2}{\vartwo}{\vartwo^\alpha},
+    (\lamp{3}{\varthree}{\varthree^\alpha}) [w^\alpha]].
 \]
 
 What follows is its derivation space, \ie,
@@ -182,8 +182,8 @@ Some facts about these derivations:
   \item $\redex \redextwo' \permeq \redextwo \redex'$. Remember that two derivations $\redseq$,
     $\redseqtwo$ are permutation equivalent if $\redseq \permle \redseqtwo \permle \redseq$,
     \ie if they perform the same amount of work.
-  \item $\redextwo / \redex = \set{\redex''}$ and
+  \item $\redextwo / \redex = \set{\redextwo'}$ and
     $\redextwo / \redex \redexthree = \set{\redextwo''}$. Remember that in $\lambdadist$,
-    residuals are either empty or singletons, so we will often skip the parentheses.
-  \item $\name(\redexthree) = \name(\redexthree') = 3$.
+    residuals are either empty or singletons, so we will often skip the curly brackets.
+  \item $\name(\redexthree) = \name(\redexthree') = 2$.
 \end{itemize}

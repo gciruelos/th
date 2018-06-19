@@ -4,7 +4,7 @@ In this section we will see two important lemmas that guarantee certain properti
 of residues after steps or derivations.
 
 The result that we will call full stability can be seen as a functorial extension
-to the confluence result: confluence speaks about happens to terms after
+to the confluence result: confluence speaks about what happens to terms after
 two coinitial derivations,
 while full stability speaks about what happens to steps after two coinitial derivations.
 
@@ -111,13 +111,13 @@ then they have a common ancestor $\redexthree_0$.
   }
 \]
 
-In the figure above, if $\redexthree_1$ and $\redexthree_2$ have a common descendant
-$\redexthree_3$ means that $\redexthree_3 \in \redexthree_1 / (\redextwo / \redex)$
+In the figure above, $\redexthree_1$ and $\redexthree_2$ have a common descendant
+$\redexthree_3$, which means that $\redexthree_3 \in \redexthree_1 / (\redextwo / \redex)$
 and $\redexthree_3 \in \redexthree_2 / (\redex / \redextwo)$.
 Informally, this means that $\redexthree_1$ and $\redexthree_2$ do the same work,
 which means that that work is enabled by either performing $\redex$ or $\redextwo$.
 The fact that a system is stable means that we could actually perform the work that
-$\redexthree_1$ and $\redexthree_2$ do, without executing $\redex$ nor $\redextwo$
+$\redexthree_1$ and $\redexthree_2$ do, without executing neither $\redex$ nor $\redextwo$
 (by doing $\redexthree_0$).
 
 Hence, what stability means is that steps are created essentially in a unique way.
@@ -129,7 +129,7 @@ If $\redex,\redextwo$ are different coinitial steps such that
 $\redex$ creates a step $\redexthree$,
 then $\redex/\redextwo$ creates the step $\redexthree/(\redextwo/\redex)$.
 
-Diagrammatically:
+More specifically:
 \[
   \xymatrix@R=.5cm@C=2cm{
     \ar[r]^{\redex}
@@ -149,6 +149,7 @@ Diagrammatically:
 \emph{Note:} It is easy to see that this is equivalent to stability in the sense of Lévy.
 \end{lemma}
 \begin{proof}
+\SeeAppendixRef{basic_stability_proof}
 Let $\redex : \conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}} \todist \conof{\subs{\tm}{\var}{\ls{\tmtwo}}}$,
 let $\redextwo \neq \redex$ be a step coinitial to $\redex$,
 and suppose that $\redex$ creates a step $\redexthree$.
