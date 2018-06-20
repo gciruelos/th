@@ -187,6 +187,40 @@ The order $\cls{\redseq} \permle \cls{\redseqtwo}$ is given by $\redseq \permle 
 the join is $\cls{\redseq} \sqcup \cls{\redseqtwo} = \cls{\redseq \sqcup \redseqtwo}$,
 and the bottom is $\bot = \cls{\emptyDerivation}$.
 
+We need to equip the $\lambda$-calculus with a notion of residual if we want it to
+enjoy the properties of an arbitrary axiomatic rewrite system.
+A \defn{position} is a sequence of positive integers; $\epsilon$ is the
+empty sequence and $p \cdot q$ is the concatenation of sequences.
+If $Q$ is a set of positions, we write $p \cdot Q$ to mean the that results from
+concatenating $p$ with every position in $Q$.
+We define $\lpos(\tm)$ to be the set of positions of $\tm$, so by definition:
+$\lpos(\var) = \{\epsilon\}$,
+$\lpos(\tm \tmtwo) = (0 \cdot \lpos(\tm)) \cup (1 \cdot \lpos(\tmtwo))$, and
+$\lpos(\lam{\var}{\tm}) = 0 \cdot \lpos(\tm)$.
+The sub-term of $\tm$ in the position $p$ is called $M|_p$.
+Given a step $\tm \to \tmtwo$ in the $\lambda$-calculus, we say that
+the term in the position $q \in \lpos(\tmtwo)$ is a \defn{descendant} of the term
+in the position $p \in \lpos(\tm)$ (or simply, that $q$ is a descendant of $p$)
+in the following cases:
+\begin{enumerate}
+  \item If the reduction is at the head,
+    $\tm = (\lam{x}{\tmthree}) \tmfour \to \subs{\tmthree}{x}{\tmfour}$,
+    then $q$ is a descendant of $p$ if and only if it is the case that:
+    \begin{enumerate}
+      \item $q \in \lpos(\tmthree)$ and $\tmthree|_q \neq \var$ with $p = 00q$, or
+      \item $q = q_1 q_2$, $\tmthree|_{q_1} = \var$ and $q_2 \in \lpos(\tmfour)$,
+        with $p=1q_2$.
+    \end{enumerate}
+  \item If the reduction is under a context,
+    $\tm = \conof{\tmthree} \to \conof{\tmthree'} = \tmtwo$, with $\con|_r = \conbase$,
+    then $q$ is a descendent of $p$ if and only if $p = rp'$, $q = rq'$, and
+    $q'$ is a descendant of $p'$ in the step $\tmthree \to \tmthree'$.
+\end{enumerate}
+Given a step $\tm \to \tmtwo$,
+a redex $\tmtwo|_q$ is a \defn{residual} of a redex $\tm|_p$
+if and only if $q$ is a descendant of $p$.
+
+
 The $\lambda$-calculus is an example of an orthogonal axiomatic rewrite system \cite{thesismellies}.
 Our structures of interest are the semilattices of derivations from a given
 term $\tm$ of the $\lambda$-calculus,
@@ -196,11 +230,11 @@ is written $\tm \tobeta \tmtwo$
 and defined by the contextual closure of the axiom $(\lam{\var}{\tm})\tmtwo \tobeta \subs{\tm}{\var}{\tmtwo}$.
 
 
-\section{Lists and sets}
+\section{Lists and multisets}
 
 Throughout this work we will use lists and sets, so we establish here basic definitions and notations.
 
-\begin{definition}[Lists and sets]
+\begin{definition}[Lists and multisets]
 If $A$ is a sort, we write $\ls{A}$ for the sort of (finite) \defn{lists} over $A$,
 defined inductively as:
 \[
@@ -219,16 +253,16 @@ for the list $\ls{a} + [b] + \ls{c}$.
 We write $\ls{a} \approx \ls{b}$ if $\ls{a}$ is a permutation of $\ls{b}$.
 Observe that $\approx$ is an equivalence relation.
 
-In some cases we will work with (finite) \defn{sets},
+In some cases we will work with (finite) \defn{multisets},
 which are defined to be lists,
 considered modulo arbitrary permutations of their elements
 and without regard of the number of repetitions of each element.
 The notation for operations on lists will be lifted to operations
-on sets.
-In particular, $\ls{a} + \ls{b}$ denotes the union of sets,
+on multisets.
+In particular, $\ls{a} + \ls{b}$ denotes the union of multisets,
 and $\lengthof{\ls{a}}$ stands for the cardinal of $\ls{a}$.
 This notation is chosen to resemble the multiset notation of existing
-intersection type systems. Whether we are referring to sets or lists will be
+intersection type systems. Whether we are referring to multisets or lists will be
 clear from the context.
 \end{definition}
 
@@ -245,8 +279,8 @@ For example, knowing $\tctx \vdash \tm : \typ$ means that
 with the typing context $\tctx$ we can prove that $\tm$ has type $\typ$.
 
 \defn{Typing contexts}, or contexts for short,
-ranged over by $\tctx,\tctxtwo,\tctxthree,\hdots$ are (total) functions from variables to finite sets of types.
-We write $\dom\tctx$ for the set of variables $\var$ such that $\tctx(\var) \neq \lset{}$.
+ranged over by $\tctx,\tctxtwo,\tctxthree,\hdots$ are (total) functions from variables to finite multisets of types.
+We write $\dom\tctx$ for the multiset of variables $\var$ such that $\tctx(\var) \neq \lset{}$.
 We write $\emptyContext$ for the context such that $\emptyContext(\var) = \lset{}$ for every variable $\var$.
 The notation $\tctx + \tctxtwo$ stands for the \defn{sum of contexts}, defined as follows:
 \[

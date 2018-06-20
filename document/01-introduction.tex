@@ -1,20 +1,21 @@
 \chapter{Introduction}
 
 The main concern of this work will be to analyze and understand \emph{spaces of computations}.
-To understand what a space of computations is, we need to introduce the notion of rewriting systems.
+To understand what a space of computations is, we need to introduce the notion of rewriting system.
 A rewriting system is a set of objects $A$ and a binary \emph{rewriting} relation
 on $A$, called $\to$.
 If $a_1 \to a_2$ we say that $a_1$ can be \emph{rewritten} to $a_2$.
 
 For example, the elementary arithmetic (addition and multiplication of natural numbers)
-can be seen as a rewriting system, where the objects (called \emph{terms} in this case) are:
+can be seen as a rewriting system, where the objects (called \emph{terms} in this case) are
+given by the following abstract syntax:
 \[
   \tm, \tmtwo ::= \tm + \tmtwo \ |\ \tm \cdot \tmtwo \ |\ \underline{n}
 \]
 \noindent with $n \in \mathbb{N_0}$. We write $\underline{n}$ to mean that we have a term,
 not only a natural number.
 The terms are equipped with three rewriting rules,
-one that says how to add and two that say how to multiply:
+one that states how to add and two that say how to multiply:
 \[
 \begin{array}{rclc}
   \underline{n} + \underline{m} & \to & \underline{n + m} & \\
@@ -28,8 +29,7 @@ of the rules above, which intuitively means that we can apply the rules anywhere
 For example, if we had the term $\underline{3} + \underline{0} \cdot (\underline{4} + \underline{5})$,
 we can apply the first rule to get $\underline{3} + \underline{0} \cdot \underline{9}$,
 and then the third one to get $\underline{3} + \underline{0}$, which can be rewritten to $\underline{3}$.
-A derivation is simply a sequence of composable steps.
-
+%A derivation is simply a sequence of composable steps.
 But notice that instead of doing the first step we did, we could have directly applied the third rewrite rule
 onto our term, which would have yielded $\underline{3} + \underline{0}$, saving one step.
 
@@ -39,7 +39,7 @@ and edges between two nodes if one can be rewritten to the other.
 
 We could also consider the set of all reductions that
 start in $\tm$, and equip it with an order relation---usually a derivation
-is \emph{less than} another derivation if it does less work.
+is \emph{lesser than} another derivation if it does less work.
 The \emph{space of computations} of $\tm$ is that set modulo an equivalence relation---which
 usually says whether or not two derivations do the same amount of work.
 We will use the same kind of diagrams to represent computation spaces and reduction graphs.
@@ -55,7 +55,7 @@ would be the following.
 }
 \]
 
-To learn some other notions of rewriting theory, consider the following examples.
+To illustrate some other notions of rewriting theory, consider the following examples.
 
 \[
 \xymatrix{
@@ -78,6 +78,7 @@ In the next example we will name our steps to make the explanation clearer.
 }
 \]
 
+\noindent
 This example allows us to present the notion of \emph{residuals}. We have two
 steps that perform the sum $\underline{5} + \underline{5} \to \underline{10}$, $\redex$ and $\redex'$.
 These steps are formally different (they are different elements of the rewriting relation),
@@ -98,11 +99,13 @@ Let us consider a last, slightly more complicated, example.
 }
 \]
 
+\noindent
 Notice here how the residual of $\redex$ after $\redextwo$ is a set of two steps, $\set{\redex_1, \redex_2}$.
 That means that if we performed $\redextwo$, we need to do those two steps to do the work $\redex$ alone did.
 
-We would be inclined to guess that a good reduction strategy would be to always multiply
-a number to a number, such that we don't multiply work. But that strategy fails when we have a 0 as an operand.
+We would be inclined to guess that a good reduction strategy would be to never perform a
+multiplication $\underline{n} \cdot t$ if $t$ is an unevaluated expression,
+such that we don't multiply work. But that strategy fails when we have a 0 as $\underline{n}$.
 
 \bigskip
 
@@ -120,8 +123,14 @@ the {\em product} of the spaces of $A$ and $B$.
 In contrast, the space of computations of a function application $f(A)$ is not so easy
 to characterize. The difficulty is that $f$ may use the value of $A$ zero, one, or
 possibly many times.
+For example, the constant function, \texttt{const x y = x}, does not use its second parameter,
+while it uses its first parameter exactly once. The duplication function,
+\texttt{dup x = (x, x)}, on the other hand, uses
+its parameter twice.
 
-Another difficulty is that a program may \emph{hang}, which means it has an infinite rewrite sequence.
+Another difficulty is that a program may \emph{hang}, which means it has an infinite rewrite
+sequence. For example, the evaluation of the function \texttt{f x = 1 + (f x)}
+will never terminate.
 This did not happen in the elementary arithmetic example above, where we always arrive to a result.
 More importantly, a program may finish or not depending on what rewriting rule we choose in each step.
 
@@ -135,7 +144,7 @@ and it should allow to justify that certain program conversions are sound:
 
 The study of different notions of equivalence of programs~\cite{Tesis:Morris,Bre16}
 may greatly benefit from a better understanding of space of computations, too.
-Usually, several different notions of observational equivalence may be
+Usually, several notions of observational equivalence may be
 established, depending of how a program behaves under an arbitrary context $\con$.
 For example, a possible definition says that two terms $M$ and $N$
 are observationally equivalent if for any context $\con$, we have that
@@ -148,6 +157,7 @@ tool to reason about the different notions of observational equivalence.
 The pure $\lambda$-calculus is the quintessential functional programming language.
 The $\lambda$-calculus is a rewriting system that can represent all computable functions in a concise manner.
 Terms of the $\lambda$-calculus can be variables, functions or applications.
+More precisely, the set of terms is given by the following grammar:
 
 \[
   \tm, \tmtwo ::= \var \ | \ \lam{\var}{\tm} \ | \ \tm\, \tmtwo
