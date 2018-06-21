@@ -1,7 +1,7 @@
 
 PDFLATEX = pdflatex
 
-SRC=$(wildcard *.tex)
+SRC=$(wildcard *.tex) biblio.bib
 
 .PHONY = view clean debug
 
