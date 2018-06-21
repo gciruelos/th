@@ -564,9 +564,119 @@ anterior es un morfismo de semirreticulados:
 \end{array}
 \]
 \end{proes}
+
+\textbf{Ejemplo.}
+Sean $\cLam{I} = \cLam{\lam{x}{x}}$ y
+$\cLam{t} = \cLam{(\lam{\var}{\var\var})\,(I\, \varthree)}$.
+Es refinado por $\cDist{t'} = \cDist{(\lamp{1}{x}{x^2 [\,]}) [(\lamp{5}{x}{x^2}) [z^2]]}$.
+{\scriptsize
+\[
+  \xymatrix@=.2cm{
+  &
+    \cLam{(\lam{\var}{\var\var})\,(I\, \varthree)}
+    \ar@/_.25cm/[dl]_-{\redex_1}
+    \ar@/^.25cm/[dr]^-{\redextwo}
+  &
+  &
+  \\
+    \cLam{(I\, \varthree)\, (I\, \varthree)}
+    \ar[d]_-{\redextwo_{11}}
+    \ar[r]^-{\redextwo_{21}}
+  &
+    \cLam{(I\varthree)\varthree}
+    \ar[d]^{\redextwo_{12}}
+  &
+    \cLam{(\lam{\var}{\var\var})\varthree}
+    \ar@/^.25cm/[dl]^-{\redex_2}
+  \\
+    \cLam{\varthree (I\varthree)}
+    \ar[r]_-{\redextwo_{22}}
+  &
+    \cLam{ \varthree \varthree}
+  }\hspace{-0.4cm}\xymatrix@=.2cm{
+  &
+    \cDist{(\lamp{1}{x}{x^2 [\,]}) [(\lamp{5}{x}{x^2}) [z^2]]}
+    \ar@/_.25cm/[dl]_-{\redex'_1}
+    \ar@/^.25cm/[dr]^-{\redextwo'}
+  \\
+    \cDist{(\lamp{5}{x}{x^2}) [z^2] [\,]}
+    \ar@/_.25cm/[dr]_-{\redextwo'_1}
+  &
+  &
+    \cDist{\hspace{-1cm}(\lamp{1}{x}{x^2 [\,]}) [z^2]}
+    \ar@/^.25cm/[dl]^-{\redex'_2}
+  \\
+  &
+    \cDist{z^2 [\,]}
+  }
+\]
+}
 \end{frame}
 
+\begin{frame}{Basura}
+\begin{defes}[Basura]
+Sea $\cDist{t'} \refines \cLam{t}$.
+Una derivación $\rho : \cLam{t} \to_{\cLam{\beta}}^* \cLam{s}$ es
+\defn{$\cDist{t'}$-basura} si $\rho / \cDist{t'} = \epsilon$.
+\end{defes}
 
+\begin{defes}[Libre de basura]
+Sea $\cDist{t'} \refines \cLam{t}$.
+Una derivación $\rho : \cLam{t} \to_{\cLam{\beta}}^* \cLam{s}$ es
+\defn{$\cDist{t'}$-libre de basura} si para cada $\sigma \permle \rho$, 
+si $\rho / \sigma$ es $(\cDist{t'}/\sigma)$-basura, entonces $\rho/\sigma = \epsilon$.
+\end{defes}
+
+Notemos que las definiciones dependen de la elección de $\cDist{t'}$.
+\textbf{Ejemplo} Los pasos punteados son basura.
+
+{\scriptsize
+\[
+  \xymatrix@C=.1cm{
+  &
+    \cLam{(\lam{\var}{\var\var})\,(I\, \varthree)} \refinedby \cDist{(\lamp{1}{x}{x^2 [\,]}) [(\lamp{5}{x}{x^2}) [z^2]]}
+    \ar@/_.25cm/[dl]
+    \ar@/^.25cm/[dr]
+  &
+  &
+  \\
+    \cLam{(I\, \varthree)\, (I\, \varthree)} \refinedby \cDist{(\lamp{5}{x}{x^2}) [z^2] [\,]}
+    \ar[d]
+    \ar@{.>}[r]
+  &
+    \cLam{(I\varthree)\varthree} \refinedby \cDist{(\lamp{5}{x}{x^2}) [z^2] [\,]}
+    \ar[d]
+  &
+    \hspace{-1cm}\cLam{(\lam{\var}{\var\var})\varthree} \refinedby \cDist{(\lamp{1}{x}{x^2 [\,]}) [z^2]}
+    \ar@/^.25cm/[dl]
+  \\
+    \cLam{\varthree (I\varthree)} \refinedby \cDist{z^2 [\,]}
+    \ar@{.>}[r]
+  &
+    \cLam{ \varthree \varthree} \refinedby \cDist{z^2 [\,]}
+}
+\]
+}
+\end{frame}
+
+\begin{frame}{Basura y factorización}
+\begin{teoes}[Factorización]
+Si $\cDist{t'} \refines \cLam{t}$, existe un isomorfismo de semirreticulados:
+\[\ulbDeriv{\cLam{t}} \simeq \int_{\ulbF}{\ulbG}\]
+\noindent donde:
+\begin{itemize}
+\item $\ulbF$ es el reticulado de derivaciones $\cDist{t'}$-libres de basura.
+\item $\ulbG : \ulbF \to \mathsf{Semilattice}$ es un funtor que a cada
+  derivación libre de basura $\rho : \cLam{t} \to_{\cLam{\beta}}^* \cLam{s}$ 
+  en $\ulbF$ le asigna el semirreticulado de derivaciones basura que salen
+  de $\cLam{s}$ (que son las $(\cDist{t'}/\rho)$-basura).
+\item $\int_{\ulbF}{\ulbG}$ es la construcción de Grothendieck.
+\end{itemize}
+\end{teoes}
+Este teorema en particular implica que toda derivación $\rho$ de $\cLam{t}$
+se puede factorizar de manera única en $\rho = \rho_1 \rho_2$ donde
+$\rho_1$ es libre de basura y $\rho_2$ es basura.
+\end{frame}
 
 \section{Some \LaTeX{} Examples}
 
