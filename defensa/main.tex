@@ -21,18 +21,30 @@
 \usepackage{mathtools}
 \usepackage{array,amsmath,amssymb,amsthm}
 \usepackage{xcolor}
+\usepackage{listings}
 
 \newtheorem{defes}{Definición}
 \newtheorem{teoes}{Teorema}
+\newtheorem{lemes}{Lema}
 \newtheorem{proes}{Proposición}
+\newtheorem{comes}{Comentario}
 
 
 
 \definecolor{darkGreen}{rgb}{0,0.5,0}
 \definecolor{darkBlue}{rgb}{0,0,1}
+\definecolor{lightBlue}{rgb}{1,0.2,0.6}
+\definecolor{normalGrey}{rgb}{0.7,0.7,0.7}
 \newcommand{\cArith}[1]{{\color{darkGreen} #1}}
 \newcommand{\cLam}[1]{{\color{darkBlue} #1}}
+\newcommand{\cProto}[1]{{\color{lightBlue} #1}}
+\newcommand{\cDist}[1]{{\color{red} #1}}
+\newcommand{\cGrey}[1]{{\color{normalGrey} #1}}
 \newcommand{\uline}[1]{\underline{#1}}
+\newcommand{\clambdadist}{\cDist{\lambdadist}}
+\newcommand{\clambda}{\cLam{\lambda}}
+\newcommand{\cdist}{\cDist{\dist}}
+\newcommand{\cLab}[1]{{\color{black} #1}}
 
 \title{Factorizando espacios de derivación \\ a través de tipos intersección}
 \author{Gonzalo Ciruelos \\ {\footnotesize Director: Pablo Barenbaum}}
@@ -40,6 +52,7 @@
 \date{28 de junio de 2018}
 
 \input{macros.tex}
+\input{prooftree.tex}
 
 \begin{document}
 
@@ -246,6 +259,315 @@ Para darle más estructura, proveemos al conjunto de un orden.
 \end{defes}
 \end{frame}
 
+\begin{frame}{Espacios de derivación en el $\lambda$-cálculo}
+
+\begin{defes}[Reticulado]
+Un reticulado es un conjunto parcialmente ordenado $(A, \leq)$ en el cual
+todo par de elementos tiene un único supremo (mínima cota superior)
+y un único ínfimo (máxima cota inferior).
+\end{defes}
+
+\vskip 0.5cm
+
+\begin{teoes}[J.-J. Lévy]
+En el $\lambda$-cálculo, $\ulbDeriv{\cLam{t}}$ forma un \defn{semi-reticulado con supremos},
+donde:
+\[[\rho] \sqcup [\sigma] \eqdef [\rho (\sigma / \rho)] \]
+\noindent $\ulbDeriv{\cLam{t}}$ no necesariamente es un reticulado.
+\end{teoes}
+
+\end{frame}
+
+
+\begin{frame}{Objetivo}
+Queremos \textbf{entender los espacios de derivación del $\lambda$-cálculo.}
+\vskip 0.2cm
+Creemos que \textbf{explicitar el manejo de recursos puede ser útil.}
+\vskip 0.5cm
+
+$\ulbDeriv{\cProto{(\lam{x}{x x}) [I\, y, I\, y]}} = $
+\[\xymatrix@=0.3cm{
+& \cProto{(\lam{x}{x x}) [I\, y, I\, y]} \ar[rr] \ar[dd]|!{[d]}\hole \ar[dl]
+& & \cProto{(\lam{x}{x x}) [y, I\, y]} \ar[dd] \ar[dl]
+\\
+\cProto{(\lam{x}{x x}) [I\, y, y]} \ar[rr]\ar[dd]
+& & \cProto{(\lam{x}{x x}) [y, y]} \ar[dd]
+\\
+& \cProto{(I\, y)\ (I\, y)} \ar[rr]|!{[r]}\hole \ar[dl]
+& & \cProto{y\ (I\, y)} \ar[dl]
+\\
+\cProto{(I\, y)\ y} \ar[rr]
+& & \cProto{y\ y}
+}\]
+\end{frame}
+
+
+\section{El $\lambda$-cálculo distributivo}
+
+
+\begin{frame}[fragile]{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{itemize}
+\item En sistemas de tipos intersección, distintas ocurrencias ligadas de una misma variable
+pueden tener distintos tipos.
+\item La no-idempotencia de la intersección nos da la capacidad de manejar cómo se usan los recursos.
+\item Nos basamos en el sistema $\mathcal{W}$, un sistema de tipos intersección no-idempotente.
+\end{itemize}
+
+\textbf{Idea:}
+
+\begin{lstlisting}[language=Python]
+def f(x):
+  x += 1
+  return x + x(100)
+\end{lstlisting}
+
+El parámetro se usa con dos tipos distintos.
+En consecuencia, el tipo de $f$ es
+$[\text{Int}, \text{Int}, \text{Int} \to \text{Int}] \to \text{Int}$.
+\end{frame}
+
+\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{defes}[$\clambdadist$ ``na\"if'']
+\textbf{Sintaxis}
+{\footnotesize
+\[\arraycolsep=4pt
+\begin{array}{llllllll}
+\text{Términos} & \cDist{t} & ::= & \cDist{x^A}\ |\ \cDist{t \, \ls{t}}\ |\ \cDist{\lam{x}{t}} & \text{Listas de términos} & \cDist{\ls{t}} & ::= & \cDist{[t_1, ..., t_n]} \\
+\text{Tipos} & \cDist{A} & ::= & \cDist{\alpha}\ |\ \cDist{\mathcal{M} \to A} & \text{Multiconjuntos de tipos} & \cDist{\mathcal{M}} & ::= & \cDist{[A_1, ..., A_n]} \\
+\text{Contextos} & \cDist{\tctx} & ::= & \cDist{(.)}\ |\ \cDist{\tctx, \var : \mathcal{M}} & & & & \\
+\end{array}
+\]
+}
+\textbf{Tipado}
+{\scriptsize
+\[
+  \indrule{}{
+  }{
+    \cDist{\var} : \cDist{\lset{A}} \vdash \cDist{\var^A} : \cDist{A}
+  }
+  \indrule{}{
+    \cDist{\tctx \oplus \var} : \cDist{\mtyp} \vdash \cDist{\tm} : \cDist{A}
+  }{
+    \cDist{\tctx} \vdash \cDist{\lam{\var}{\tm}} : \cDist{\mtyp \to A}
+  }
+  \indrule{}{
+    \cDist{\tctx} \vdash \cDist{\tm} : \cDist{\lset{A_1,\hdots,A_n} \to A}
+    \hspace{10pt}
+    \left( \cDist{\tctxtwo_i} \vdash \cDist{\tmtwo_i} : \cDist{A_i} \right)_{i=1}^{n}
+  }{
+    \cDist{\tctx +_{i=1}^{n} \tctxtwo_i} \vdash \cDist{\tm[\tmtwo_1,\hdots,\tmtwo_n]} : \cDist{A}
+  }
+\]
+}
+\textbf{Reducción}
+\[ \cDist{(\lam{x}{t}) [s_1, ..., s_n]} \todist \cDist{\subs{t}{x}{[s_1, ..., s_n]}} \]
+\end{defes}
+\end{frame}
+
+
+\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\textbf{Problema! (no es confluente)}
+\[
+\xymatrix@=0.5cm{
+  & \cDist{(\lam{x}{(\lam{y}{f\, y\, x})\, x})\ [a, b]} \ar[dr] \ar[dl]& \\
+\cDist{(\lam{y}{f\, y\, a})\, b} \ar@{->>}[dr] &  & \cDist{(\lam{y}{f\, y\, b})\, a} \ar@{->>}[dl] \\
+  & \cDist{?} & \\
+}
+\]
+\end{frame}
+
+
+\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{defes}[$\clambdadist$]
+\textbf{Sintaxis}
+{\footnotesize
+\[\arraycolsep=4pt
+\begin{array}{llllllll}
+\text{Términos} & \cGrey{t} & ::= & \cGrey{x^A}\ |\ \cGrey{t \, \ls{t}}\ |\ \cGrey{\lamp{\cDist{\lab}}{x}{t}} & \text{Listas de términos} & \cGrey{\ls{t}} & ::= & \cGrey{[t_1, ..., t_n]} \\
+\text{Tipos} & \cGrey{A} & ::= & \cGrey{\alpha^\cDist{\lab}}\ |\ \cGrey{\mathcal{M} \tolab{\cDist{\lab}} A} & \text{Multiconjuntos de tipos} & \cGrey{\mathcal{M}} & ::= & \cGrey{[A_1, ..., A_n]} \\
+\text{Contextos} & \cGrey{\tctx} & ::= & \cGrey{(.)}\ |\ \cGrey{\tctx, \var : \mathcal{M}} & & & & \\
+\end{array}
+\]
+}
+\textbf{Tipado}
+{\scriptsize
+\[
+  \indrule{}{
+  }{
+    \cGrey{\var} : \cGrey{\lset{A}} \vdash \cGrey{\var^A} : \cGrey{A}
+  }
+  \indrule{}{
+    \cGrey{\tctx \oplus \var} : \cGrey{\mtyp} \vdash \cGrey{\tm} : \cGrey{A}
+  }{
+    \cGrey{\tctx} \vdash \cGrey{\lamp{\cDist{\lab}}{\var}{\tm}} : \cGrey{\mtyp \tolab{\cDist{\lab}} A}
+  }
+  \indrule{}{
+    \cGrey{\tctx} \vdash \cGrey{\tm} : \cGrey{\lset{A_1,\hdots,A_n} \tolab{\cDist{\lab}} B}
+    \hspace{10pt}
+    \left( \cGrey{\tctxtwo_i} \vdash \cGrey{\tmtwo_i} : \cGrey{A_i} \right)_{i=1}^{n}
+  }{
+    \cGrey{\tctx +_{i=1}^{n} \tctxtwo_i} \vdash \cGrey{\tm[\tmtwo_1,\hdots,\tmtwo_n]} : \cGrey{B}
+  }
+\]
+}
+\textbf{Reducción}
+\[ \cGrey{(\lam{x}{t}) [s_1, ..., s_n]} \todistl{\cDist{\lab}} \cGrey{\subs{t}{x}{[s_1, ..., s_n]}} \]
+\end{defes}
+
+La reducción es orientada por tipos.
+\end{frame}
+
+
+\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{defes}[Términos correctos]
+Decimos que un término tipable $\cDist{t}$ es \defn{correcto} si:
+\begin{itemize}
+\item Distintos lambdas tienen distintos labels.
+\item Dado un multiconjunto de tipos $[A_1, ..., A_n]$ que ocurren como una subfórmula
+en cualquier lugar de la derivación de tipos de $\cDist{t}$, si $i\neq j$ entonces
+$\cDist{A_i}$ y $\cDist{A_j}$ están decorados con distintas etiquetas en la raíz.
+\end{itemize}
+\end{defes}
+
+\begin{comes}[Tipado único]
+Si $\cDist{\tctx} \vdash \cDist{t} : \cDist{A}$ es derivable y $\cDist{t}$ correcto,
+entonces es la única derivación de tipo para $\cDist{t}$.
+\end{comes}
+
+\begin{lemes}[\emph{Subject reduction}]
+Si $\cDist{\tctx} \vdash \cDist{t} : \cDist{A}$, el término $\cDist{t}$
+es correcto y $\cDist{t} \to_{\cDist{\dist}} \cDist{s}$,
+entonces $\cDist{\tctx} \vdash \cDist{s} : \cDist{A}$ y $\cDist{s}$ es correcto.
+\end{lemes}
+\end{frame}
+
+
+\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{proes}[Confluencia]
+El cálculo-$\clambdadist$ cumple la propiedad de Church--Rosser.
+\end{proes}
+\[
+\xymatrix{
+  \cDist{(\lamp{\cLab1}{x}{(\lamp{\cLab2}{y}{f^{\cLab3}\,[x^{\cLab4}, y^{\cLab5}]}) [x^{\cLab5}]})\ [a^{\cLab5}, b^{\cLab4}]} \ar^-{2}[d] \ar^-{1}[r] & \cDist{(\lamp{\cLab2}{y}{f^{\cLab3}\,[b^{\cLab4}, y^{\cLab5}]}) [a^{\cLab5}]} \ar^-{2}[d] \\
+  \cDist{(\lamp{\cLab1}{x}{f^{\cLab3}\,[x^{\cLab4}, x^{\cLab5}]})\ [a^{\cLab5}, b^{\cLab4}]} \ar^-{1}[r] & \cDist{f^{\cLab3}\,[b^{\cLab4}, a^{\cLab5}]}\\
+}
+\]
+\end{frame}
+
+\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{proes}[Fuertemente normalizante]
+No hay secuencias de reducción infinitas: $\cDist{t_1} \to_\cdist \cDist{t_2} \to_\cdist ...$.
+\end{proes}
+\begin{defes}[Residuo]
+Los residuos pueden definirse en $\clambdadist$ utilizando las etiquetas de los lambdas.
+\end{defes}
+\begin{proes}[Ortogonalidad \lbrack cf. P.-A. Melli\`es\rbrack]
+El cálculo-$\clambdadist$ es un sistema de reescritura abstracto ortogonal.
+\end{proes}
+\begin{lemes}
+No hay duplicación ni borrado en $\clambdadist$.
+\end{lemes}
+\begin{proes}
+En el cálculo-$\clambdadist$, $\ulbDeriv{\cDist{t}}$ es un reticulado distributivo, a saber:
+\begin{itemize}
+\item existen supremos e ínfimos para cada par de reducciones, y
+\item las operaciones de \emph{join} ($\sqcup$) y \emph{meet} ($\sqcap$) distribuyen
+una sobre la otra.
+\end{itemize}
+\end{proes}
+\end{frame}
+
+\section{Simulación}
+\begin{frame}{Simulación}
+\begin{defes}[Refinamiento]
+Damos una forma de relacionar términos correctos del cálculo-$\clambdadist$ y el cálculo-$\clambda$.
+{\small
+\[
+  \indrule{}{
+  }{
+    \cDist{\var^\typ} \refines \cLam{\var}
+  }
+  \indrule{}{
+    \cDist{\tm'} \refines \cLam{\tm}
+  }{
+    \cDist{\lamp{\lab}{\var}{\tm'}} \refines \cLam{\lam{\var}{\tm}}
+  }
+  \indrule{}{
+    \cDist{\tm'} \refines \tm
+    \HS
+    \cDist{\tmtwo_i} \refines \cLam{\tmtwo} \text{ para cada } i\in\set{1, ..., n}
+  }{
+    \cDist{\tm'[\tmtwo_1,\hdots,\tmtwo_n]} \refines \cLam{\tm\,\tmtwo}
+  }
+\]
+}
+\end{defes}
+
+Un término $\clambda$ puede tener muchos refinamientos:
+\begin{itemize}
+  \item[] $\cDist{\lamp{1}{x}{x^2\,[\ ]}} \refines \cLam{\lam{x}{x\,x}}$
+  \item[] $\cDist{\lamp{1}{x}{x^2\,[x^3]}} \refines \cLam{\lam{x}{x\,x}}$
+  \item[] $\cDist{\lamp{1}{x}{x^2\,[x^3, x^4]}} \refines \cLam{\lam{x}{x\,x}}$
+  \item[] $\dots$
+\end{itemize}
+También puede no tener ninguno, como $\cLam{\Omega} = \cLam{(\lam{x}{x\,x})\ (\lam{x}{x\,x})}$.
+\end{frame}
+
+\begin{frame}{Simulación}
+\begin{proes}[Simulación]
+\textbf{Del $\clambda$ por el $\clambdadist$}.
+Si $\cDist{\tm'} \refines \cLam{\tm} \to_{\cLam{\beta}} \cLam{\tmtwo}$,
+entonces existe $\cDist{\tmtwo'}$ tal que:
+\[
+\xymatrix@=1cm{
+ \cLam{\tm} \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\cLam{\beta}} & \cLam{\tmtwo} \ar@{}[d]|*=0[@]{\rtimes} \\
+ \cDist{\tm'} \ar@{.>>}[r]^{\cDist{\dist}} & \cDist{\tmtwo'} \\
+}
+\]
+
+\textbf{Del $\clambdadist$ por el $\clambda$}.
+Si $\cLam{\tm} \refinedby \cDist{\tm'} \to_{\cDist{\dist}} \cDist{\tmtwo'}$,
+entonces existen $\cLam{\tmtwo}$ y $\cDist{\tmtwo''}$ tal que:
+\[
+\xymatrix@=1cm{
+ \cLam{\tm} \ar@{}[d]|*=0[@]{\rtimes} \ar@{.>>}[rr]^{\cLam{\beta}} & & \cLam{\tmtwo} \ar@{}[d]|*=0[@]{\rtimes} \\
+ \cDist{\tm'} \ar[r]^{\cDist{\dist}} & \cDist{\tmtwo'} \ar@{.>>}[r]^{\cDist{\dist}} & \cDist{\tmtwo''} \\
+}
+\]
+\end{proes}
+\end{frame}
+
+\begin{frame}{Simulación -- \emph{Head normal forms}}
+\begin{defes}[\emph{Head normal form}]
+Un término del cálculo-$\clambda$ está en \emph{head normal form} si no tiene redexes debajo de un contexto head:
+\[ \mathtt{H} ::= \conbase \ | \ \lam{x}{\mathtt{H}} \ | \ \mathtt{H}\, t \]
+Se define análogamente para el cálculo-$\clambdadist$.
+\end{defes}
+
+\begin{proes}[{\footnotesize La refinabilidad caracteriza la tenencia de \emph{head normal forms}}]
+Dado $\cLam{t}$ un término del cálculo-$\clambda$:
+\begin{enumerate}
+\item El término $\cLam{t}$ tiene una \emph{head normal form}.
+\item Existe un término $\cDist{t'}$ del cálculo-$\clambdadist$ tal que $\cDist{t'} \refines \cLam{t}$.
+\end{enumerate}
+\end{proes}
+\end{frame}
+
+\begin{frame}{Simulación}
+\begin{proes}[Simulación algebraica]
+Para cada refinamiento $\cDist{t'} \refines \cLam{t}$, la construcción dada por el resultado
+anterior es un morfismo de semirreticulados:
+\[
+\begin{array}{ccc}
+  \ulbDeriv{\cLam{t}} & \to & \ulbDeriv{\cDist{t'}} \\
+  \rho & \mapsto & \rho / \cDist{t'} \\
+\end{array}
+\]
+\end{proes}
+\end{frame}
+
+
+
 \section{Some \LaTeX{} Examples}
 
 \subsection{Tables and Figures}
@@ -257,12 +579,6 @@ Para darle más estructura, proveemos al conjunto de un orden.
 \item You can upload a figure (JPEG, PNG or PDF) using the files menu. 
 \item To include it in your document, use the \texttt{includegraphics} command (see the comment below in the source code).
 \end{itemize}
-
-% Commands to include a figure:
-%\begin{figure}
-%\includegraphics[width=\textwidth]{your-figure's-file-name}
-%\caption{\label{fig:your-figure}Caption goes here.}
-%\end{figure}
 
 \begin{table}
 \centering
