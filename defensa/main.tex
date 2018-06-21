@@ -447,6 +447,9 @@ entonces $\cDist{\tctx} \vdash \cDist{s} : \cDist{A}$ y $\cDist{s}$ es correcto.
 \begin{proes}[Confluencia]
 El cálculo-$\clambdadist$ cumple la propiedad de Church--Rosser.
 \end{proes}
+
+\vskip 1cm
+\textbf{En el ejemplo que antes no funcionaba:}
 \[
 \xymatrix{
   \cDist{(\lamp{\cLab1}{x}{(\lamp{\cLab2}{y}{f^{\cLab3}\,[x^{\cLab4}, y^{\cLab5}]}) [x^{\cLab5}]})\ [a^{\cLab5}, b^{\cLab4}]} \ar^-{2}[d] \ar^-{1}[r] & \cDist{(\lamp{\cLab2}{y}{f^{\cLab3}\,[b^{\cLab4}, y^{\cLab5}]}) [a^{\cLab5}]} \ar^-{2}[d] \\
@@ -763,6 +766,7 @@ Lo refinaba $\cDist{t'} = \cDist{(\lamp{1}{x}{x^2 [\,]}) [(\lamp{5}{x}{x^2}) [z^
     aproximantes de \emph{head normal forms}.
   \item Intentar hacer lo mismo con otros cálculos de recursos.
   \item Relacionar que la factorización dada con la factorización interna--externa de Melliés.
+  \item Obtener resultados cuantitativos con la teoría desarrollada.
 \end{itemize}
 \end{frame}
 
