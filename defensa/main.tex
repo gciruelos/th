@@ -160,7 +160,7 @@ Por ejemplo,
   \cLam{\subs{x}{x}{s}}            & \eqdef & \cLam{s} & \\
   \cLam{\subs{y}{x}{s}}            & \eqdef & \cLam{y} & \\
   \cLam{\subs{(u\, v)}{x}{s}}      & \eqdef & \cLam{\subs{u}{x}{s}\, \subs{v}{x}{s}} & \\
-  \cLam{\subs{(\lam{y}{u})}{x}{s}} & \eqdef & \cLam{\lam{y}{\subs{u}{x}{s}}} & \text{ si } \cLam{x}\neq \cLam{y} \text{ e } \cLam{y} \not\in \fv{\cLam{u}} \\
+  \cLam{\subs{(\lam{y}{u})}{x}{s}} & \eqdef & \cLam{\lam{y}{\subs{u}{x}{s}}} & \text{ si } \cLam{x}\neq \cLam{y} \text{ e } \cLam{y} \not\in \fv{\cLam{s}} \\
 \end{array}
 \]
 
@@ -241,7 +241,7 @@ $\ulbDeriv{\cLam{(\lam{x}{y})\ (I\, z)}}
 \begin{frame}{Espacios de derivación en el cálculo-$\clambda$}
 
 \begin{defes}[Equivalencia por permutaciones]
-Decimos que dos secuencias de reducción $\rho, \sigma$ son equivalentes por permutación si $\rho/\sigma = \sigma/\rho = \epsilon$.
+  Decimos que dos secuencias de reducción $\rho, \sigma$ son \defn{equivalentes por permutación} si $\rho/\sigma = \sigma/\rho = \epsilon$.
 Lo escribimos como $\rho \permeq \sigma$.
 \end{defes}
 
@@ -263,7 +263,7 @@ Para darle más estructura, proveemos al conjunto de un orden.
 \begin{frame}{Espacios de derivación en el cálculo-$\clambda$}
 
 \begin{defes}[Reticulado]
-Un reticulado es un conjunto parcialmente ordenado $(A, \leq)$ en el cual
+  Un \defn{reticulado} es un conjunto parcialmente ordenado $(A, \leq)$ en el cual
 todo par de elementos tiene un único supremo (mínima cota superior)
 y un único ínfimo (máxima cota inferior).
 \end{defes}
@@ -424,7 +424,7 @@ La reducción es orientada por tipos.
 Decimos que un término tipable $\cDist{t}$ es \defn{correcto} si:
 \begin{itemize}
 \item Distintos lambdas tienen distintas etiquetas.
-\item Dado un multiconjunto de tipos $\cDist{[A_1, ..., A_n]}$ que ocurren como una subfórmula
+\item Para todo multiconjunto de tipos $\cDist{[A_1, ..., A_n]}$ que ocurra como una subfórmula
 en cualquier lugar de la derivación de tipos de $\cDist{t}$, si $i\neq j$ entonces
 $\cDist{A_i}$ y $\cDist{A_j}$ están decorados con distintas etiquetas en la raíz.
 \end{itemize}
@@ -460,7 +460,7 @@ El cálculo-$\clambdadist$ cumple la propiedad de Church--Rosser.
 No hay secuencias de reducción infinitas: $\cDist{t_1} \to_\cdist \cDist{t_2} \to_\cdist ...$.
 \end{proes}
 \begin{defes}[Residuo]
-Los residuos pueden definirse en $\clambdadist$ utilizando las etiquetas de los lambdas.
+  Los \defn{residuos} pueden definirse en $\clambdadist$ utilizando las etiquetas de los lambdas.
 \end{defes}
 \begin{proes}[Ortogonalidad \lbrack cf. P.-A. Melli\`es\rbrack]
 El cálculo-$\clambdadist$ es un sistema de reescritura abstracto ortogonal.
@@ -540,7 +540,7 @@ entonces existen $\cLam{\tmtwo}$ y $\cDist{\tmtwo''}$ tal que:
 
 \begin{frame}{Simulación -- \emph{Head normal forms}}
 \begin{defes}[\emph{Head normal form}]
-Un término del cálculo-$\clambda$ está en \emph{head normal form} si no tiene redexes debajo de un contexto head:
+  Un término del cálculo-$\clambda$ está en \textbf{\emph{head normal form}} si no tiene redexes debajo de un contexto head:
 \[ \mathtt{H} ::= \conbase \ | \ \lam{x}{\mathtt{H}} \ | \ \mathtt{H}\, t \]
 Se define análogamente para el cálculo-$\clambdadist$.
 \end{defes}
@@ -629,7 +629,7 @@ si $\rho / \sigma$ es $(\cDist{t'}/\sigma)$-basura, entonces $\rho/\sigma = \eps
 \end{defes}
 
 Notemos que las definiciones dependen de la elección de $\cDist{t'}$.
-\textbf{Ejemplo} Los pasos punteados son basura.
+\textbf{Ejemplo.} Los pasos punteados son basura.
 
 {\scriptsize
 \[
