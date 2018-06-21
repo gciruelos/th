@@ -28,6 +28,7 @@
 \newtheorem{lemes}{Lema}
 \newtheorem{proes}{Proposición}
 \newtheorem{comes}{Comentario}
+\newtheorem{cores}{Corolario}
 
 
 
@@ -115,19 +116,19 @@ $\ulbDeriv{\cArith{(A,B)}} \simeq \ulbDeriv{\cArith{A}} \times \ulbDeriv{\cArith
 
 \end{frame}
 
-\begin{frame}{El $\lambda$-cálculo}
+\begin{frame}{El cálculo-$\clambda$}
 
-\textbf{Términos del $\lambda$-cálculo}
+\textbf{Términos del cálculo-$\clambda$}
 
 \[
-  t ::= x\  |\ t\, t \ |\ \lam{x}{t}
+  \cLam{t} ::= \cLam{x}\  |\ \cLam{t\, t} \ |\ \cLam{\lam{x}{t}}
 \]
 
 Por ejemplo,
 \begin{itemize}
- \item[] $\lam{x}{x}$
- \item[] $(\lam{x}{z})\ y$
- \item[] $(\lam{x}{\lam{y}{x}})\ z\ w$ = $((\lam{x}{(\lam{y}{x})})\ z)\ w$
+  \item[] $\cLam{\lam{x}{x}}$
+  \item[] $\cLam{(\lam{x}{z})\ y}$
+  \item[] $\cLam{(\lam{x}{\lam{y}{x}})\ z\ w}$ = $\cLam{((\lam{x}{(\lam{y}{x})})\ z)\ w}$
 \end{itemize}
 
 \vskip 0.5cm
@@ -135,20 +136,20 @@ Por ejemplo,
 \textbf{Variables libres}
 \[
 \begin{array}{rclc}
-  \fv{x} & \eqdef & x & \\
-  \fv{u\, v} & \eqdef & \fv{u} \cup \fv{v} & \\
-  \fv{\lam{x}{u}} & \eqdef & \fv{u} - \set{x} & \\
+  \fv{\cLam{x}} & \eqdef & \cLam{x} & \\
+  \fv{\cLam{u\, v}} & \eqdef & \fv{\cLam{u}} \cup \fv{\cLam{v}} & \\
+  \fv{\cLam{\lam{x}{u}}} & \eqdef & \fv{\cLam{u}} - \set{\cLam{x}} & \\
 \end{array}
 \]
 \end{frame}
 
 
-\begin{frame}{El $\lambda$-cálculo}
+\begin{frame}{El cálculo-$\clambda$}
 
 \textbf{$\beta$-reducción}
 
 \[
-  (\lam{x}{t})\, s \to_\beta \subs{t}{x}{s}
+  \cLam{(\lam{x}{t})\, s} \to_\cLam{\beta} \cLam{\subs{t}{x}{s}}
 \]
 \vskip 0.5cm
 
@@ -156,30 +157,30 @@ Por ejemplo,
 \textbf{...donde sustituir significa}
 \[
 \begin{array}{rclc}
-  \subs{x}{x}{s} & \eqdef & s & \\
-  \subs{y}{x}{s} & \eqdef & y & \\
-  \subs{(u\, v)}{x}{s} & \eqdef & \subs{u}{x}{s}\, \subs{v}{x}{s} & \\
-  \subs{(\lam{y}{u})}{x}{s} & \eqdef & \lam{y}{\subs{u}{x}{s}} & \text{ si } x\neq y \text{ e } y \not\in \fv{u} \\
+  \cLam{\subs{x}{x}{s}}            & \eqdef & \cLam{s} & \\
+  \cLam{\subs{y}{x}{s}}            & \eqdef & \cLam{y} & \\
+  \cLam{\subs{(u\, v)}{x}{s}}      & \eqdef & \cLam{\subs{u}{x}{s}\, \subs{v}{x}{s}} & \\
+  \cLam{\subs{(\lam{y}{u})}{x}{s}} & \eqdef & \cLam{\lam{y}{\subs{u}{x}{s}}} & \text{ si } \cLam{x}\neq \cLam{y} \text{ e } \cLam{y} \not\in \fv{\cLam{u}} \\
 \end{array}
 \]
 
 \textbf{Por ejemplo}
 
-\[(\lam{x}{x}) ((\lam{y}{y}) z) \to (\lam{y}{y}) z \to z\]
+  \[\cLam{(\lam{x}{x}) ((\lam{y}{y}) z)} \to \cLam{(\lam{y}{y}) z} \to \cLam{z}\]
 
 
 \end{frame}
 
-\begin{frame}{Espacios de derivación en el $\lambda$-cálculo}
+\begin{frame}{Espacios de derivación en el cálculo-$\clambda$}
 \[\ulbDeriv{\cLam{(\lam{x}{x}) ((\lam{y}{y}) z)}} =
-\xymatrix@C=0.3cm{
+\xymatrix@C=0.8cm{
 \cLam{(\lam{x}{x}) ((\lam{y}{y}) z)} \ar[d] \ar[r] & \cLam{(\lam{y}{y}) z} \ar[d] \\
 \cLam{(\lam{x}{x}) z}  \ar[r] & \cLam{z}
 }
 \]
 \end{frame}
 
-\begin{frame}{Espacios de derivación en el $\lambda$-cálculo -- Problemas}
+\begin{frame}{Espacios de derivación en el cálculo-$\clambda$ -- Problemas}
 \textbf{Creación}
 \[\ulbDeriv{\cLam{(\lam{x}{x x}) (\lam{x}{x x})}} =
 \xymatrix@C=0.3cm{
@@ -193,7 +194,7 @@ $\ulbDeriv{\cLam{(\lam{x}{x x}) (\lam{x}{x x})}}$ es infinito, mientras que
 $\ulbDeriv{\cLam{(\lam{x}{x x})}}$ es finito.
 \end{frame}
 
-\begin{frame}{Espacios de derivación en el $\lambda$-cálculo -- Problemas}
+\begin{frame}{Espacios de derivación en el cálculo-$\clambda$ -- Problemas}
 \textbf{Duplicación}
 \[\ulbDeriv{\cLam{(\lam{x}{x x})\ (I\, z)}} =
 \xymatrix@C=0.3cm{
@@ -216,7 +217,7 @@ $\ulbDeriv{\cLam{(\lam{x}{x x})\ (I\, z)}}
 }
 \end{frame}
 
-\begin{frame}{Espacios de derivación en el $\lambda$-cálculo -- Problemas}
+\begin{frame}{Espacios de derivación en el cálculo-$\clambda$ -- Problemas}
 \textbf{Borrado}
 \[\ulbDeriv{\cLam{(\lam{x}{y})\ (I\, z)}} =
 \xymatrix@C=0.3cm{
@@ -237,7 +238,7 @@ $\ulbDeriv{\cLam{(\lam{x}{y})\ (I\, z)}}
 }
 \end{frame}
 
-\begin{frame}{Espacios de derivación en el $\lambda$-cálculo}
+\begin{frame}{Espacios de derivación en el cálculo-$\clambda$}
 
 \begin{defes}[Equivalencia por permutaciones]
 Decimos que dos secuencias de reducción $\rho, \sigma$ son equivalentes por permutación si $\rho/\sigma = \sigma/\rho = \epsilon$.
@@ -259,7 +260,7 @@ Para darle más estructura, proveemos al conjunto de un orden.
 \end{defes}
 \end{frame}
 
-\begin{frame}{Espacios de derivación en el $\lambda$-cálculo}
+\begin{frame}{Espacios de derivación en el cálculo-$\clambda$}
 
 \begin{defes}[Reticulado]
 Un reticulado es un conjunto parcialmente ordenado $(A, \leq)$ en el cual
@@ -270,7 +271,7 @@ y un único ínfimo (máxima cota inferior).
 \vskip 0.5cm
 
 \begin{teoes}[J.-J. Lévy]
-En el $\lambda$-cálculo, $\ulbDeriv{\cLam{t}}$ forma un \defn{semi-reticulado con supremos},
+En el cálculo-$\clambda$, $\ulbDeriv{\cLam{t}}$ forma un \defn{semi-reticulado con supremos},
 donde:
 \[[\rho] \sqcup [\sigma] \eqdef [\rho (\sigma / \rho)] \]
 \noindent $\ulbDeriv{\cLam{t}}$ no necesariamente es un reticulado.
@@ -280,7 +281,7 @@ donde:
 
 
 \begin{frame}{Objetivo}
-Queremos \textbf{entender los espacios de derivación del $\lambda$-cálculo.}
+Queremos \textbf{entender los espacios de derivación del cálculo-$\lambda$.}
 \vskip 0.2cm
 Creemos que \textbf{explicitar el manejo de recursos puede ser útil.}
 \vskip 0.5cm
@@ -302,10 +303,10 @@ $\ulbDeriv{\cProto{(\lam{x}{x x}) [I\, y, I\, y]}} = $
 \end{frame}
 
 
-\section{El $\lambda$-cálculo distributivo}
+\section{El cálculo-$\lambda$ distributivo}
 
 
-\begin{frame}[fragile]{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{frame}[fragile]{El cálculo-$\lambda$ distributivo ($\clambdadist$)}
 \begin{itemize}
 \item En sistemas de tipos intersección, distintas ocurrencias ligadas de una misma variable
 pueden tener distintos tipos.
@@ -326,7 +327,7 @@ En consecuencia, el tipo de $f$ es
 $[\text{Int}, \text{Int}, \text{Int} \to \text{Int}] \to \text{Int}$.
 \end{frame}
 
-\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{frame}{El cálculo-$\lambda$ distributivo ($\clambdadist$)}
 \begin{defes}[$\clambdadist$ ``na\"if'']
 \textbf{Sintaxis}
 {\footnotesize
@@ -365,19 +366,19 @@ $[\text{Int}, \text{Int}, \text{Int} \to \text{Int}] \to \text{Int}$.
 \end{frame}
 
 
-\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{frame}{El cálculo-$\lambda$ distributivo ($\clambdadist$)}
 \textbf{Problema! (no es confluente)}
 \[
 \xymatrix@=0.5cm{
   & \cDist{(\lam{x}{(\lam{y}{f\, y\, x})\, x})\ [a, b]} \ar[dr] \ar[dl]& \\
-\cDist{(\lam{y}{f\, y\, a})\, b} \ar@{->>}[dr] &  & \cDist{(\lam{y}{f\, y\, b})\, a} \ar@{->>}[dl] \\
+\cDist{(\lam{y}{f\, y\, a})\, b} \ar@{.>>}[dr] &  & \cDist{(\lam{y}{f\, y\, b})\, a} \ar@{.>>}[dl] \\
   & \cDist{?} & \\
 }
 \]
 \end{frame}
 
 
-\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{frame}{El cálculo-$\lambda$ distributivo ($\clambdadist$)}
 \begin{defes}[$\clambdadist$]
 \textbf{Sintaxis}
 {\footnotesize
@@ -418,12 +419,12 @@ La reducción es orientada por tipos.
 \end{frame}
 
 
-\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{frame}{El cálculo-$\lambda$ distributivo ($\clambdadist$)}
 \begin{defes}[Términos correctos]
 Decimos que un término tipable $\cDist{t}$ es \defn{correcto} si:
 \begin{itemize}
-\item Distintos lambdas tienen distintos labels.
-\item Dado un multiconjunto de tipos $[A_1, ..., A_n]$ que ocurren como una subfórmula
+\item Distintos lambdas tienen distintas etiquetas.
+\item Dado un multiconjunto de tipos $\cDist{[A_1, ..., A_n]}$ que ocurren como una subfórmula
 en cualquier lugar de la derivación de tipos de $\cDist{t}$, si $i\neq j$ entonces
 $\cDist{A_i}$ y $\cDist{A_j}$ están decorados con distintas etiquetas en la raíz.
 \end{itemize}
@@ -442,7 +443,7 @@ entonces $\cDist{\tctx} \vdash \cDist{s} : \cDist{A}$ y $\cDist{s}$ es correcto.
 \end{frame}
 
 
-\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{frame}{El cálculo-$\lambda$ distributivo ($\clambdadist$)}
 \begin{proes}[Confluencia]
 El cálculo-$\clambdadist$ cumple la propiedad de Church--Rosser.
 \end{proes}
@@ -454,7 +455,7 @@ El cálculo-$\clambdadist$ cumple la propiedad de Church--Rosser.
 \]
 \end{frame}
 
-\begin{frame}{El $\lambda$-cálculo distributivo ($\clambdadist$)}
+\begin{frame}{El cálculo-$\lambda$ distributivo ($\clambdadist$)}
 \begin{proes}[Fuertemente normalizante]
 No hay secuencias de reducción infinitas: $\cDist{t_1} \to_\cdist \cDist{t_2} \to_\cdist ...$.
 \end{proes}
@@ -673,44 +674,96 @@ Si $\cDist{t'} \refines \cLam{t}$, existe un isomorfismo de semirreticulados:
 \item $\int_{\ulbF}{\ulbG}$ es la construcción de Grothendieck.
 \end{itemize}
 \end{teoes}
-Este teorema en particular implica que toda derivación $\rho$ de $\cLam{t}$
+  \begin{cores}
+Toda derivación $\rho$ de $\cLam{t}$
 se puede factorizar de manera única en $\rho = \rho_1 \rho_2$ donde
 $\rho_1$ es libre de basura y $\rho_2$ es basura.
+\end{cores}
+\end{frame}
+
+\begin{frame}{Factorización -- Ejemplo}
+Sea $\cLam{t} = \cLam{(\lam{\var}{\var\var})\,(I\, \varthree)}$.
+Lo refinaba $\cDist{t'} = \cDist{(\lamp{1}{x}{x^2 [\,]}) [(\lamp{5}{x}{x^2}) [z^2]]}$.
+{\scriptsize
+\[
+  \xymatrix@=.2cm{
+  &
+    \cLam{(\lam{\var}{\var\var})\,(I\, \varthree)}
+    \ar@/_.25cm/[dl]_-{\redex_1}
+    \ar@/^.25cm/[dr]^-{\redextwo}
+  &
+  &
+  \\
+    \cLam{(I\, \varthree)\, (I\, \varthree)}
+    \ar[d]_-{\redextwo_{11}}
+    \ar@{.>}[r]^-{\redextwo_{21}}
+  &
+    \cLam{(I\varthree)\varthree}
+    \ar[d]^{\redextwo_{12}}
+  &
+    \cLam{(\lam{\var}{\var\var})\varthree}
+    \ar@/^.25cm/[dl]^-{\redex_2}
+  \\
+    \cLam{\varthree (I\varthree)}
+    \ar@{.>}[r]_-{\redextwo_{22}}
+  &
+    \cLam{ \varthree \varthree}
+  }\hspace{-0.4cm}\xymatrix@=.2cm{
+  &
+    \cDist{(\lamp{1}{x}{x^2 [\,]}) [(\lamp{5}{x}{x^2}) [z^2]]}
+    \ar@/_.25cm/[dl]_-{\redex'_1}
+    \ar@/^.25cm/[dr]^-{\redextwo'}
+  \\
+    \cDist{(\lamp{5}{x}{x^2}) [z^2] [\,]}
+    \ar@/_.25cm/[dr]_-{\redextwo'_1}
+  &
+  &
+    \cDist{\hspace{-1cm}(\lamp{1}{x}{x^2 [\,]}) [z^2]}
+    \ar@/^.25cm/[dl]^-{\redex'_2}
+  \\
+  &
+    \cDist{z^2 [\,]}
+  }
+\]
+}
+
+\[
+  \xymatrix@C=1cm{
+  &
+    ([\epsilon], [\epsilon])
+    \ar@/_.25cm/[dl]_-{\redex_1}
+    \ar@/^.25cm/[dr]^-{\redextwo}
+  &
+  &
+  \\
+    ([\redex_1], [\epsilon])
+    \ar[d]_-{\redextwo_{11}}
+    \ar@{.>}[r]^-{\redextwo_{21}}
+  &
+    ([\redex_1], [\redextwo_{21}])
+    \ar[d]^{\redextwo_{12}}
+  &
+    ([\redextwo], [\epsilon])
+    \ar@/^.25cm/[dl]^-{\redex_2}
+  \\
+    ([\redex_1 \redextwo_{11}], [\epsilon])
+    \ar@{.>}[r]_-{\redextwo_{22}}
+  &
+    ([\redex_1 \redextwo_{11}], [\redextwo_{22}])
+  }
+\]
 \end{frame}
 
 \section{Some \LaTeX{} Examples}
 
-\subsection{Tables and Figures}
-
-\begin{frame}{Tables and Figures}
-
+\subsection{Final}
+\begin{frame}{Trabajo futuro}
 \begin{itemize}
-\item Use \texttt{tabular} for basic tables --- see Table~\ref{tab:widgets}, for example.
-\item You can upload a figure (JPEG, PNG or PDF) using the files menu. 
-\item To include it in your document, use the \texttt{includegraphics} command (see the comment below in the source code).
+  \item Estudiar la relación de los términos que refinan a un $\cLam{t}$ con la noción de
+    aproximantes de \emph{head normal forms}.
+  \item Intentar hacer lo mismo con otros cálculos de recursos.
+  \item Relacionar que la factorización dada con la factorización interna--externa de Melliés.
 \end{itemize}
-
-\begin{table}
-\centering
-\begin{tabular}{l|r}
-Item & Quantity \\\hline
-Widgets & 42 \\
-Gadgets & 13
-\end{tabular}
-\caption{\label{tab:widgets}An example table.}
-\end{table}
-
-\end{frame}
-
-\subsection{Mathematics}
-
-\begin{frame}{Readable Mathematics}
-
-Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
-$$S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-      = \frac{1}{n}\sum_{i}^{n} X_i$$
-denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
-
 \end{frame}
 
 \end{document}
