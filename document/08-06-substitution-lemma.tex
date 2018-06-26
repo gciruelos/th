@@ -84,7 +84,6 @@ Also,
   \subs{\subs{(\lamp{\lab}{\varthree}{\tmfour})}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}
      & = \subs{(\lamp{\lab}{\varthree}{\subs{\tmfour}{\var}{\ls{\tmtwo}}})}{\vartwo}{\ls{\tmthree}} \\
      & = \lamp{\lab}{\varthree}{\subs{\subs{\tmfour}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}} \\
-     & = \lamp{\lab}{\varthree}{\subs{\subs{\tmfour}{\var}{\ls{\tmtwo}}}{\vartwo}{\ls{\tmthree}}} \\
      & \eqih \lamp{\lab}{\varthree}{\subs{\subs{\tmfour}
                                                {\vartwo}{\ls{\tmthree}_1}}
                                          {\var}{\subs{\ls{\tmtwo}}
@@ -108,11 +107,11 @@ Also,
                [\subs{\subs{\tmfour_i}{\var}{\ls{\tmtwo}_i}}{\vartwo}{\ls{\tmthree}_i}]_{i=0}^n \\
      & \eqih \subs{\subs{\tmfour}{\vartwo}{\ls{\tmthree}_{0,1}}}{\var}{\subs{\ls{\tmtwo}_0}
                   {\vartwo}{\ls{\tmthree}_{0,2}}}
-            [\subs{\subs{\tmfour_i}{\vartwo}{\ls{\tmthree}_{i,1}}}{\var}{\subs{\ls{\tmtwo}_0}
+            [\subs{\subs{\tmfour_i}{\vartwo}{\ls{\tmthree}_{i,1}}}{\var}{\subs{\ls{\tmtwo}_i}
                   {\vartwo}{\ls{\tmthree}_{i,2}}}]_{i=0}^n \\
      & = \subs{(\subs{\tmfour}{\vartwo}{\ls{\tmthree}_{0,1}}
                      [\subs{\tmfour_i}{\vartwo}{\ls{\tmthree}_{i,1}}]_{i=0}^n)}
-              {\var}{\sum_{i=1}^n \subs{\ls{\tmtwo}_i}{\vartwo}{\ls{\tmthree}_{i,2}}} \\
+              {\var}{\sum_{i=0}^n \subs{\ls{\tmtwo}_i}{\vartwo}{\ls{\tmthree}_{i,2}}} \\
 \end{split}\end{equation*}
 \noindent Because $\sum_{i=0}^n \ls{\tmtwo}_i$ is a permutation of $\ls{\tmtwo}$ and
 we can perform the substitution of each $\ls{\tmthree}_{i,2}$ simultaneously, defining

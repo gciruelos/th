@@ -35,20 +35,20 @@ By induction on $\tm$.
 
 
 
-The following properties show that the rewrite rule $\todist$ is well-defined.
+The following property shows that the rewrite rule $\todist$ is well-defined and well-behaved.
 
-\begin{lemma}[$\termsdist$ is closed under $\todist$]
-\llem{closed_under_arrow}
-Let $\tm \in \termsdist$ such that $\tm \todist \tm'$. Then $\tm' \in \termsdist$.
-\end{lemma}
-\begin{proof}
-  \SeeAppendixRef{closed_under_arrow_proof}
-Let $\tm = \conof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$. By induction on $\con$.
-\end{proof}
+%\begin{lemma}[$\termsdist$ is closed under $\todist$]
+%Let $\tm \in \termsdist$ such that $\tm \todist \tm'$. Then $\tm' \in \termsdist$.
+%\end{lemma}
+%\begin{proof}
+%  \SeeAppendixRef{closed_under_arrow_proof}
+%Let $\tm = \conof{(\lamp{\lab}{\var}{\tmtwo}) \ls{\tmthree}}$. By induction on $\con$.
+%\end{proof}
 
 
 \begin{lemma}[Subject reduction]
 \llem{subject_reduction}
+\llem{closed_under_arrow}
 If $\tctx \vdash \conof{(\lamp{\lab}{\var}{\tm}) \vec{\tmtwo}} : \typ$
 then $\tctx \vdash \conof{\subs{\tm}{\var}{\vec{\tmtwo}}} : \typ$.
 Moreover, correctness is preserved.
@@ -57,7 +57,7 @@ Moreover, correctness is preserved.
 \SeeAppendixRef{subject_reduction_proof} By induction on $\con$.
 \end{proof}
 
-These two lemmas are very important because they show that $\todist$ behaves
-well, in particular that it preserves correctness of terms and their types.
-That is, if $\tm \to \tm'$ and $\tm$ is correct and well-typed,
-we know that $\tm'$ is correct, well-typed and has the same type as $\tm$.
+%This lemma is very important because it shows that $\todist$ behaves
+%well, in particular that it preserves correctness of terms and their types.
+%That is, if $\tm \to \tm'$ and $\tm$ is correct and well-typed,
+%we know that $\tm'$ is correct, well-typed and has the same type as $\tm$.
