@@ -238,12 +238,33 @@ $\ulbDeriv{\cLam{(\lam{x}{y})\ (I\, z)}}
 }
 \end{frame}
 
-\begin{frame}{Espacios de derivación en el cálculo-$\clambda$}
+\begin{frame}{Residuos en el cálculo-$\clambda$}
+\begin{defes}
+Sean $R$, $S$ dos pasos coiniciales. Definimos el residuo de $R$ después de $S$ como lo que queda
+de el paso $R$ después de hacer $S$: es un conjunto de pasos que salen del target de $S$.
 
+Formalmente, se puede definir con posiciones o etiquetas.
+\end{defes}
+\vskip 0.3cm
+La definición se puede extender para derivaciones: $\rho/\sigma$ es lo que
+queda de $\rho$ después hacer hacer $\sigma$.
+
+\vskip 1cm
+
+Para ordenar las derivaciones que salen de un mismo término, usamos el orden del prefijo.
+
+\begin{defes}[Orden del prefijo]
+\[[\rho] \permle [\sigma]   \iffdef \rho / \sigma = \epsilon\]
+\end{defes}
+\end{frame}
+
+\begin{frame}{Espacios de derivación en el cálculo-$\clambda$}
 \begin{defes}[Equivalencia por permutaciones]
-  Decimos que dos secuencias de reducción $\rho, \sigma$ son \defn{equivalentes por permutación} si $\rho/\sigma = \sigma/\rho = \epsilon$.
+  Decimos que dos secuencias de reducción $\rho, \sigma$ son \defn{equivalentes por permutación} si $\rho/\sigma = \epsilon$ y $\sigma/\rho = \epsilon$.
 Lo escribimos como $\rho \permeq \sigma$.
 \end{defes}
+
+\vskip 0.7cm
 
 \begin{defes}[Espacio de derivación]
 Si $\cLam{\tm}$ es un término, $\ulbDeriv{\cLam{\tm}}$ es el conjunto de
@@ -252,20 +273,14 @@ Si $\cLam{\tm}$ es un término, $\ulbDeriv{\cLam{\tm}}$ es el conjunto de
   \set{\rho \ | \ \rho : \cLam{t} \to^* \cLam{s} \text{ es una secuencia de pasos de reescritura}} \bigg/ \permeq
 \]
 \end{defes}
-
-Para darle más estructura, proveemos al conjunto de un orden.
-
-\begin{defes}[Orden del prefijo]
-\[[\rho] \permle [\sigma]   \iffdef \rho / \sigma = \epsilon\]
-\end{defes}
 \end{frame}
 
 \begin{frame}{Espacios de derivación en el cálculo-$\clambda$}
 
 \begin{defes}[Reticulado]
   Un \defn{reticulado} es un conjunto parcialmente ordenado $(A, \leq)$ en el cual
-todo par de elementos tiene un único supremo (mínima cota superior)
-y un único ínfimo (máxima cota inferior).
+todo par de elementos tiene un supremo (mínima cota superior)
+y un ínfimo (máxima cota inferior).
 \end{defes}
 
 \vskip 0.5cm
@@ -318,8 +333,7 @@ pueden tener distintos tipos.
 
 \begin{lstlisting}[language=Python]
 def f(x):
-  x += 1
-  return x + x(100)
+  return x * x + x(100)
 \end{lstlisting}
 
 El parámetro se usa con dos tipos distintos.
@@ -679,7 +693,7 @@ Si $\cDist{t'} \refines \cLam{t}$, existe un isomorfismo de semirreticulados:
 \end{teoes}
   \begin{cores}
 Toda derivación $\rho$ de $\cLam{t}$
-se puede factorizar de manera única en $\rho = \rho_1 \rho_2$ donde
+se puede factorizar de manera única en $\rho \permeq \rho_1 \rho_2$ donde
 $\rho_1$ es libre de basura y $\rho_2$ es basura.
 \end{cores}
 \end{frame}
