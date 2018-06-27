@@ -60,9 +60,28 @@ Rather, we have a different term for each type that the function expects its par
 
 \begin{example}
 Using integer labels,
-\[\vdash \lamp{1}{\var}{\var^{[\alpha^2,\alpha^3] \tolab{4} \beta^5}[\var^{\alpha^3},\var^{\alpha^2}]}
-: [[\alpha^2,\alpha^3] \tolab{4} \beta^5, \alpha^2, \alpha^3] \tolab{1} \beta^5\]
-is a derivable judgment.
+\[
+  \vdash \lamp{1}{\var}{\var^{[\alpha^2,\alpha^3] \tolab{4} \beta^5}[\var^{\alpha^3},\var^{\alpha^2}]}
+: [[\alpha^2,\alpha^3] \tolab{4} \beta^5, \alpha^2, \alpha^3] \tolab{1} \beta^5
+\]
+is a derivable judgment. Its complete derivation is as follows.
+{\footnotesize
+\[
+  \indrule{\toI}{
+    \indrule{\toE}{
+      \indrule{$var$}{}{\var : [[\alpha^2,\alpha^3] \tolab{4} \beta^5] \vdash \var : [\alpha^2,\alpha^3] \tolab{4} \beta^5}
+      \indrule{$var$}{}{\var : [\alpha^2] \vdash \var : \alpha^2}
+      \indrule{$var$}{}{\var : [\alpha^3] \vdash \var : \alpha^3}
+      \vspace{.1cm}
+    }{
+      \var : [[\alpha^2,\alpha^3] \tolab{4} \beta^5, \alpha^2, \alpha^3] \vdash \var^{[\alpha^2,\alpha^3] \tolab{4} \beta^5}[\var^{\alpha^3},\var^{\alpha^2}] : \beta^5
+    }
+  }{
+      \vdash \lamp{1}{\var}{\var^{[\alpha^2,\alpha^3] \tolab{4} \beta^5}[\var^{\alpha^3},\var^{\alpha^2}]}
+      : [[\alpha^2,\alpha^3] \tolab{4} \beta^5, \alpha^2, \alpha^3] \tolab{1} \beta^5
+  }
+\]
+  }
 \end{example}
 
 Note that writing all the labels can be tiresome
