@@ -141,8 +141,8 @@ We proceed by induction on $\tm$.
             $(\redex / \tmfive') / (\redextwo / \tmfive') = (\redex / \redextwo) / (\tmfive' / \redextwo)$,
             which we can extend to $\tm'$, yielding the desired result.
           \item {\bf $\redextwo$ is in $\tmsix$.} Again, we can summarize this case with a diagram.
-            \[
             {\tiny
+            \[
               \xymatrix@C=.5cm{
               \conof{(\lam{\var}{\tmthree}) \tmthreevariant} \tmsix
                 \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
@@ -155,8 +155,8 @@ We proceed by induction on $\tm$.
                 & \contwoof{(\lamp{\lab_1}{\var}{\tmthree_1}) \tmthreevariant_1, \hdots, (\lamp{\lab_n}{\var}{\tmthree_n}) \tmthreevariant_n} \ls{\tmtwo} \ar@{->>}[r]^{(\redex / \tm') / (\redextwo / \tm')}
                   & \contwoof{\subs{\tmthree_1}{\var}{\tmthreevariant_1}, \hdots, \subs{\tmthree_1}{\var}{\tmthreevariant_1}} \ls{\tmtwo} \\
               }
-            }
             \]
+            }
             We know that $\frac{(\lamp{\lab_i}{\var}{\tmthree_i}) \tmthreevariant_i}{\redex / \redextwo}
              = \subs{\tmthree_i}{\var}{\tmthreevariant_i}$.
             Then by \rlem{simulation_of_context},
@@ -171,8 +171,8 @@ We proceed by induction on $\tm$.
         \begin{enumerate}
           \item {\bf $\redextwo$ is at the root.} Then $\tmfive = \lam{\var}{\tmtwo}$
             and $\tm = (\lam{\var}{\tmtwo}) \conof{(\lam{\var}{\tmthree}) \tmthreevariant}$.
-            \[
             {\tiny
+            \[
               \xymatrix@C=.5cm{
               (\lam{\var}{\tmtwo}) \conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}
                 \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
@@ -186,8 +186,8 @@ We proceed by induction on $\tm$.
                 & \subs{\tmtwo'}{\var}{[\con_i\of{(\lamp{\lab_{i,j}}{\vartwo}{\tmthree_{i,j}} \tmthreevariant_{i,j})}_{j=1}^{m_i}]_{i=1}^n} \ar@{->}[r]^{(\redex / \tm') / (\redextwo / \tm')}
                   & \subs{\tmtwo'}{\var}{[\con_i\of{\subs{\tmthree_{i,j}}{\vartwo}{\tmthreevariant_{i,j}}}_{j=1}^{m_i}]_{i=1}^n}
               }
-            }
             \]
+            }
             First, note that $\redex / \redextwo$ has as many elements as $\var$s in $\tmtwo$, in other words,
             $\redextwo$ may erase or multiply $\redex$.
             Some of those $\var$s are refined in $\tm'$ (the number is exactly $n$,
