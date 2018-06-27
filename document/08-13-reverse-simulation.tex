@@ -104,13 +104,12 @@ By induction on $\tm'$.
     \[
     \xymatrix@C=1cm{
     \tmthree' [\tmfour'_0, \hdots, \tmfour'_{i-1}, \tmfour'_i, \tmfour'_{i+1}, \hdots, \tmfour'_m]
-      \ar[d]^{\dist} & \refines & \tmthree \tmfour \ar@{.>}[ddddddddd]^{\beta} \\
+      \ar[d]^{\dist} & \refines & \tmthree \tmfour \ar@{.>}[dddddddd]^{\beta} \\
     \tmthree' [\tmfour'_0, \hdots, \tmfour'_{i-1}, \tmfour'_{i,1}, \tmfour'_{i+1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
     \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1}, \tmfour'_{i,1}, \tmfour'_{i+1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
     \vdots \ar@{.>>}[d]^{\dist} & & \\
     \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour'_{i,1}, \tmfour'_{i+1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
     \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour''_{i,1}, \tmfour'_{i+1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
-    \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour''_{i,1}, \tmfour'_{i+1,1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
     \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour''_{i,1}, \tmfour'_{i+1,1}, \hdots, \tmfour'_m] \ar@{.>>}[d]^{\dist} & & \\
     \vdots \ar@{.>>}[d]^{\dist} & & \\
     \tmthree' [\tmfour'_{0, 1}, \hdots, \tmfour'_{i-1,1}, \tmfour''_{i,1}, \tmfour'_{i+1,1}, \hdots, \tmfour'_{m,1}] & \refines  & \tmthree \tmfour_1                    \\

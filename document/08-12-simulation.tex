@@ -83,20 +83,20 @@ We can  apply the inductive hypothesis to every $\tmthree'_i$, obtaining
 Then,
 \[
 \xymatrix@C=1cm{
- \contwoof{(\lam{\var}{\tmfive}) \tmsix} \tmthree \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta}
-    & \contwoof{\subs{\tmfive}{\var}{\tmsix}} \tmthree \ar@{}[d]|*=0[@]{\rtimes} \\
- \tmthree' [\tmthree'_1, \hdots, \tmthree'_n] \ar@{.>>}[r]^{\dist}
-    & \tmthree' [\tmthree''_1, \hdots, \tmthree''_n] \\
+ \tmthree\ \contwoof{(\lam{\var}{\tmfive}) \tmsix} \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta}
+    & \tmthree\ \contwoof{\subs{\tmfive}{\var}{\tmsix}} \ar@{}[d]|*=0[@]{\rtimes} \\
+ \tmthree'\ [\tmthree'_1, \hdots, \tmthree'_n] \ar@{.>>}[r]^{\dist}
+    & \tmthree'\ [\tmthree''_1, \hdots, \tmthree''_n] \\
 }
 \]
 Because
 \begin{equation*}\begin{split}
- \tmthree' [\tmthree'_1, \hdots, \tmthree'_{i-1}, \tmthree'_i, \tmthree_{i+1}, \hdots, \tmthree'_n]
+ \tmthree' [\tmthree'_1, \hdots, \tmthree'_{i-1}, \tmthree'_i, \tmthree'_{i+1}, \hdots, \tmthree'_n]
     & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree'_{i-1}, \tmthree'_i, \tmthree'_{i+1}, \hdots, \tmthree'_n] \\
     & \tomdist \hdots \\
-    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree'_i, \tmthree'_{i+1}, \hdots, \tmthree''_n] \\
-    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree''_i, \tmthree'_{i+1}, \hdots, \tmthree''_n] \\
-    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree''_i, \tmthree''_{i+1}, \hdots, \tmthree''_n] \\
+    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree'_i, \tmthree'_{i+1}, \hdots, \tmthree'_n] \\
+    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree''_i, \tmthree'_{i+1}, \hdots, \tmthree'_n] \\
+    & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree''_i, \tmthree''_{i+1}, \hdots, \tmthree'_n] \\
     & \tomdist \hdots \\
     & \tomdist \tmthree' [\tmthree''_1, \hdots, \tmthree''_{i-1}, \tmthree''_i, \tmthree''_{i+1}, \hdots, \tmthree''_n] \\
 \end{split}\end{equation*}

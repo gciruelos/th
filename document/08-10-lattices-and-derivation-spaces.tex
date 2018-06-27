@@ -112,10 +112,10 @@ Let $\redseq$ and $\redseqtwo$ be coinitial derivations.
 Then $\names(\redseq \sqcap \redseqtwo) \subseteq \names(\redseq)$.
 \end{lemma}
 \begin{proof}
-By induction on the length of $\redseq \cap \redseqtwo$:
+By induction on the length of $\redseq \sqcap \redseqtwo$:
 \begin{enumerate}
 \item {\bf Empty, $\redseq \sqcap \redseqtwo = \emptyDerivation$.}
-      Then $\names(\redseq \cap \redseqtwo) = \emptyset \subseteq \names(\redseq)$ is immediate.
+      Then $\names(\redseq \sqcap \redseqtwo) = \emptyset \subseteq \names(\redseq)$ is immediate.
 \item {\bf Non-empty, $\redseq \sqcap \redseqtwo = \redexthree(\redseq/\redexthree \sqcap \redseqtwo/\redexthree)$,
            where $\redexthree$ is a step common to $\redseq$ and $\redseqtwo$.}
       Then since $\redexthree$ is common to $\redseq$ and $\redseqtwo$,
@@ -124,7 +124,7 @@ By induction on the length of $\redseq \cap \redseqtwo$:
       So:
       \[
         \begin{array}{rcll}
-        \names(\redseq \cap \redseqtwo) & = & \set{\name(\redexthree)} \cup \names(\redseq/\redexthree \sqcap \redseqtwo/\redexthree) \\
+        \names(\redseq \sqcap \redseqtwo) & = & \set{\name(\redexthree)} \cup \names(\redseq/\redexthree \sqcap \redseqtwo/\redexthree) \\
                                         & \subseteq & \names(\redseq) \cup \names(\redseq/\redexthree) \\
                                         & = & \names(\redseq) \cup (\names(\redseq) \setminus \set{\name(\redexthree)} & \text{by \rlem{names_after_projection_along_a_step}} \\
                                         & = & \names(\redseq)

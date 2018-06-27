@@ -4,9 +4,9 @@ We had a term $\tm \in \terms$ that is in head normal form,
 
 We wanted to prove that:
   \begin{itemize}
-    \item that there exists $\tm' \in \termsdist$ such that $\tm' \refines \tm$,
-    \item that for every application in $\tm'$ the argument list is empty, and
-    \item that if $\var_i = \vartwo$ for any $i$, $\tctx$ will be empty,
+    \item there exists $\tm' \in \termsdist$ such that $\tm' \refines \tm$,
+    \item for every application in $\tm'$ the argument list is empty, and
+    \item if $\var_i = \vartwo$ for any $i$, $\tctx$ will be empty,
       otherwise it will be a singleton of the form $\set{\vartwo : [\typ]}$.
   \end{itemize}
 
@@ -29,7 +29,7 @@ We proceed by induction on the pair $(n, m)$, that is, by induction on
           $\tmtwo' = \vartwo^\typ\,\ls{\tm}_1\,\hdots\,\ls{\tm}_{m-1}$,
         where each element of $\ls{\tm}_i$ refines $\tm_i$.
         If $\tmtwo'$ wasn't like that, it simply would not refine $\tmtwo$.
-        If $m = 1$, then $\tmtwo' = \vartwo$ and the type of $\vartwo$ is $\typ_1$.
+        If $m = 1$, then $\tmtwo' = \vartwo$ and the type of $\vartwo$ is $\typ$.
 
         If $m > 1$, the inductive hypothesis tells us that all $\ls{\tm}_i$ are empty, so
           $\tmtwo' = \vartwo \emptylset_1 \hdots \emptylset_{m-1}$

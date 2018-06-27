@@ -1,9 +1,8 @@
 
 \begin{lemma}[Refinement of a substitution]
 \llem{refinement_substitution}
-If $\tm'$ is of the form $\subs{\tm'}{\var}{[\tmtwo_1', \hdots, \tmtwo_n']}$,
-where $\tm' \refines \tm$ and $\tmtwo'_i \refines \tmtwo$ for all $1 \leq i \leq n$
-then $\tm' \refines \subs{\tm}{\var}{\tmtwo}$.
+If $\tm' \refines \tm$ and $\tmtwo'_i \refines \tmtwo$ for all $1 \leq i \leq n$
+  then $\subs{\tm'}{\var}{[\tmtwo_1', \hdots, \tmtwo_n']} \refines \subs{\tm}{\var}{\tmtwo}$.
 \end{lemma}
 \begin{proof}
   By induction on $\tm$.
@@ -77,7 +76,7 @@ We prove each direction separately:
     By \ih, write $\tmthree'$ as $\tmthree' = \con'_1\of{\tmtwo'_1,\hdots,\tmtwo'_n}$
     where $\con'_1 \refines \con_1$ and $\tmtwo'_i \refines \tmtwo$ for all $1 \leq i \leq n$.
     Taking $\con' := \lamp{\lab}{\var}{\con'_1}$ we conclude.
-    Moreover, note that $\con'$ must start with $\lamp{\lab}{\var}{\conbase}$.
+    %Moreover, note that $\con'$ must start with $\lamp{\lab}{\var}{\conbase}$.
     By \ih the decomposition is unique for $\tmtwo'$, so the decomposition is also unique for $\tm'$.
   \item {\bf Left of an application, $\con = \con_1\,\tmthree$.}
     Then $\tm'$ must be of the form $\tmfour'[\tmthree'_1,\hdots,\tmthree'_m]$
@@ -86,8 +85,8 @@ We prove each direction separately:
     By \ih, write $\tmfour'$ as $\tmfour' = \con'_1\of{\tmtwo'_1,\hdots,\tmtwo'_n}$
     with $\con'_1 \refines \con_1$ and $\tmtwo'_i \refines \tmtwo$ for all $1 \leq i \leq n$.
     Taking $\con' := \con'_1\,[\tmthree'_1,\hdots,\tmthree'_m]$ we conclude.
-    Moreover, note that $\con'$ must start with $\conbase[\tmthree'_1,\hdots,\tmthree'_m]$
-    where, by the previous remark, all the $\tmthree'_i$ must be $0$-hole contexts.
+    %Moreover, note that $\con'$ must start with $\conbase[\tmthree'_1,\hdots,\tmthree'_m]$
+    %where, by the previous remark, all the $\tmthree'_i$ must be $0$-hole contexts.
     By \ih the decomposition is unique for $\tmfour'$, so the decomposition is also unique for $\tm'$.
   \item {\bf Right of an application, $\con = \tmthree\,\con_1$.}
     Then $\tm'$ must be of the form $\tmthree'\,[\tmfour'_1,\hdots,\tmfour'_m]$
@@ -97,9 +96,9 @@ We prove each direction separately:
     such that $\con'_{(1,i)} \refines \con_1$ and $\tmtwo'_{(i,j)} \refines \tmtwo$ for all $1 \leq i \leq m$ and all $1 \leq j \leq k_i$.
     Taking $\con' = \tmthree'[\con'_{(1,1)},\hdots,\con'_{(1,m)}]$ as a context with $m = \sum_{i=1}^{n} k_i$ holes
     we conclude.
-    Moreover, note that $\con'$ must start with $\tmthree'[\conbase,\hdots,\conbase]$
-    where the application has exactly $m$ arguments,
-    and, by the previous remark, $\tmthree'$ must be a $0$-hole context.
+    %Moreover, note that $\con'$ must start with $\tmthree'[\conbase,\hdots,\conbase]$
+    %where the application has exactly $m$ arguments,
+    %and, by the previous remark, $\tmthree'$ must be a $0$-hole context.
     By \ih the decomposition fo reach $\tmthree'_i$ is unique,
     so the decomposition is also unique for $\tm'$.
   \end{enumerate}
@@ -125,7 +124,7 @@ We prove each direction separately:
     Moreover, for each $1 \leq j \leq m$, the context $\con'_{(1,j)}$ is a context with $k_j \geq 0$ holes,
     in such a way that $\sum_{j=1}^{m} k_j = n$.
     Let us split the list $[\tmtwo'_1,\hdots,\tmtwo'_n]$ in $m$ lists, such that the $j$-th list has $k_j$ elements,
-    \ie $[\tmtwo'_1,\hdots,\tmtwo'_n] = [\tmtwo'_{(1,1)},\hdots,\tmtwo'_{(1,k_1)},\hdots,\tmtwo'_{(m,1)},\hdots,\tmtwo'_{(1,k_m)}]$.
+    \ie $[\tmtwo'_1,\hdots,\tmtwo'_n] = [\tmtwo'_{(1,1)},\hdots,\tmtwo'_{(1,k_1)},\hdots,\tmtwo'_{(m,1)},\hdots,\tmtwo'_{(m,k_m)}]$.
     By \ih, for each $1 \leq j \leq m$ we have that $\con'_{(1,j)}\of{ \tmtwo'_{(j,1)},\hdots,\tmtwo'_{(j,k_j)} } \refines \con_1\of{\tmtwo}$.
     So:
     \[
