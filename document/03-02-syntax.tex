@@ -55,7 +55,7 @@ with the following rule:
 \end{definition}
 
 The most noticeable feature of these terms is that in applications
-we don't have an argument that can be typed in many ways (as we did in system~$\mathcal{W}$).
+we do not have an argument that can be typed in many ways (as we did in system~$\mathcal{W}$).
 Rather, we have a different term for each type that the function expects its parameter to be.
 
 \begin{example}
@@ -75,7 +75,7 @@ we cannot uniquely associate arguments with variables in the body of the lambdas
 For example, consider the following term.
 \[(\lamp{1}{x}{y^{[\alpha^2, \alpha^2] \tolab{3} \alpha^4} [x^{\alpha^2}, x^{\alpha^2}]})
 [a^{\alpha^2}, b^{\alpha^2}]\]
-We don't know which parameter to associate which each $x$---which parameter goes in the first $x$, $a$ or $b$?
+We do not know which parameter to associate which each $x$---which parameter goes in the first $x$, $a$ or $b$?
 
 To solve that problem we introduce an invariant that will ensure
 that problem does not manifest.
@@ -84,7 +84,7 @@ We will call that invariant \defn{correctness}.
 Note that the problem is that the function in the application expects two arguments
 with exactly the same type. A related problem is that, in the body of the function,
 the variable $x$ has the same type twice (remember that in a non idempotent context repetition matters).
-In fact, it is enough to ask that those two anomalies don't show up for the system to work.
+In fact, it is enough to ask that those two anomalies do not show up for the system to work.
 
 We will also ask that the labels of the lambdas do not repeat which
 will come in handy later.
@@ -149,7 +149,7 @@ we only consider correct terms, because otherwise when we apply the rule
 $\toE$ we may have the possibility to choose between different orders for the
 parameters.\footnote{This implies that a weaker uniqueness result holds for
 incorrect terms: proof trees are equal modulo permutations when the rule $\toE$
-is applied, but as we don't care about incorrect terms we don't need to consider this.}
+is applied, but as we do not care about incorrect terms we do not need to consider this.}
 
 \begin{lemma}[Unique typing]
 \llem{unique_typing}

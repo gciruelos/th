@@ -105,7 +105,7 @@ That means that if we performed $\redextwo$, we need to do those two steps to do
 
 We would be inclined to guess that a good reduction strategy would be to never perform a
 multiplication $\underline{n} \cdot t$ if $t$ is an unevaluated expression,
-such that we don't multiply work. But that strategy fails when we have a 0 as $\underline{n}$.
+such that we do not multiply work. But that strategy fails when we have a 0 as $\underline{n}$.
 
 \bigskip
 
@@ -325,10 +325,10 @@ resulting in two copies of $\redex$: the steps $\redex_1$ and $\redex_2$.
 In such situation, one says that $\redex_1$ and $\redex_2$ are \emph{residuals} of $\redex$,
 and, conversely, $\redex$ is an \emph{ancestor} of $\redex_1$ and $\redex_2$.
 The second phenomenon is \emph{erasure}:
-in the diagram above (\ref{eq:redgraph}), the step $\redexthree$ erases the step $\redex'_1$,
+in the same graph (\ref{eq:redgraph}), the step $\redexthree$ erases the step $\redex'_1$,
 resulting in no copies of $\redex'_1$.
 The third phenomenon is \emph{creation}:
-in the diagram above, the step $\redex_2$ creates the step $\redexthree$,
+in the same graph, the step $\redex_2$ creates the step $\redexthree$,
 meaning that $\redexthree$ is not a residual of a step that existed prior
 to executing $\redex_2$; that is, $\redexthree$ has no ancestor.
 
@@ -388,7 +388,7 @@ Type assignment rules for system $\mathcal{W}$ are as follows.
 \[
   \indrule{var}{
   }{
-    \var : [\typ] \vdash \typ
+    \var : [\typ] \vdash \var^\typ
   }
   \indrule{\toI}{
     \tctx \oplus (\var:\mtyp) \vdash \tm : \typ

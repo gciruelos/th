@@ -11,7 +11,7 @@ $\redseq \permle \redseqtwo$ if and only if $\redseq / \redseqtwo = \emptyDeriva
 
 In the preliminaries we defined a \defn{lattice} to be partially ordered set with two operations:
 join and meet. Given two elements of the lattice, their join is their least upper bound,
-and their join is their greatest lower bound. Notice that those elements have to be unique.
+and their meet is their greatest lower bound. Notice that those elements have to be unique.
 
 As a consequence of
 and axiomatic results~\cite{thesismellies},
@@ -27,7 +27,7 @@ terms of orthogonal abstract rewrite systems have push-outs.
 
 \begin{example} Laneve's counterexample from the introduction
 showed that the meet of derivations is not well defined for the pure lambda calculus
-(which is a orthogonal abstract rewrite system \cite{thesismellies}).
+(which is an orthogonal abstract rewrite system \cite{thesismellies}).
 Let $\Omega = (\lam{\var}{\var\var})\lam{\var}{\var\var}$,
 and consider the reduction space of
 $(\lam{\var}{(\lam{\vartwo}{a})(\var \Omega)}) (\lam{\varthree}{b})$
@@ -395,7 +395,7 @@ Some examples:
 \begin{itemize}
   \item $\emptyset$ represents the empty derivation, $\emptyDerivation$.
   \item $\set{1}$ represents $\redex$.
-  \item $\set{1, 2, 3}$ represents $[\redex \redextwo' \redexthree'']$,
+  \item $\set{1, 2, 3}$ represents $[\redex \redextwo' \redexthree']$,
     which is equal to $[\redex \redexthree \redextwo'']$ and $[\redextwo \redex' \redexthree']$.
   \item As $\set{1}$ represents $\redex$ and $\set{3}$ represents $\redextwo$, and $\set{1} \cup \set{3} = \set{1, 3}$, we know that $\redex \sqcup \redextwo = [\redex \redextwo']$.
 \end{itemize}
