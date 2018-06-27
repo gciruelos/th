@@ -54,19 +54,15 @@
 \newtheorem{remark}[dummythm]{Remark}
 \newtheorem{notation}[dummythm]{Notation}
 
-% https://tex.stackexchange.com/questions/425600/latex-error-command-counterwithout-already-defined
-\let\counterwithout\relax
-\let\counterwithin\relax
-\usepackage{chngcntr}
-\counterwithin{lemma}{chapter}
-\counterwithin{convention}{chapter}
-\counterwithin{proposition}{chapter}
-\counterwithin{theorem}{chapter}
-\counterwithin{example}{chapter}
-\counterwithin{corollary}{chapter}
-\counterwithin{definition}{chapter}
-\counterwithin{remark}{chapter}
-\counterwithin{notation}{chapter}
+\numberwithin{lemma}{chapter}
+\numberwithin{convention}{chapter}
+\numberwithin{proposition}{chapter}
+\numberwithin{theorem}{chapter}
+\numberwithin{example}{chapter}
+\numberwithin{corollary}{chapter}
+\numberwithin{definition}{chapter}
+\numberwithin{remark}{chapter}
+\numberwithin{notation}{chapter}
 
 
 % El \expandafter\uppercase es un hack para que anden las refs
