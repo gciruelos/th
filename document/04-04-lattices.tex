@@ -230,11 +230,11 @@ and \rlem{names_after_projection_along_a_step}:
                                     & = & \names(\redseq) \cup \names(\redseqtwo) \\
   \end{array}
 \]
-For item 2., 
-the inclusion $\names(\redseq \sqcap \redseqtwo) \subseteq \names(\redseq) \cap \names(\redseqtwo)$
-is an immediate consequence of \rlem{names_of_meet_included_in_names}.
-For other inclusion, namely to show  $\names(\redseq) \cap \names(\redseqtwo) \subseteq \names(\redseq \sqcap \redseqtwo)$,
-we first prove the following claim:\medskip
+%For item 2., 
+%the inclusion $\names(\redseq \sqcap \redseqtwo) \subseteq \names(\redseq) \cap \names(\redseqtwo)$
+%is an immediate consequence of \rlem{names_of_meet_included_in_names}.
+%For other inclusion, namely to show  $\names(\redseq) \cap \names(\redseqtwo) \subseteq \names(\redseq \sqcap \redseqtwo)$,
+For item 2., we first prove the following claim:\medskip
 
 {\bf Claim.} $\names(\redseq/(\redseq \sqcap \redseqtwo)) \cap \names(\redseqtwo/(\redseq \sqcap \redseqtwo) = \emptyset$.
 {\em Proof of the claim.}
@@ -397,7 +397,7 @@ Some examples:
   \item $\set{1}$ represents $\redex$.
   \item $\set{1, 2, 3}$ represents $[\redex \redextwo' \redexthree'']$,
     which is equal to $[\redex \redexthree \redextwo'']$ and $[\redextwo \redex' \redexthree']$.
-  \item As $\set{1}$ represents $\redex$ and $\set{3}$ represents $\redextwo$, and $\set{1} \cup {3} = \set{1, 3}$, we know that $\redex \sqcup \redextwo = [\redex \redextwo']$.
+  \item As $\set{1}$ represents $\redex$ and $\set{3}$ represents $\redextwo$, and $\set{1} \cup \set{3} = \set{1, 3}$, we know that $\redex \sqcup \redextwo = [\redex \redextwo']$.
 \end{itemize}
 \end{example}
 

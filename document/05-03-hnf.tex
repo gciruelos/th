@@ -40,9 +40,6 @@ then it is refined by
 if $\var_i \neq \vartwo$ for every $i$ (otherwise the type of $\vartwo$ is slightly different,
 but the term has the same shape).
 
-The claim that terms that are refinable are exactly the ones that have
-a head normal form is formally stated as follows.
-
 \begin{lemma}
 \llem{hnf_has_refinement}
 Let $\tm \in \terms$ such that it is in head normal form.
@@ -63,6 +60,10 @@ We proceed by induction on the pair $(n, m)$, that is, by induction on
   $\mathbb{N}^2$ with lexicographic order.
 \SeeAppendixRef{hnf_has_refinement_proof}
 \end{proof}
+
+The claim that terms that are refinable are exactly the ones that have
+a head normal form is formally stated as follows.
+
 
 \begin{proposition}[Refinability characterizes head normalization]
 \lprop{has_hnf_has_refinement}

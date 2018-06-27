@@ -192,14 +192,14 @@ But before that let us explain what the cube lemma does.
 The situation it speaks about is as shown in the following diagram.
 
 \[
-\xymatrix{
+\xymatrix@C=1cm{
   & \tm
   \ar[dl]_{\redex} \ar[dr]^{\redextwo}
   &
   & \refinedby
   &
   & \tm'
-  \ar[dl]_{\redex / \tm'} \ar[dr]^{\redextwo / \tm'}
+  \ar@{->>}[dl]_{\redex / \tm'} \ar@{->>}[dr]^{\redextwo / \tm'}
   &
   \\
   \ar@{->>}[dr]_{\redextwo / \redex}
@@ -285,7 +285,7 @@ By induction on depth of $\redexset$, \ie the maximum length of any development 
     and let $\redseq$ be a complete development of it.
     Without loss of generality, we may assume that $\redex_{n+1}$ is the first step executed by $\redseq$,
     followed by a complete development of
-    $\redseq' = \set{\redex_1 / \redex_{n+1}, \hdots, \redex_n / \redex_{n+1}}$, which we will call $\redseq'$.
+    $\redexset' = \set{\redex_1 / \redex_{n+1}, \hdots, \redex_n / \redex_{n+1}}$, which we will call $\redseq'$.
     Note that the longest development of $\redexset'$ (let's call it $\redseqtwo$) is strictly shorter
     than the longest development of $\redexset$ because $\redex_{n+1} \redseqtwo$
     is a complete development of $\redexset$.
@@ -379,7 +379,7 @@ We proceed by induction on $\redseqtwo$.
     On the other hand, the left side of the equation is $(\redex / \tm') / ((\redextwo \redseqtwo') / \tm')$,
     which by definition of simulation residual equals
     $(\redex / \tm') / ((\redextwo / \tm') (\redseqtwo' / (\tm' / \redextwo)))$.
-    That last derivation equals the a canonical development of the
+    That last derivation equals the canonical development of the
     right hand side of the equation because of the general
     rule $\alpha / (\beta \gamma) \permeq (\alpha / \beta) / \gamma$.
 \end{enumerate}
@@ -426,7 +426,7 @@ $
   (\redseq \sqcup \redseqtwo)/\tm =
   \redseq(\redseqtwo/\redseq)/\tm =
   (\redseq/\tm)((\redseqtwo/\redseq)/(\tm/\redseq)) \permeq
-  (\redseq/\tm)((\redseqtwo/\tm)/(\redseqtwo/\redseq)) =
+  (\redseq/\tm)((\redseqtwo/\tm)/(\redseq/\tm)) =
   (\redseq/\tm) \sqcup (\redseqtwo/\tm)
 $.
 \end{proof}
@@ -447,7 +447,7 @@ induces a morphism between the upper semilattices represented by the following r
   &
   &
   \\
-    \vartwo(II)(II)
+    \vartwo(I z)(I z)
     \ar[d]_-{\redextwo_{11}}
     \ar[r]^-{\redextwo_{21}}
   &
