@@ -36,7 +36,7 @@
 
 %% Otros paquetes.
 \usepackage{listings}
-\usepackage[colorlinks=true, pagebackref=true, citecolor=magenta, linkcolor=blue]{hyperref}
+\usepackage[colorlinks=true,backref=page,citecolor=magenta,linkcolor=blue]{hyperref}
 %\usepackage[alphabetic]{amsrefs}
 \usepackage{titlesec} %reasonable chapter headings
 \usepackage{stmaryrd} %double brackets
@@ -45,7 +45,9 @@
 % \usepackage{showlabels}
 \usepackage[margin=1.2cm]{caption}
 \usepackage{leading}
-\usepackage[space]{cite}
+% https://latex.org/forum/viewtopic.php?t=3722
+%\usepackage[space]{cite}
+\usepackage{natbib}
 \usepackage{breakcites}
 
 \leading{13.5pt}
@@ -82,7 +84,7 @@
 %\counterwithout{equation}{section} %this fixes equation numbering
 \begin{document}
 \frontmatter
-\setcounter{page}{-1}
+\setcounter{page}{-8}
 \input{./caratula.tex}
 \cleardoublepage \input{./00-abstract_es.tex}
 \cleardoublepage \input{./00-abstract_en.tex}
