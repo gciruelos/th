@@ -23,6 +23,7 @@
 \usepackage{xcolor}
 \usepackage{listings}
 
+\theoremstyle{remark}
 \newtheorem{defes}{Definición}
 \newtheorem{teoes}{Teorema}
 \newtheorem{lemes}{Lema}
@@ -48,7 +49,7 @@
 \newcommand{\cLab}[1]{{\color{black} #1}}
 
 \title{Factorizando espacios de derivación \\ a través de tipos intersección}
-\author{Gonzalo Ciruelos \\ {\footnotesize Director: Pablo Barenbaum}}
+\author{Gonzalo Ciruelos \\ Director: Pablo Barenbaum}
 \institute{Facultad de Ciencias Exactas y Naturales \\ Universidad de Buenos Aires}
 \date{28 de junio de 2018}
 
@@ -242,14 +243,15 @@ $\ulbDeriv{\cLam{(\lam{x}{y})\ (I\, z)}}
 \begin{defes}
 Sean $R$, $S$ dos pasos coiniciales. Definimos el residuo de $R$ después de $S$ como lo que queda
 de el paso $R$ después de hacer $S$: es un conjunto de pasos que salen del target de $S$.
+Lo escribimos como $R/S$.
 
 Formalmente, se puede definir con posiciones o etiquetas.
 \end{defes}
-\vskip 0.3cm
+\vskip 0.2cm
 La definición se puede extender para derivaciones: $\rho/\sigma$ es lo que
 queda de $\rho$ después hacer hacer $\sigma$.
 
-\vskip 1cm
+\vskip 0.7cm
 
 Para ordenar las derivaciones que salen de un mismo término, usamos el orden del prefijo.
 
@@ -301,19 +303,19 @@ Queremos \textbf{entender los espacios de derivación del cálculo-$\lambda$.}
 Creemos que \textbf{explicitar el manejo de recursos puede ser útil.}
 \vskip 0.5cm
 
-$\ulbDeriv{\cProto{(\lam{x}{x x}) [I\, y, I\, y]}} = $
+$\ulbDeriv{\cProto{(\lam{x}{x x}) [I\, z, I\, z]}} = $
 \[\xymatrix@=0.3cm{
-& \cProto{(\lam{x}{x x}) [I\, y, I\, y]} \ar[rr] \ar[dd]|!{[d]}\hole \ar[dl]
-& & \cProto{(\lam{x}{x x}) [y, I\, y]} \ar[dd] \ar[dl]
+& \cProto{(\lam{x}{x x}) [I\, z, I\, z]} \ar[rr] \ar[dd]|!{[d]}\hole \ar[dl]
+& & \cProto{(\lam{x}{x x}) [z, I\, z]} \ar[dd] \ar[dl]
 \\
-\cProto{(\lam{x}{x x}) [I\, y, y]} \ar[rr]\ar[dd]
-& & \cProto{(\lam{x}{x x}) [y, y]} \ar[dd]
+\cProto{(\lam{x}{x x}) [I\, z, z]} \ar[rr]\ar[dd]
+& & \cProto{(\lam{x}{x x}) [z, z]} \ar[dd]
 \\
-& \cProto{(I\, y)\ (I\, y)} \ar[rr]|!{[r]}\hole \ar[dl]
-& & \cProto{y\ (I\, y)} \ar[dl]
+& \cProto{(I\, z)\ (I\, z)} \ar[rr]|!{[r]}\hole \ar[dl]
+& & \cProto{z\ (I\, z)} \ar[dl]
 \\
-\cProto{(I\, y)\ y} \ar[rr]
-& & \cProto{y\ y}
+\cProto{(I\, z)\ z} \ar[rr]
+& & \cProto{z\ z}
 }\]
 \end{frame}
 
@@ -428,8 +430,10 @@ $[\text{Int}, \text{Int}, \text{Int} \to \text{Int}] \to \text{Int}$.
 \textbf{Reducción}
 \[ \cGrey{(\lam{x}{t}) [s_1, ..., s_n]} \todistl{\cDist{\lab}} \cGrey{\subs{t}{x}{[s_1, ..., s_n]}} \]
 \end{defes}
-
 La reducción es orientada por tipos.
+
+\textbf{Ejemplo.} $\cDist{(\lamp{1}{x}{x^{\alpha^2}})\,[y^{\alpha^2}]}$
+
 \end{frame}
 
 
@@ -563,7 +567,7 @@ Se define análogamente para el cálculo-$\clambdadist$.
 \end{defes}
 
 \begin{proes}[{\footnotesize La refinabilidad caracteriza la tenencia de \emph{head normal forms}}]
-Dado $\cLam{t}$ un término del cálculo-$\clambda$:
+  Dado $\cLam{t}$ un término del cálculo-$\clambda$, son equivalentes:
 \begin{enumerate}
 \item El término $\cLam{t}$ tiene una \emph{head normal form}.
 \item Existe un término $\cDist{t'}$ del cálculo-$\clambdadist$ tal que $\cDist{t'} \refines \cLam{t}$.
