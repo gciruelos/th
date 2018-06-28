@@ -355,7 +355,7 @@ By induction on $\redseq$ using \rlem{cube_lemma_for_simulation_residuals}.
 %\begin{pabloenv}
 %The interesting case is when $\redseq$ is non-empty, \ie $\redseq = \redex\redseqthree$. 
 %\end{pabloenv}
-We will prove this result in two steps. The first step will be to prove it in the case where $\redseq$ is just one step, \ie, $(\redex / \tm') / (\redseqtwo / \tm') \permeq (\redex / \redseqtwo) / (\tm' / \redseqtwo)$.
+We will prove this result in two steps. The first step will be to prove it in the case where $\redseq$ is just one step, \ie, \[(\redex / \tm') / (\redseqtwo / \tm') \permeq (\redex / \redseqtwo) / (\tm' / \redseqtwo). \tag{2} \label{eq:cubelemma_partial_result}\]
 We proceed by induction on $\redseqtwo$.
 \begin{enumerate}
   \item {\bf $\redseqtwo = \emptyDerivation$.}
@@ -395,9 +395,9 @@ Now we proceed to prove the full proposition, and we will proceed by inducion on
         & = & \frac{(\redex \redseq')/\redseqtwo}{\tm'/\redseqtwo} \\
         & = & \frac{(\redex / \redseqtwo) (\redseq' / (\redseqtwo / \redex))}{\tm'/\redseqtwo} & \text{ by definition of residual} \\
         & = & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\redseqtwo / \redex)}{(\tm' / \redseqtwo) / (\redex / \redseqtwo)} & \text{ by definition of simulation residual} \\
-        & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\redseqtwo / \redex)}{(\tm' / \redex) / (\redseqtwo / \redex)} & \text{ by the previous partial result} \\
+      & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\redseqtwo / \redex)}{(\tm' / \redex) / (\redseqtwo / \redex)} & \text{ by the previous partial result } (\ref{eq:cubelemma_partial_result}) \\
         & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by inductive hypothesis} \\
-        & \permeq & \frac{\redex / \tm'}{\redseqtwo / \tm'} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by the previous partial result} \\
+        & \permeq & \frac{\redex / \tm'}{\redseqtwo / \tm'} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by the previous partial result } (\ref{eq:cubelemma_partial_result}) \\
         & = & \frac{(\redex / \tm') (\redseq' / (\tm' / \redex))}{\redseqtwo / \tm'} & \text{ by definition of residual}\\
         & = & \frac{(\redex \redseq') / \tm'}{\redseqtwo / \tm'} & \text{ by definition of simulation residual}\\
       \end{array}
