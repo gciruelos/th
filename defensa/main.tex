@@ -36,7 +36,7 @@
 \definecolor{darkGreen}{rgb}{0,0.5,0}
 \definecolor{darkBlue}{rgb}{0,0,1}
 \definecolor{lightBlue}{rgb}{1,0.2,0.6}
-\definecolor{normalGrey}{rgb}{0.7,0.7,0.7}
+\definecolor{normalGrey}{rgb}{0.6,0.6,0.6}
 \newcommand{\cArith}[1]{{\color{darkGreen} #1}}
 \newcommand{\cLam}[1]{{\color{darkBlue} #1}}
 \newcommand{\cProto}[1]{{\color{lightBlue} #1}}
@@ -429,10 +429,10 @@ $[\text{Int}, \text{Int}, \text{Int} \to \text{Int}] \to \text{Int}$.
 }
 \textbf{Reducción}
 \[ \cGrey{(\lam{x}{t}) [s_1, ..., s_n]} \todistl{\cDist{\lab}} \cGrey{\subs{t}{x}{[s_1, ..., s_n]}} \]
-\end{defes}
 La reducción es orientada por tipos.
+\end{defes}
 
-\textbf{Ejemplo.} $\cDist{(\lamp{1}{x}{x^{\alpha^2}})\,[y^{\alpha^2}]}$
+\textbf{Ejemplo de término.} $\cDist{(\lamp{1}{x}{x^{\alpha^2}})\,[y^{\alpha^2}]}$
 
 \end{frame}
 
