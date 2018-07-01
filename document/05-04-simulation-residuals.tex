@@ -398,7 +398,8 @@ Now we proceed to prove the full proposition, and we will proceed by inducion on
       & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\redseqtwo / \redex)}{(\tm' / \redex) / (\redseqtwo / \redex)} & \text{ by the previous partial result } (\ref{eq:cubelemma_partial_result}) \\
         & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by inductive hypothesis} \\
         & \permeq & \frac{\redex / \tm'}{\redseqtwo / \tm'} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by the previous partial result } (\ref{eq:cubelemma_partial_result}) \\
-        & = & \frac{(\redex / \tm') (\redseq' / (\tm' / \redex))}{\redseqtwo / \tm'} & \text{ by definition of residual}\\
+        & \permeq & \frac{\redex / \tm'}{\redseqtwo / \tm'} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \tm') / (\redex / \tm')} & \text{ by the previous partial result } (\ref{eq:cubelemma_partial_result}) \\
+        & \permeq & \frac{(\redex / \tm') (\redseq' / (\tm' / \redex))}{\redseqtwo / \tm'} & \text{ by residual properties, in general: $\frac{\gamma}{\beta} \frac{\alpha}{\beta/\gamma} \permeq \frac{\gamma \alpha}{\beta}$}\\
         & = & \frac{(\redex \redseq') / \tm'}{\redseqtwo / \tm'} & \text{ by definition of simulation residual}\\
       \end{array}
     \]
