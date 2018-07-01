@@ -33,9 +33,9 @@ We proceed by induction on $\con$.
         Like before,
           $\redextwo : (\lam{\var}{\tmfour}) \con_{\tmtwo}\of{(\lam{\vartwo}{\tmthree}) \tmthreevariant}
              \to (\lam{\var}{\tmfour}) \con_{\tmtwo}\of{\subs{\tmthree}{\vartwo}{\tmthreevariant}}$.
-        By \rlem{refinement_context} we have that $\tm' = (\lamp{\lab}{\var}{\tmfour'}) [\con'_{\tmtwo}\of{
+        By \rlem{refinement_context} we have that \[\tm' = (\lamp{\lab}{\var}{\tmfour'}) [\con'_{\tmtwo}\of{
           (\lamp{\lab_{i,1}}{\vartwo}{\tmthree_{i,1}}) \tmthreevariant_{i,1}, \hdots,
-          (\lamp{\lab_{i,m_i}}{\vartwo}{\tmthree_{i,m_i}}) \tmthreevariant_{i,m_i}}]_{i=1}^n$, then
+    (\lamp{\lab_{i,m_i}}{\vartwo}{\tmthree_{i,m_i}}) \tmthreevariant_{i,m_i}}]_{i=1}^n\] then
         $\names(\redextwo / \tm') = \bigcup_{i=1}^n \set{\lab_{i,1}, \hdots, \lab_{i, m_i}}$, which
         does not contain $\lab$ because labels are pairwise distinct.
     \end{enumerate}
@@ -702,12 +702,15 @@ There are two cases, depending on whether there exists a coarse step for $(\reds
   We have just claimed that $\redex_0 = \redextwo_0$.
   Then:
   \[
-    \begin{array}{rcll}
+    \begin{array}{rcl}
     \redseq\redseqtwo \sieve \tm'
-    & = & \redex_0((\redseq\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)) & \text{by definition of sieving} \\
+    & = & \redex_0((\redseq\redseqtwo/\redex_0) \sieve (\tm'/\redex_0)) \\
+    &   & \text{by definition of sieving} \\
     & = & \redex_0(((\redseq/\redex_0)(\redseqtwo/(\redex_0/\redseq))) \sieve (\tm'/\redex_0)) \\
-    & = & \redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0)) & \text{by \ih since $\redseqtwo/(\redex_0/\redseq)$ is garbage by \rprop{properties_of_garbage}} \\
-    & = & \redseq \sieve \tm' & \text{by definition of sieving}
+    & = & \redex_0((\redseq/\redex_0) \sieve (\tm'/\redex_0)) \\
+    &   & \text{by \ih since $\redseqtwo/(\redex_0/\redseq)$ is garbage by \rprop{properties_of_garbage}} \\
+    & = & \redseq \sieve \tm' \\
+    &   & \text{by definition of sieving}
     \end{array}
   \]
   which concludes the proof.

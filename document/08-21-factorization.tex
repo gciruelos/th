@@ -133,7 +133,7 @@ are isomorphic as upper semilattices.
 
     First, we can see that it is well-defined,
     since if $\cls{\alpha} \in \ulbG([\redseq])$
-    then the image $\ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq})(\cls{\alpha}}) = \cls{\redseq\alpha/\redseqtwo}$
+    then we have that the image $\ulbG(\ptF{\cls{\redseqtwo}}{\cls{\redseq})(\cls{\alpha}}) = \cls{\redseq\alpha/\redseqtwo}$
     is an element of $\ulbG([\redseqtwo])$,
     since
     $
@@ -231,12 +231,9 @@ are isomorphic as upper semilattices.
       $(\cls{\redseq},\cls{\redseqtwo}) \lor (\cls{\redseq'},\cls{\redseqtwo'}) \leq (\cls{\redseq''},\cls{\redseqtwo''})$.
       First note that $\cls{\redseq} \leqF \cls{\redseq''}$ and $\cls{\redseq'} \leqF \cls{\redseq''}$
       so $\cls{\redseq} \lorF \cls{\redseq'} \leqF \cls{\redseq''}$.\\
-      Moreover, we know that:
-      \[
-        \cls{\redseq\redseqtwo/\redseq''} = \ulbG(\pt{\cls{\redseq''}}{\cls{\redseq}})(\cls{\redseqtwo}) \permle \cls{\redseqtwo''}
-        \ \text{ and }\ %
-        \cls{\redseq'\redseqtwo'/\redseq''} = \ulbG(\pt{\cls{\redseq''}}{\cls{\redseq'}})(\cls{\redseqtwo'}) \permle \cls{\redseqtwo''}
-      \]
+      Moreover, we know that $\cls{\redseq\redseqtwo/\redseq''} = \ulbG(\pt{\cls{\redseq''}}{\cls{\redseq}})(\cls{\redseqtwo}) \permle \cls{\redseqtwo''}$
+     and
+     $\cls{\redseq'\redseqtwo'/\redseq''} = \ulbG(\pt{\cls{\redseq''}}{\cls{\redseq'}})(\cls{\redseqtwo'}) \permle \cls{\redseqtwo''}$.
       Let $\alpha := (\redseq \sqcup \redseq') \sieve \tm'$.
       First we claim that $\alpha \permle \redseq\redseqtwo \sqcup \redseq'\redseqtwo'$.
       Indeed, $\alpha = (\redseq \sqcup \redseq') \sieve \tm' \permle \redseq \sqcup \redseq'$
@@ -266,7 +263,7 @@ are isomorphic as upper semilattices.
         \\
         & = &
         \cls{\alpha((\redseq\redseqtwo \sqcup \redseq'\redseqtwo')/\alpha)/\redseq''}
-        &\hspace{-3cm} \text{since $A/C \sqcup B/C \permeq (A \sqcup B)/C$}
+        &\hspace{-5cm} \text{since $A/C \sqcup B/C \permeq (A \sqcup B)/C$}
         \\
         & = &
         \cls{(\redseq\redseqtwo \sqcup \redseq'\redseqtwo')(\alpha/(\redseq\redseqtwo \sqcup \redseq'\redseqtwo'))/\redseq''}
@@ -274,15 +271,15 @@ are isomorphic as upper semilattices.
         \\
         & = &
         \cls{(\redseq\redseqtwo \sqcup \redseq'\redseqtwo')/\redseq''}
-        &\hspace{-3cm} \text{since $\alpha \permle \redseq\redseqtwo \sqcup \redseq'\redseqtwo'$}
+        &\hspace{-5cm} \text{since $\alpha \permle \redseq\redseqtwo \sqcup \redseq'\redseqtwo'$}
         \\
         & = &
         \cls{\redseq\redseqtwo/\redseq'' \sqcup \redseq'\redseqtwo'/\redseq''}
-        &\hspace{-3cm} \text{since $A/C \sqcup B/C \permeq (A \sqcup B)/C$}
+        &\hspace{-5cm} \text{since $A/C \sqcup B/C \permeq (A \sqcup B)/C$}
         \\
         & \permle &
         \cls{\redseqtwo''}
-        &\hspace{-3cm} \text{since $\cls{\redseq\redseqtwo/\redseq''} \permle \cls{\redseqtwo''}$, $\cls{\redseq'\redseqtwo'/\redseq''} \permle \cls{\redseqtwo''}$}
+        &\hspace{-5cm} \text{since $\cls{\redseq\redseqtwo/\redseq''} \permle \cls{\redseqtwo''}$, $\cls{\redseq'\redseqtwo'/\redseq''} \permle \cls{\redseqtwo''}$}
         \end{array}
       \]
     \end{enumerate}
@@ -340,17 +337,19 @@ are isomorphic as upper semilattices.
             \redseqtwo/(\redseqtwo \sieve \tm')$.
             In fact:
             \[
-              \begin{array}{rcll}
+              \begin{array}{rcl}
                 \ulbG(\ptF{\cls{\redseqtwo \sieve \tm'}}{\cls{\redseq \sieve \tm'}})(\cls{\redseq/(\redseq \sieve \tm')})
               & = &
-                \cls{ (\redseq \sieve \tm')(\redseq/(\redseq \sieve \tm')) / (\redseqtwo \sieve \tm') } & \text{ by definition} \\
+                \cls{ (\redseq \sieve \tm')(\redseq/(\redseq \sieve \tm')) / (\redseqtwo \sieve \tm') } \\
+              &   & \text{ by definition} \\
               & = &
-                \cls{ \redseq / (\redseqtwo \sieve \tm') } & \text{ by \rlem{garbage_free_garbage_decomposition}} \\
+                \cls{ \redseq / (\redseqtwo \sieve \tm') } \\
+              &   & \text{ by \rlem{garbage_free_garbage_decomposition}} \\
               & \permle &
-                \cls{ \redseqtwo / (\redseqtwo \sieve \tm') } & \text{ since $\redseq \permle \redseqtwo$} \\
+                \cls{ \redseqtwo / (\redseqtwo \sieve \tm') } \\
+              &   & \text{ since $\redseq \permle \redseqtwo$} \\
               \end{array}
             \]
-             
       \end{enumerate}
     \item {\bf Preserves bottom.}
       By definition:
@@ -447,7 +446,7 @@ are isomorphic as upper semilattices.
       This immediately implies that
       $\psi(\cls{\redseq_1},\cls{\redseqtwo_1}) \permle \psi(\cls{\redseq_2},\cls{\redseqtwo_2})$.
     \item {\bf Preserves bottom.}
-      Recall that the bottom element $\bot_{(\grothy{\ulbF}{\ulbG})}$
+      The bottom element $\bot_{(\grothy{\ulbF}{\ulbG})}$
       is defined as $(\bot_\ulbF, \bot_{\ulbG(\bot_\ulbF)})$, that is
       $(\cls{\emptyDerivation}, \cls{\emptyDerivation})$.
       Therefore $\psi(\bot_{(\grothy{\ulbF}{\ulbG})}) = \cls{\emptyDerivation} = \bot_{\ulbDerivLam{\tm}}$.
@@ -471,27 +470,27 @@ are isomorphic as upper semilattices.
       $\redseq_1 \sqcup \redseq_2 \permle \redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2$.
       Using this fact we have:
       \[
-      \begin{array}{rcll}
-        \psi((\cls{\redseq_1},\cls{\redseqtwo_1}) \lor (\cls{\redseq_2},\cls{\redseqtwo_2}))
-      & = &
+      \begin{array}{rll}
+        \psi((\cls{\redseq_1},\cls{\redseqtwo_1}) \lor (\cls{\redseq_2},\cls{\redseqtwo_2})) & & \\
+      & \hspace{-3cm} =
         \psi(\cls{\alpha},\ulbG(\ptF{\cls{\alpha}}{\cls{\redseq_1}})(\cls{\redseqtwo_1}) \sqcup \ulbG(\ptF{\cls{\alpha}}{\cls{\redseq_2}})(\cls{\redseqtwo_2}))
       \\
-      & = &
+      & \hspace{-3cm} =
         \psi(\cls{\alpha}, \cls{(\redseq_1\redseqtwo_1/\alpha) \sqcup (\redseq_2\redseqtwo_2/\alpha)})
       \\
-      & = &
+      & \hspace{-3cm} =
         \psi(\cls{\alpha}, \cls{(\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2)/\alpha})
-      \\&&\text{ since $A/C \sqcup B/C \permle (A \sqcup B)/C$} \\
-      & = &
+        \\&\hspace{-2cm}\text{ since $A/C \sqcup B/C \permle (A \sqcup B)/C$} \\
+      & \hspace{-3cm} =
         \cls{\alpha((\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2)/\alpha)} \\
-      & = &
+      & \hspace{-3cm} =
         \cls{(\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2)(\alpha/(\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2))} \\
-      & = &
+      & \hspace{-3cm} =
         \cls{\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2}
-        \\&&\text{ since
+        \\&\hspace{-2cm}\text{ since
                      $\alpha \permle \redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2$,
                    so $\alpha/(\redseq_1\redseqtwo_1 \sqcup \redseq_2\redseqtwo_2) = \emptyDerivation$} \\
-      & = &
+      & \hspace{-3cm} =
         \psi(\cls{\redseq_1},\cls{\redseqtwo_1}) \sqcup \psi(\cls{\redseq_2},\cls{\redseqtwo_2}))
       \end{array}
       \]

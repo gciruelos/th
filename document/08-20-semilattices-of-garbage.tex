@@ -92,7 +92,11 @@ We have just claimed that $\redex_0 = \redextwo_0$. Then we conclude as follows:
 \]
 \end{proof}
 
-Let us check the two items of \rprop{semilattices_of_garbage_free_and_garbage_derivations}:
+Now we can proceed to check the two items of \rprop{semilattices_of_garbage_free_and_garbage_derivations}.
+
+\begin{proof}
+We check that the set $\ulbFree{\tm'}{\tm}$ forms a finite lattice
+and th set $\ulbGarbage{\tm'}{\tm}$ forms an upper semilattice.
 \begin{enumerate}
 \item
   {\bf The set $\ulbFree{\tm'}{\tm}$ forms a finite lattice.}
@@ -112,7 +116,7 @@ Let us check the two items of \rprop{semilattices_of_garbage_free_and_garbage_de
         \redseq
         & \permeq & \redseq \sieve \tm' & \text{ since $\redseq$ is garbage-free, by \rprop{characterization_of_garbage_free_derivations}} \\
         & \permeq & \redseq(\redseqtwo/\redseq) \sieve \tm' & \text{ since $\redseqtwo/\redseq$ is garbage, by \rlem{sieving_trailing_garbage}} \\
-        & \permeq & \redseqtwo(\redseq/\redseqtwo) \sieve \tm' & \text{ since $A(B/A) \permeq B(A/B)$ in general, using \rlem{sieving_is_compatible_with_permutation_equivalence}} \\
+        & \permeq & \redseqtwo(\redseq/\redseqtwo) \sieve \tm' & \text{ since $A(B/A) \permeq B(A/B)$, by \rlem{sieving_is_compatible_with_permutation_equivalence}} \\
         & \permeq & \redseqtwo \sieve \tm' & \text{ since $\redseq/\redseqtwo$ is garbage, by \rlem{sieving_trailing_garbage}} \\
         & \permeq & \redseqtwo & \text{ since $\redseqtwo$ is garbage-free, by \rprop{characterization_of_garbage_free_derivations}} \\
         \end{array}
@@ -126,7 +130,8 @@ Let us check the two items of \rprop{semilattices_of_garbage_free_and_garbage_de
       By the fact that the projection of garbage is garbage~(\rprop{properties_of_garbage})
       the derivation $(\redseq/\redseqtwo)/(\redseqtwo/\redseqthree)$ is garbage.
       The composition of garbage is also garbage~(\rprop{properties_of_garbage}),
-      so $(\redseqtwo/\redseqthree)((\redseq/\redseqtwo)/(\redseqtwo/\redseqthree))$ is garbage.
+      so we have that
+      $(\redseqtwo/\redseqthree)((\redseq/\redseqtwo)/(\redseqtwo/\redseqthree))$ is garbage.
       In general the following holds:
       \[
         \begin{array}{rcll}
@@ -264,4 +269,5 @@ Let us check the two items of \rprop{semilattices_of_garbage_free_and_garbage_de
     of $\set{\cls{\redseq}, \cls{\redseqtwo}}$.
   \end{enumerate}
 \end{enumerate}
+\end{proof}
 

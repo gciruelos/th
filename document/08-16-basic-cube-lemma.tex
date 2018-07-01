@@ -101,8 +101,8 @@ We proceed by induction on $\tm$.
           \item {\bf $\redextwo$ is at the root.}
             Here we have that $\tmfive = \lam{x}{\conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}}$, hence
             the following diagram.
-            \[
             {\tiny
+            \[
               \xymatrix@C=.5cm{
               (\lam{\var}{\conof{(\lam{\vartwo}{\tmthree}) \tmthreevariant}}) \tmsix
                 \ar@{->}[r]^{\redex} \ar@{->}[rd]^{\redextwo} \ar@{}[dd]|*=0[@]{\rtimes}
@@ -117,8 +117,8 @@ We proceed by induction on $\tm$.
                   \ar@{->>}[r]^{(\redex / \tm') / (\redextwo / \tm')}
                   & \con'^{\circ}\of{\subs{\tmthree^{\circ}_1}{\vartwo}{\tmthreevariant^{\circ}_1}, \hdots, \subs{\tmthree^{\circ}_n}{\vartwo}{\tmthreevariant^{\circ}_n}} \\
               }
-            }
             \]
+            }
             As seen in the diagram, $\names((\redex / \tm') / (\redextwo / \tm')) = \set{\lab_1, \hdots, \lab_n}$.
             But the lambda reduced by $\redex / \redextwo$ is refined by each $\lamp{\lab_i}{\vartwo}{\tmthree_i}$,
             then $\names((\redex / \redextwo) / (\tm' / \redextwo)) = \set{\lab_1, \hdots, \lab_n}$,
