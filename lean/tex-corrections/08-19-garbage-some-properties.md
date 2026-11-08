@@ -10,8 +10,8 @@ and `../document/08-20-semilattices-of-garbage.tex` (line 72).
 ## The problem
 
 The lemma says: if $R_0$ is the leftmost coarse step for $(\rho, t')$ and
-$\sigma \sqsubseteq \rho$, then $\#(R_0/\sigma) \le 1$. The proof goes by induction on
-$\sigma = S\,\sigma_1$. It shows that $R_0$ has a single residual $R_1$ after $S$, and then
+$\sigma \sqsubseteq \rho$, then $`\#(R_0/\sigma) \le 1`$. The proof goes by induction on
+$`\sigma = S\,\sigma_1`$. It shows that $R_0$ has a single residual $R_1$ after $S$, and then
 applies the induction hypothesis to $R_1$ in $(\rho/S, t'/S)$.
 
 The induction hypothesis is about the **leftmost** coarse step. The proof only checks that
@@ -64,6 +64,6 @@ coarse step*:
 | `leftmost_least` | the lemma with the strengthened invariant (`hK`) |
 | `sieve_least`, `sieve_garbageFree` | the uses in the sieve |
 
-Lean proves the form the sieve actually uses, rather than "$\#(R_0/\sigma) \le 1$". If a
+Lean proves the form the sieve actually uses, rather than "$`\#(R_0/\sigma) \le 1`$". If a
 prefix $\sigma \sqsubseteq \rho$ already contracts every λ^dist-redex simulating $R_0$, then
 $R_0 \sqsubseteq \sigma$. The induction and the invariant are the same as above.

@@ -33,13 +33,13 @@ Even if Subject Expansion and Backwards Simulation were omitted altogether, almo
 - They are used **exclusively** for the implication **$(3 \implies 2)$** (hence $(3 \implies 1)$: *every head-normalizing λ-term has a refinement*) of `\lprop{has_hnf_has_refinement}`.
 - **Completely independent of Subject Expansion / Backwards Simulation:**
   - All of Chapter 2 (`../document/03-distributive.tex`, `Thesis/Chapter2DistLambdaCalc{Defs,Appendix,}.lean`): Unique Typing, Linearity, Subject Reduction, Strong Normalization, Strong Permutation, Confluence.
-  - All of Chapter 3 (`../document/04-residual-theory.tex`, `Thesis/Chapter3ResidualTheory{Defs,Appendix,}.lean`): orthogonality of λ^dist, creation/stability, and $\mathbb{D}^{\mathtt{\#}}(t')$ being a distributive lattice and ring of sets.
-  - Forward Simulation, Reverse Simulation (`../document/05-02-simulation.tex` — which projects $\to_{\mathtt{\#}}$ *forward* to $\to_\beta$, not backwards), $(1 \implies 3)$ of `has_hnf_has_refinement`, `hnf_has_refinement`, Cube Lemmas, Compatibility, and Algebraic Simulation (`Thesis/Chapter4Simulation{Defs,}.lean`).
+  - All of Chapter 3 (`../document/04-residual-theory.tex`, `Thesis/Chapter3ResidualTheory{Defs,Appendix,}.lean`): orthogonality of λ^dist, creation/stability, and $`\mathbb{D}^{\mathtt{\#}}(t')`$ being a distributive lattice and ring of sets.
+  - Forward Simulation, Reverse Simulation (`../document/05-02-simulation.tex` — which projects $`\to_{\mathtt{\#}}`$ *forward* to $\to_\beta$, not backwards), $(1 \implies 3)$ of `has_hnf_has_refinement`, `hnf_has_refinement`, Cube Lemmas, Compatibility, and Algebraic Simulation (`Thesis/Chapter4Simulation{Defs,}.lean`).
   - All of Chapter 5 (`../document/06-factorization.tex`, `Thesis/Chapter5Factorization{Defs,Appendix,}.lean`): garbage, sieving, the garbage-free lattice $\mathcal{F}$, the lax 2-functor $\mathcal{G}$, and the Grothendieck Factorization Theorem $\mathbb{D}^\lambda(t) \simeq \int_{\mathcal{F}} \mathcal{G}$, which take a refinement $t' \ltimes t$ as an input hypothesis and only step $t'$ forward via $t'/\rho$.
 
 ---
 
-## Fragility 1: $\to_{\mathtt{\#}}$-expansion breaks plain correctness (Closed in the thesis & Lean)
+## Fragility 1: $`\to_{\mathtt{\#}}`$-expansion breaks plain correctness (Closed in the thesis & Lean)
 
 ### Why naive Subject Expansion / Backwards Simulation fails
 
@@ -51,11 +51,11 @@ Plain **correctness** (`\ldef{sequentiality_and_correctness}` in `../document/03
 
 Note that `Correct` does **not** require global uniqueness of all arrow labels inside type annotations: `correct_repeated_arrow_labels` (`Thesis/Chapter2DistLambdaCalcAppendix.lean`) proves that a single variable annotated with $[] \xrightarrow{7} [] \xrightarrow{7} \alpha^8$ is `Correct` (constructed via the compositional lemmas `Correct.var` and `Correct.app`).
 
-Reduction ($\to_{\mathtt{\#}}$) splits elements of an already-sequential multiset apart, preserving correctness. Expansion ($\leftarrow_{\mathtt{\#}}$) does the opposite: it **gathers** disjoint subterms $s'_1, \dots, s'_n$ into a single argument list $(\lambda^\ell x.\, t')[s'_1, \dots, s'_n]$, merging their types into a single multiset $[\tau_1, \dots, \tau_n] \xrightarrow{\ell} \sigma$ (and $x : [\tau_1, \dots, \tau_n]$).
+Reduction ($`\to_{\mathtt{\#}}`$) splits elements of an already-sequential multiset apart, preserving correctness. Expansion ($`\leftarrow_{\mathtt{\#}}`$) does the opposite: it **gathers** disjoint subterms $s'_1, \dots, s'_n$ into a single argument list $`(\lambda^\ell x.\, t')[s'_1, \dots, s'_n]`$, merging their types into a single multiset $[\tau_1, \dots, \tau_n] \xrightarrow{\ell} \sigma$ (and $x : [\tau_1, \dots, \tau_n]$).
 
 Plain correctness of the reduced term does **not** prevent two disjoint subterms from
 having different types with the same external label. A typable example is obtained from
-$u = f\,w$, with refinements
+$`u = f\,w`$, with refinements
 - $u'_1 = f^{[] \xrightarrow{5} \alpha^0}[] : \alpha^0$,
 - $u'_2 = f^{[] \xrightarrow{6} \beta^0}[] : \beta^0$.
 
@@ -63,9 +63,17 @@ Let $Z = [\alpha^0] \xrightarrow{2} [\beta^0] \xrightarrow{3} \gamma^1$. Then
 $$s' = z^Z[u'_1][u'_2]$$
 is correct: the context for $f$ contains two types with distinct external labels 5 and 6,
 each arrow domain in $Z$ is a singleton, and there are no lambdas. Expanding along
-$$(\lambda x.\,z\,x\,x)\,(f\,w) \to_\beta z\,(f\,w)\,(f\,w)$$
+
+```math
+(\lambda x.\,z\,x\,x)\,(f\,w) \to_\beta z\,(f\,w)\,(f\,w)
+```
+
 gives the typable term
-$$t' = (\lambda^4 x.\,z^Z[x^{\alpha^0}][x^{\beta^0}])[u'_1,u'_2].$$
+
+```math
+t' = (\lambda^4 x.\,z^Z[x^{\alpha^0}][x^{\beta^0}])[u'_1,u'_2].
+```
+
 Its new binder domain $[\alpha^0,\beta^0]$ is not sequential. The types are distinct,
 so type-directed lookup selects the intended argument at each occurrence; the failure
 also occurs for the existing `DStep`, independently of the partition relation.
@@ -74,11 +82,11 @@ This is proved in `Thesis/Chapter2DistLambdaCalcAppendix.lean` by
 `correctness_subject_expansion_counterexample` and
 `correctness_dStep_expansion_counterexample`. Notice that all old arrow labels
 (2, 3, 5, 6) are distinct: distinct arrow labels alone do not prevent this failure.
-(An earlier note used closed refinements of $(\lambda q.\,q\,q)(\lambda r.\,r)$ with claimed atomic result type, which were not typable as written because $\lambda^2 r.\,r^{\alpha^0}$ has type $[\alpha^0]\xrightarrow{2}\alpha^0$ rather than $[]\xrightarrow{2}\alpha^0$; the $f\,w$ witnesses above replace them.)
+(An earlier note used closed refinements of $`(\lambda q.\,q\,q)(\lambda r.\,r)`$ with claimed atomic result type, which were not typable as written because $`\lambda^2 r.\,r^{\alpha^0}`$ has type $[\alpha^0]\xrightarrow{2}\alpha^0$ rather than $[]\xrightarrow{2}\alpha^0$; the $`f\,w`$ witnesses above replace them.)
 
 ### How the thesis closes it
 
-In git history, earlier drafts (prior to commit `59d860b`, April 22, 2018) stated `backwards_simulation` over $\mathcal{T}^{\mathtt{\#}}$ (correct terms) with a `\TODO`. Commit `59d860b` resolved this (`../document/05-03-hnf.tex` lines 85–86; `../document/08-15-has-hnf-has-refinement.tex` lines 34–83):
+In git history, earlier drafts (prior to commit `59d860b`, April 22, 2018) stated `backwards_simulation` over $`\mathcal{T}^{\mathtt{\#}}`$ (correct terms) with a `\TODO`. Commit `59d860b` resolved this (`../document/05-03-hnf.tex` lines 85–86; `../document/08-15-has-hnf-has-refinement.tex` lines 34–83):
 1. `\llem{subject_expansion}` is stated **only for raw typing** ($\Gamma \vdash \dots : \tau$), making no claim about correctness.
 2. Correctness is strengthened to **strong sequentiality** (`../document/08-15-has-hnf-has-refinement.tex`, lines 60–66; `StronglySequential` in `Thesis/Chapter4SimulationAppendix.lean`, proved strictly stronger than `Correct` in `correct_not_stronglySequential`): in every subterm $s \in \mathsf{sub}(t)$, any two free subterms $s_1, s_2 \in \mathsf{sub}^\circ(s)$ at disjoint positions have distinct external labels.
 3. The canonical refinement of an HNF (`../document/08-14-hnf-has-refinement.tex`) uses empty argument lists `[]` everywhere, so its subterm positions form a single linear chain with no disjoint pairs; hence it is vacuously strongly sequential.
@@ -88,17 +96,17 @@ In git history, earlier drafts (prior to commit `59d860b`, April 22, 2018) state
 ## Fragility 2: Typing Subject Expansion vs. definitions of substitution (Closed in Lean)
 
 `../document/08-15-has-hnf-has-refinement.tex` (lines 22–26) states:
-> If $\Gamma \vdash \mathtt{C}\langle t\{x := \vec{s}\}\rangle : \tau$ is derivable, then $\Gamma \vdash \mathtt{C}\langle (\lambda^\ell x.\, t)\vec{s}\rangle : \tau$ is derivable.
+> If $`\Gamma \vdash \mathtt{C}\langle t\{x := \vec{s}\}\rangle : \tau`$ is derivable, then $`\Gamma \vdash \mathtt{C}\langle (\lambda^\ell x.\, t)\vec{s}\rangle : \tau`$ is derivable.
 
 Formalizing this uncovered three specification subtleties:
 
 1. **Type-directed lookup fails Subject Expansion when $\vec{s}$ has duplicate types.**
-   `../document/03-03-the-calculus.tex` defines both **partition-based** substitution $t\{x := \vec{s}\}$ (lines 21–43) and **type-directed ("alternative")** substitution $t\{\!\{x := \vec{s}\}\!\}$ (lines 96–117, `DTerm.subst` in `Thesis/Chapter2DistLambdaCalcDefs.lean`). Sequential argument labels guarantee agreement. Outside that domain agreement is not guaranteed.
-   - Counterexample (`typeDirected_subject_expansion_counterexample` in `Thesis/Chapter2DistLambdaCalcAppendix.lean`): for $t = z^{[\tau]\to[\tau]\to\sigma}[x^\tau][x^\tau]$ and $\vec{s} = [a^\tau, b^\tau]$, we have $\mathtt{T}_x(t) = [\tau,\tau] = \mathtt{T}(\vec{s})$ and typable $t, a^\tau, b^\tau$, yet type-directed `DTerm.subst` selects $a^\tau$ for both occurrences of $x^\tau$, yielding $z[a^\tau][a^\tau]$ with context $\{z:\dots, a:[\tau,\tau]\}$. By `linearity` at the index of $b$, that context omits $b$, so it cannot type $(\lambda^\ell x.\, t)[a^\tau, b^\tau]$.
+   `../document/03-03-the-calculus.tex` defines both **partition-based** substitution $`t\{x := \vec{s}\}`$ (lines 21–43) and **type-directed ("alternative")** substitution $`t\{\!\{x := \vec{s}\}\!\}`$ (lines 96–117, `DTerm.subst` in `Thesis/Chapter2DistLambdaCalcDefs.lean`). Sequential argument labels guarantee agreement. Outside that domain agreement is not guaranteed.
+   - Counterexample (`typeDirected_subject_expansion_counterexample` in `Thesis/Chapter2DistLambdaCalcAppendix.lean`): for $t = z^{[\tau]\to[\tau]\to\sigma}[x^\tau][x^\tau]$ and $\vec{s} = [a^\tau, b^\tau]$, we have $\mathtt{T}_x(t) = [\tau,\tau] = \mathtt{T}(\vec{s})$ and typable $t, a^\tau, b^\tau$, yet type-directed `DTerm.subst` selects $a^\tau$ for both occurrences of $x^\tau$, yielding $z[a^\tau][a^\tau]$ with context $`\{z:\dots, a:[\tau,\tau]\}`$. By `linearity` at the index of $b$, that context omits $b$, so it cannot type $`(\lambda^\ell x.\, t)[a^\tau, b^\tau]`$.
 2. **Implicit resource-matching precondition $\mathtt{T}_x(t) = \mathtt{T}(\vec{s})$ (and typable arguments).**
-   Unlike System $\mathcal{W}$ on pure λ-terms (where $(\lambda x.\, y) s$ can type an unused $s$ with $0$ premises), $(\lambda^\ell x.\, t)\vec{s}$ in λ^dist carries an explicit argument list $\vec{s}$ whose types must match the free occurrences of $x$ in $t$. In the thesis this is implicit in writing the partial operation $t\{x := \vec{s}\}$.
+   Unlike System $\mathcal{W}$ on pure λ-terms (where $`(\lambda x.\, y) s`$ can type an unused $s$ with $0$ premises), $`(\lambda^\ell x.\, t)\vec{s}`$ in λ^dist carries an explicit argument list $\vec{s}$ whose types must match the free occurrences of $x$ in $t$. In the thesis this is implicit in writing the partial operation $`t\{x := \vec{s}\}`$.
 3. **Domain circularity with `Correct`.**
-   `../document/03-03-the-calculus.tex` (line 23) formally defines $t\{x := \vec{s}\}$ only on *correct* terms, yet `refinement_substitution_inverse` (`../document/08-15-has-hnf-has-refinement.tex`) invokes `subject_expansion` *in order* to prove that $(\lambda^\ell x.\, t')\vec{s}'$ is typable/correct.
+   `../document/03-03-the-calculus.tex` (line 23) formally defines $`t\{x := \vec{s}\}`$ only on *correct* terms, yet `refinement_substitution_inverse` (`../document/08-15-has-hnf-has-refinement.tex`) invokes `subject_expansion` *in order* to prove that $`(\lambda^\ell x.\, t')\vec{s}'`$ is typable/correct.
 
 ### How Lean closes it
 
@@ -144,6 +152,6 @@ The corresponding LaTeX write-up of Controlled Subject Expansion and the context
 ### 3c. Separate cosmetic issues in the original LaTeX proofs
 
 - `../document/08-14-hnf-has-refinement.tex`, line 84: states that when $x_1 = y$ and $x_1 \neq x_i$ ($i > 1$), $\ell$ is "the external label of $y$"; in fact $\ell$ decorates $\lambda^\ell x_1$ and should simply be chosen fresh in both subcases (as line 99 itself says).
-- `../document/08-14-hnf-has-refinement.tex`, line 104: writes the premise context in subcase (b) as $\{y : \tau_1\}$, whereas when $y = x_i$ for some $i > 1$ the IH gives $\Gamma = \emptyset$. In both cases $x_1 \notin \dom(\Gamma)$, so $\Gamma \vdash \lambda^\ell x_1.\, s' : [] \xrightarrow{\ell} \tau$ holds uniformly.
+- `../document/08-14-hnf-has-refinement.tex`, line 104: writes the premise context in subcase (b) as $`\{y : \tau_1\}`$, whereas when $y = x_i$ for some $i > 1$ the IH gives $\Gamma = \emptyset$. In both cases $x_1 \notin \dom(\Gamma)$, so $`\Gamma \vdash \lambda^\ell x_1.\, s' : [] \xrightarrow{\ell} \tau`$ holds uniformly.
 - `../document/08-15-has-hnf-has-refinement.tex`, line 17: typo $s_1 \dots s_n$ for $s_1 \dots s_m$.
 - `../document/08-15-has-hnf-has-refinement.tex`, line 407: cites `\rprop{simulation}` where `\rprop{reverse_simulation}` is actually being applied.

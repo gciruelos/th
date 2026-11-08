@@ -61,7 +61,7 @@ Prove three claims in order:
    - the basic cube lemma, for $\mathcal{M}/R$;
    - the fact that the names along $\rho/t'$ are pairwise distinct.
 3. **$(\ast)$ itself.** This is by induction on $\sigma = S\sigma'$, using Claim 2 with
-   $\mathcal{M} = \{S\}$.
+   $`\mathcal{M} = \{S\}`$.
 
 Each claim uses only earlier claims and earlier results of the thesis, so there is no
 circularity. The patch [`05-04-simulation-residuals.tex.diff`](05-04-simulation-residuals.tex.diff)
