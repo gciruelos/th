@@ -1,0 +1,117 @@
+diff --git a/document/08-15-has-hnf-has-refinement.tex b/document/08-15-has-hnf-has-refinement.tex
+index 15a80f7..99bb5a0 100644
+--- a/document/08-15-has-hnf-has-refinement.tex
++++ b/document/08-15-has-hnf-has-refinement.tex
+@@ -18,6 +18,11 @@ So $\tm$ is of the form $\lam{\var_1}{\hdots\lam{\var_n}{\vartwo \tmtwo_1 \hdots
+ that is, $\tm$ is a head normal form.
+ \end{proof}
+ 
++For the expansion arguments below, fix a partition realizing the substitution rules
++on raw terms, with typable arguments and matching occurrence types
++$\varlabel{\var}{\tm} = \tmlabel{\ls{\tmtwo}}$.
++This auxiliary use of the rules does not assume correctness of the body:
++correctness of the reconstructed redex will be proved separately.
+ The following lemma is an adaptation of Subject~Expansion in~\cite{bucciarelli2017non}.
+ \begin{lemma}[Subject Expansion]
+ \llem{subject_expansion}
+@@ -82,6 +87,56 @@ The following examples illustrate the notion of strong sequentiality:
+ \end{enumerate}
+ \end{example}
+ 
++A \defn{free cut} is a finite family of pairwise disjoint free subterm
++occurrences, recording the typing context and type of each selected occurrence.
++The empty family is allowed. A cut can pass through a binder only when the bound
++variable is absent from every selected context. Strong sequentiality is equivalently
++expressed by requiring distinct external labels in every free cut of every subterm.
++
++\begin{lemma}[Controlled Subject Expansion]
++\llem{strong_subject_expansion}
++Fix a partition-based substitution $\tmthree = \subs{\tm}{\var}{\ls{\tmtwo}}$.
++If $\conof{\tmthree}$ is strongly sequential and $\lab$ is fresh for all labels
++of $\conof{\tmthree}$, including labels inside its types, then
++$\conof{(\lamp{\lab}{\var}{\tm})\ls{\tmtwo}}$ is strongly sequential.
++\end{lemma}
++\begin{proof}
++We track whole cuts, including their contexts, rather than only the root types
++of the reconstructed subterms. Induction on the partition substitution proves two facts.
++First, any free cut of the body gives a cut of its contractum with the same selected
++types; the contexts of variables bound above the substitution point are unchanged.
++The same holds for cuts inside each argument. Thus distinctness of external labels
++in the contractum implies distinctness in the body and arguments.
++Second, a cut of the body whose contexts omit $\var$ can be combined with arbitrary
++free cuts of the arguments to give a cut of the contractum with exactly the same
++selected contexts and types. The application case uses the resource partition:
++selections in different branches remain disjoint. The abstraction case uses the
++absence of its bound variable from the selected contexts.
++
++Consequently, every free cut of the expanded redex corresponds to a cut of
++$\tmthree$ with the same contexts and types, after removing at most the newly
++introduced abstraction. Selecting the whole redex corresponds to selecting
++$\tmthree$, by Subject Expansion and Linearity. If the new abstraction is selected,
++its external label is $\lab$; freshness separates it from all other selected labels.
++These facts also apply to proper subterms.
++
++To check correctness, observe that all inherited variable annotations have sequential
++types, and a new variable annotation is the type of a consumed argument.
++Free occurrences of any one variable form a cut, so their external labels are distinct;
++this gives sequential contexts and the sequential domain of the new abstraction.
++No old lambda is erased or copied by the partition substitution, and $\lab$ is fresh,
++so lambda labels remain unique. Typability is supplied by Subject Expansion.
++
++The cut correspondence extends through $\con$: unchanged branches retain their cuts,
++and a binder can be crossed because the selected old contexts are identical.
++Hence separation holds also between reconstructed subterms and their unchanged
++siblings. Freshness is taken against the entire $\conof{\tmthree}$, so the new label
++cannot collide with a sibling label. This proves both correctness and strong
++sequentiality in the surrounding context.
++Finally, the reconstructed binder domain is sequential, so its partition substitution
++agrees with the alternative type-directed substitution.
++\end{proof}
++
+ \begin{lemma}[Refinement of a substitution: decomposition]
+ \llem{refinement_substitution_inverse}
+ If $\tmthree' \refines \subs{\tm}{\var}{\tmtwo}$
+@@ -344,7 +399,13 @@ Then there exists a strongly sequential term $\tm' \in \termsdist$ such that:
+ \end{lemma}
+ \begin{proof}
+ Let $\tm = \conof{(\lam{\var}{\tmthree})\tmfour} \tobeta \conof{\subs{\tmthree}{\var}{\tmfour}} = \tmtwo$.
+-The proof proceeds by induction on $\con$.
++We strengthen the induction hypothesis to permit an arbitrary surrounding
++$\lambdadist$-context $\contwo$: if $\contwoof{\tmtwo'}$ is strongly sequential,
++the reconstruction takes place inside $\contwo$ and preserves that invariant
++for the whole term. Every new label avoids all labels of the entire current term,
++including its types, and may also avoid any prescribed finite set.
++Controlled Subject Expansion~(\rlem{strong_subject_expansion}) supplies this
++contextual invariant at a contracted redex. We proceed by induction on $\con$.
+ \begin{enumerate}
+ \item {\bf Empty, $\con = \conbase$.}
+   By \rlem{refinement_substitution_inverse} we have that $\tmtwo'$
+@@ -361,7 +422,10 @@ The proof proceeds by induction on $\con$.
+   Then $\tm = \tmthree\,\tmfour \tobeta \tmthree\,\tmfive = \tmtwo$
+   where $\tmfour \tobeta \tmfive$ and $\tmtwo' \refines \tmtwo$.
+   Then $\tmtwo'$ is of the form $\tmthree'[\tmfive'_1,\hdots,\tmfive'_n]$ where $\tmfive'_i \refines \tmfive$ for all $i=1..n$.
+-  By \ih, for all $i=1..n$ we have that there exist $\tmfour'_1,\hdots,\tmfour'_n$ such that:
++  Apply the contextual \ih successively at the argument positions $i=1..n$,
++  taking the head and all other arguments as part of the surrounding context.
++  Each fresh label is chosen against the whole current term, including labels
++  introduced at earlier positions. We obtain $\tmfour'_1,\hdots,\tmfour'_n$ such that:
+   \[
+   \xymatrix@R=.25cm{
+    \tmfour \ar@{}[d]|*=0[@]{\rtimes} \ar[r]^{\beta} & \tmfive \ar@{}[d]|*=0[@]{\rtimes} \\
+@@ -373,10 +437,12 @@ The proof proceeds by induction on $\con$.
+    \tmthree'[\tmfour'_i]_{i=1}^{n} \ar@{.>>}[r]^{\dist} & \tmthree'[\tmfive'_i]_{i=1}^{n}  \\
+   }
+   \]
+-  Moreover, $\tmthree'[\tmfour'_i]_{i=1}^{n}$ is strongly sequential, which can be concluded
+-  from the facts that $\tmthree'[\tmfive'_i]_{i=1}^{n}$ is strongly sequential by hypothesis,
+-  $\tmfour'_i$ is strongly sequential for all $i=1..n$ by \ih,
+-  and $\tmfour'_i$ and $\tmfive'_i$ have the same types by Subject~Expansion~(\rlem{subject_expansion}).
++  Each contextual reconstruction preserves strong sequentiality of the entire
++  current term, so $\tmthree'[\tmfour'_i]_{i=1}^{n}$ is strongly sequential.
++  Subject Expansion~(\rlem{subject_expansion}) also preserves each replaced
++  argument's typing context and type. The contextual invariant, rather than
++  equality of root types alone, ensures separation of proper free subterms
++  belonging to different arguments or to the head.
+ \end{enumerate}
+ \end{proof}
+ 

@@ -1,0 +1,149 @@
+diff --git a/document/05-04-simulation-residuals.tex b/document/05-04-simulation-residuals.tex
+index 7c55ed9..93c84af 100644
+--- a/document/05-04-simulation-residuals.tex
++++ b/document/05-04-simulation-residuals.tex
+@@ -351,59 +351,92 @@ Then the following equality between derivations holds:
+ \]
+ \end{lemma}
+ \begin{proof}
+-By induction on $\redseq$ using \rlem{cube_lemma_for_simulation_residuals}.
+-%\begin{pabloenv}
+-%The interesting case is when $\redseq$ is non-empty, \ie $\redseq = \redex\redseqthree$. 
+-%\end{pabloenv}
+-We will prove this result in two steps. The first step will be to prove it in the case where $\redseq$ is just one step, \ie, \[(\redex / \tm') / (\redseqtwo / \tm') \permeq (\redex / \redseqtwo) / (\tm' / \redseqtwo). \tag{2} \label{eq:cubelemma_partial_result}\]
+-We proceed by induction on $\redseqtwo$.
+-\begin{enumerate}
+-  \item {\bf $\redseqtwo = \emptyDerivation$.}
+-    In this case $\redex / \emptyDerivation = \set{\redex}$, $\tm' / \emptyDerivation = \tm'$, and $\emptyDerivation / \tm' = \emptyDerivation$,
+-    so we end up with the equality we wanted, $\redex / \tm' = \redex / \tm'$.
+-  \item {\bf $\redseqtwo = \redextwo \redseqtwo'$.}
+-    First, $\redex / (\redextwo \redseqtwo') = (\redex / \redextwo) / \redseqtwo'
+-            = \set{\redexthree / \redseqtwo' : \redexthree \in \redex / \redextwo}$.
+-    Also, $\tm' / \redseqtwo = (\tm' / \redextwo) / \redseqtwo'$.
+-    Then, the right hand side of the equation is
+-    $((\redex / \redextwo) / \redseqtwo') / ((\tm' / \redextwo) / \redseqtwo')$,
+-    which in reality is the set
+-    $\set{(\redexthree / \redseqtwo') / ((\tm' / \redextwo) / \redseqtwo') : \redexthree \in \redex / \redextwo}$,
+-    which by inductive hypothesis equals (modulo permutation equivalence) the set
+-    $\set{(\redexthree / (\tm' / \redextwo)) / (\redseqtwo' / (\tm' / \redextwo)) : \redexthree \in \redex / \redextwo}$,
+-    \ie the set, $((\redex / \redextwo) / (\tm' / \redextwo)) / (\redseqtwo' / (\tm' / \redextwo))$.
+-
+-    In turn, this set, by \rlem{cube_lemma_for_simulation_residuals}, equals the set
+-    $((\redex / \tm') / (\redextwo / \tm')) / (\redseqtwo' / (\tm' / \redextwo))$.
+-
+-    On the other hand, the left side of the equation is $(\redex / \tm') / ((\redextwo \redseqtwo') / \tm')$,
+-    which by definition of simulation residual equals
+-    $(\redex / \tm') / ((\redextwo / \tm') (\redseqtwo' / (\tm' / \redextwo)))$.
+-    That last derivation equals the canonical development of the
+-    right hand side of the equation because of the general
+-    rule $\alpha / (\beta \gamma) \permeq (\alpha / \beta) / \gamma$.
+-\end{enumerate}
++We work with names. For a set $X$ of coinitial $\dist$-steps write
++$\names(X) = \set{\name(\redexthree) : \redexthree \in X}$.
++A complete development of $X$ contracts each name of $X$ exactly once,
++so its names are $\names(X)$.
++Hence, by \rlem{simulation_residual_of_a_development},
++$\names(\redseqthree/\tm') = \names(\redexset/\tm')$
++whenever $\redseqthree$ is a complete development of a set $\redexset$ of coinitial $\beta$-steps.
++
++By \rcoro{permutation_equivalence_in_terms_of_names} and \rlem{names_after_projection_along_a_step},
++it suffices to prove:
++\[
++  \names((\redseq/\redseqtwo)/(\tm'/\redseqtwo)) = \names(\redseq/\tm') \setminus \names(\redseqtwo/\tm')
++  \tag{$\ast$} \label{eq:cubelemma_names}
++\]
++We prove three claims in order. The second one generalizes over \emph{sets} of steps:
++projecting a derivation $\redseq = \redex\redseq'$ over a development $\redseqthree$ leaves
++$\redseq'$ to be projected over $\redseqthree/\redex$, which is a development of a set of residuals
++even when $\redseqthree$ is a single step.
++So an induction stated only for single steps does not close.
++
++\medskip
++\noindent{\bf Claim 1 (a step after a derivation).}
++For every step $\redex$ and every derivation $\redseqthree$ coinitial with it:
++\[
++  \names((\redex/\redseqthree)/(\tm'/\redseqthree)) = \names(\redex/\tm') \setminus \names(\redseqthree/\tm')
++\]
++where $\redex/\redseqthree$ is the set of residuals of $\redex$,
++and $(\redex/\redseqthree)/(\tm'/\redseqthree) = \bigcup_{\redex' \in \redex/\redseqthree} \redex'/(\tm'/\redseqthree)$.
++By induction on $\redseqthree$. The empty case is immediate.
++If $\redseqthree = \redextwo\redseqthree'$, then
++$\redex/\redseqthree = \bigcup_{\redex'' \in \redex/\redextwo} \redex''/\redseqthree'$
++and $\tm'/\redseqthree = (\tm'/\redextwo)/\redseqthree'$, so by \ih{} (on $\tm'/\redextwo$ and each $\redex''$):
++\[
++  \begin{array}{rcll}
++  \names((\redex/\redseqthree)/(\tm'/\redseqthree))
++    & = & \bigcup_{\redex'' \in \redex/\redextwo} \names(\redex''/(\tm'/\redextwo)) \setminus \names(\redseqthree'/(\tm'/\redextwo)) & \text{by \ih} \\
++    & = & (\names(\redex/\tm') \setminus \names(\redextwo/\tm')) \setminus \names(\redseqthree'/(\tm'/\redextwo)) & \text{by \rlem{cube_lemma_for_simulation_residuals}} \\
++    & = & \names(\redex/\tm') \setminus \names(\redseqthree/\tm') & \text{since $\redseqthree/\tm' = (\redextwo/\tm')(\redseqthree'/(\tm'/\redextwo))$}
++  \end{array}
++\]
+ 
+-Now we proceed to prove the full proposition, and we will proceed by inducion on $\redseq$.
+-\begin{enumerate}
+-  \item {\bf $\redseq = \emptyDerivation$.} In this case both sides of the equation are the empty derivation.
+-  \item {\bf $\redseq = \redex \redseq'$.} This case can be proven with a series of equalities,
+-    in which we will abuse notation when necessary, writing $\redex / \redseqtwo$ to mean a complete canonical development of the actual residual set.
+-    \[
+-      \begin{array}{rcll}
+-      ((\redex \redseq')/\redseqtwo)/(\tm'/\redseqtwo)
+-        & = & \frac{(\redex \redseq')/\redseqtwo}{\tm'/\redseqtwo} \\
+-        & = & \frac{(\redex / \redseqtwo) (\redseq' / (\redseqtwo / \redex))}{\tm'/\redseqtwo} & \text{ by definition of residual} \\
+-        & = & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\redseqtwo / \redex)}{(\tm' / \redseqtwo) / (\redex / \redseqtwo)} & \text{ by definition of simulation residual} \\
+-      & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\redseqtwo / \redex)}{(\tm' / \redex) / (\redseqtwo / \redex)} & \text{ by the previous partial result } (\ref{eq:cubelemma_partial_result}) \\
+-        & \permeq & \frac{\redex / \redseqtwo}{\tm' / \redseqtwo} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by inductive hypothesis} \\
+-        & \permeq & \frac{\redex / \tm'}{\redseqtwo / \tm'} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \redex) / (\tm' / \redex)} & \text{ by the previous partial result } (\ref{eq:cubelemma_partial_result}) \\
+-        & \permeq & \frac{\redex / \tm'}{\redseqtwo / \tm'} \frac{\redseq' / (\tm' / \redex)}{(\redseqtwo / \tm') / (\redex / \tm')} & \text{ by the previous partial result } (\ref{eq:cubelemma_partial_result}) \\
+-        & \permeq & \frac{(\redex / \tm') (\redseq' / (\tm' / \redex))}{\redseqtwo / \tm'} & \text{ by residual properties, in general: $\frac{\gamma}{\beta} \frac{\alpha}{\beta/\gamma} \permeq \frac{\gamma \alpha}{\beta}$}\\
+-        & = & \frac{(\redex \redseq') / \tm'}{\redseqtwo / \tm'} & \text{ by definition of simulation residual}\\
+-      \end{array}
+-    \]
+-\end{enumerate}
++\medskip
++\noindent{\bf Claim 2 (a derivation after a complete development).}
++Let $\redexset$ be a set of coinitial steps and $\redseqthree$ a complete development of $\redexset$.
++Then for every derivation $\redseq$ coinitial with $\redseqthree$:
++\[
++  \names((\redseq/\redseqthree)/(\tm'/\redseqthree)) = \names(\redseq/\tm') \setminus \names(\redexset/\tm')
++\]
++By induction on $\redseq$, generalizing over $\tm$, $\tm'$, $\redexset$ and $\redseqthree$.
++The empty case is immediate. Let $\redseq = \redex\redseq'$.
++Then $\redseq/\redseqthree = (\redex/\redseqthree)\,(\redseq'/(\redseqthree/\redex))$,
++where $\redex/\redseqthree$ stands for a complete development of the residual set,
++and $\redseqthree/\redex$ is a complete development of $\redexset/\redex$.
++The names of $(\redseq/\redseqthree)/(\tm'/\redseqthree)$ are the union of two parts:
++\begin{itemize}
++\item $\names((\redex/\redseqthree)/(\tm'/\redseqthree)) = \names(\redex/\tm') \setminus \names(\redexset/\tm')$,
++  by \rlem{simulation_residual_of_a_development}, Claim~1, and $\names(\redseqthree/\tm') = \names(\redexset/\tm')$.
++\item $\names((\redseq'/(\redseqthree/\redex))/((\tm'/\redseqthree)/(\redex/\redseqthree)))$.
++  Since $\redseqthree(\redex/\redseqthree) \permeq \redex(\redseqthree/\redex)$,
++  item~1 of \rprop{compatibility_of_simulation_residuals_and_permutation_equivalence} gives
++  $(\tm'/\redseqthree)/(\redex/\redseqthree) = (\tm'/\redex)/(\redseqthree/\redex)$.
++  So by \ih{} (on $\tm'/\redex$, the set $\redexset/\redex$, and its development $\redseqthree/\redex$),
++  this part is $\names(\redseq'/(\tm'/\redex)) \setminus \names((\redexset/\redex)/(\tm'/\redex))$.
++  By \rlem{cube_lemma_for_simulation_residuals} applied to each step of $\redexset$,
++  $\names((\redexset/\redex)/(\tm'/\redex)) = \names(\redexset/\tm') \setminus \names(\redex/\tm')$.
++\end{itemize}
++By \rlem{names_concatenation_disjoint_union} applied to $\redseq/\tm' = (\redex/\tm')(\redseq'/(\tm'/\redex))$,
++the sets $\names(\redex/\tm')$ and $\names(\redseq'/(\tm'/\redex))$ are disjoint,
++so the second part equals $\names(\redseq'/(\tm'/\redex)) \setminus \names(\redexset/\tm')$.
++The union of both parts is
++$(\names(\redex/\tm') \cup \names(\redseq'/(\tm'/\redex))) \setminus \names(\redexset/\tm')
++ = \names(\redseq/\tm') \setminus \names(\redexset/\tm')$.
++
++\medskip
++\noindent{\bf Claim 3 (the equation \eqref{eq:cubelemma_names}).}
++By induction on $\redseqtwo$. The empty case is immediate.
++If $\redseqtwo = \redextwo\redseqtwo'$, then $\redseq/\redseqtwo = (\redseq/\redextwo)/\redseqtwo'$
++and $\tm'/\redseqtwo = (\tm'/\redextwo)/\redseqtwo'$, so:
++\[
++  \begin{array}{rcll}
++  \names((\redseq/\redseqtwo)/(\tm'/\redseqtwo))
++    & = & \names((\redseq/\redextwo)/(\tm'/\redextwo)) \setminus \names(\redseqtwo'/(\tm'/\redextwo)) & \text{by \ih} \\
++    & = & (\names(\redseq/\tm') \setminus \names(\redextwo/\tm')) \setminus \names(\redseqtwo'/(\tm'/\redextwo)) & \text{by Claim~2 with $\redexset = \set{\redextwo}$} \\
++    & = & \names(\redseq/\tm') \setminus \names(\redseqtwo/\tm') & \text{since $\redseqtwo/\tm' = (\redextwo/\tm')(\redseqtwo'/(\tm'/\redextwo))$}
++  \end{array}
++\]
+ \end{proof}
+ 
+ 

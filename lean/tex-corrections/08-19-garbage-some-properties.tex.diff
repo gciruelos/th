@@ -1,0 +1,93 @@
+diff --git a/document/08-19-garbage-some-properties.tex b/document/08-19-garbage-some-properties.tex
+index fda12e3..db6a441 100644
+--- a/document/08-19-garbage-some-properties.tex
++++ b/document/08-19-garbage-some-properties.tex
+@@ -461,6 +461,22 @@ We prove each item separately:
+ \end{proof}
+ 
+ 
++Throughout, ``leftmost'' refers to the order of the redexes by the position
++of their first symbol, \ie the pre-order on positions $p \prec q$
++($p$ is a proper prefix of $q$, or $p$ is to the left of $q$ at the first point where they differ).
++Thus $\redex_0$ is the leftmost coarse step for $(\redseq,\tm')$ when $\redex_0 \prec \redextwo$
++for every other coarse step $\redextwo$ for $(\redseq,\tm')$.
++We will use two facts about contracting a step $\redextwo$ at position $r$:
++\begin{itemize}
++\item A step at position $p$ outside the argument of $\redextwo$
++  has exactly one residual: at $p$ itself if $r$ is not a prefix of $p$,
++  and at $r\,x$ if $p = r\,0\,0\,x$ lies inside the body of the abstraction.
++  So if $p \prec q$ and neither lies in the argument of $\redextwo$,
++  then their residuals are still ordered by $\prec$, and the same holds whenever $p \prec r$.
++\item A step created by $\redextwo$ lies at a position having $r$ as a prefix,
++  or at the parent of $r$ (when $\redextwo$ is in function position).
++\end{itemize}
++
+ \begin{lemma}[The leftmost coarse step has at most one residual]
+ \llem{leftmost_coarse_step_has_at_most_one_residual}
+ Let $\redex_0$ be the leftmost coarse step for $(\redseq,\tm')$,
+@@ -486,7 +502,7 @@ We consider two cases, depending on whether $\redex_0 = \redextwo$.
+   \begin{enumerate}
+   \item {\bf If $\redextwo$ is not $\tm'$-garbage.}
+     Then $\redextwo \permle \redseq$ and $\redextwo/\tm' = \emptyset$, so $\redextwo$ is coarse for $(\redseq,\tm')$.
+-    Since $\redex_0$ is the leftmost coarse step, this means that $\redex$ is to the left of $\redextwo$.
++    Since $\redex_0$ is the leftmost coarse step, this means that $\redex_0 \prec \redextwo$.
+     So $\redex_0$ has exactly one residual $\redex_1 \in \redex_0/\redextwo$.
+   \item {\bf If $\redextwo$ is $\tm'$-garbage.}
+     Let us write the term $\tm$ as $\tm = \conof{(\lam{\var}{\tmtwo})\tmthree}$, where
+@@ -508,9 +524,10 @@ We consider two cases, depending on whether $\redex_0 = \redextwo$.
+   We are left to show that $\#(\redex_0/\redextwo\redseqthree) \leq 1$.
+   Let us show that we may apply the \ih on $\redex_1$.
+   More precisely, observe that $\redseqthree \permle \redseq/\redextwo$ since $\redextwo\redseqthree \permle \redseq$.
+-  To apply the \ih it suffices to show that $\redex_1$ is coarse for $(\redseq/\redextwo,\tm'/\redextwo)$.
+-  Indeed, we may check the two conditions
+-  for the definition that $\redex_1$ is coarse for $(\redseq/\redextwo,\tm'/\redextwo)$.
++  To apply the \ih it suffices to show that $\redex_1$ is the \emph{leftmost} coarse step
++  for $(\redseq/\redextwo,\tm'/\redextwo)$.
++  Showing only that $\redex_1$ is coarse is not enough, since the \ih is stated for the leftmost coarse step.
++  We check that $\redex_1$ is coarse (items 1 and 2) and that it is leftmost (item 3).
+   \begin{enumerate}
+   \item Firstly, $\redex_1 = \redex_0/\redextwo \permle \redseq/\redextwo$ holds, as a consequence of the fact that $\redex_0 \permle \redseq$.
+   \item Secondly, we may check that $\redex_1$ is not $(\tm'/\redextwo)$-garbage.
+@@ -527,6 +544,42 @@ We consider two cases, depending on whether $\redex_0 = \redextwo$.
+         \]
+         For the last step, note that $\names(\redex_0/\tm')$ and $\names(\redextwo/\tm')$ are disjoint,
+         since $\redex_0 \neq \redextwo$.
++  \item Finally, we check that $\redex_1$ is leftmost.
++        Let $\redextwo'$ be a coarse step for $(\redseq/\redextwo,\tm'/\redextwo)$
++        with $\redextwo' \neq \redex_1$. We show $\redex_1 \prec \redextwo'$.
++        \begin{enumerate}
++        \item {\bf If $\redextwo$ creates $\redextwo'$.}
++          Since $\redextwo'$ is not $(\tm'/\redextwo)$-garbage,
++          by \rlem{garbage_only_creates_garbage} $\redextwo$ is not $\tm'$-garbage,
++          so $\redextwo$ is coarse for $(\redseq,\tm')$ and $\redex_0 \prec \redextwo$.
++          In particular $\redex_0$ is not below $\redextwo$, so $\redex_1 = \redex_0$.
++          The created step $\redextwo'$ lies below $\redextwo$, or at its parent.
++          In the first case $\redex_0 \prec \redextwo'$ directly.
++          In the second case the parent of $\redextwo$ was not a redex of the source,
++          because its left subterm $\redextwo$ is an application; so $\redex_0$ is not the parent,
++          and from $\redex_0 \prec \redextwo$ we get $\redex_0 \prec \redextwo'$.
++        \item {\bf If $\redextwo'$ is a residual of a step $\redexthree \neq \redextwo$.}
++          Then $\redexthree \neq \redex_0$, since $\redextwo' \neq \redex_1$.
++          The step $\redexthree$ is not $\tm'$-garbage,
++          because the names of $\redextwo'/(\tm'/\redextwo)$ are among those of $\redexthree/\tm'$
++          (by \rlem{generalized_cube_lemma}, as in item 2).
++          First we show $\redex_0 \prec \redexthree$.
++          If $\redexthree$ lies inside the argument of $\redextwo$,
++          then $\redextwo$ is not $\tm'$-garbage (as in case (b) above, the argument of a garbage step
++          contains no non-garbage step), so $\redextwo$ is coarse and
++          $\redex_0 \prec \redextwo \prec \redexthree$.
++          Otherwise $\redexthree$ has the single residual $\redextwo'$, and from
++          $\redextwo' \permle \redseq/\redextwo$ we get
++          $\redexthree \permle \redextwo(\redseq/\redextwo) \permeq \redseq$,
++          so $\redexthree$ is coarse for $(\redseq,\tm')$ and $\redex_0 \prec \redexthree$.
++
++          Now we transport the order along $\redextwo$.
++          If $\redextwo$ is not $\tm'$-garbage, then $\redex_0 \prec \redextwo$
++          and residuals of steps after $\redex_0$ stay after $\redex_1$.
++          If $\redextwo$ is $\tm'$-garbage, then neither $\redex_0$ nor $\redexthree$ lies in the argument of
++          $\redextwo$ (as in case (b)), and the order is preserved.
++          In both cases $\redex_1 \prec \redextwo'$.
++        \end{enumerate}
+   \end{enumerate}
+   Applying the \ih, we obtain that $\#(\redex_0/\redextwo\redseqthree) = \#(\redex_1/\redseqthree) \leq 1$.  
+ \end{enumerate}
